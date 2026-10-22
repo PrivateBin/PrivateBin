@@ -15,20 +15,20 @@ class JsonApiTest extends TestCase
     public function setUp(): void
     {
         /* Setup Routine */
-        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
         $this->_model = new Filesystem(['dir' => $this->_path]);
         ServerSalt::setStore($this->_model);
 
-        $_POST   = [];
-        $_GET    = [];
+        $_POST = [];
+        $_GET = [];
         $_SERVER = [];
         if ($this->_model->exists(Helper::getPasteId())) {
             $this->_model->delete(Helper::getPasteId());
         }
-        $options                         = parse_ini_file(CONF_SAMPLE, true);
+        $options = parse_ini_file(CONF_SAMPLE, true);
         $options['model_options']['dir'] = $this->_path;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
@@ -47,17 +47,17 @@ class JsonApiTest extends TestCase
      */
     public function testCreate()
     {
-        $options                     = parse_ini_file(CONF, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = Helper::createTempFile();
+        $file = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
-        $_SERVER['REQUEST_URI']           = '/';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_URI'] = '/';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -79,18 +79,18 @@ class JsonApiTest extends TestCase
      */
     public function testPut()
     {
-        $options                     = parse_ini_file(CONF, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = Helper::createTempFile();
+        $file = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
-        $_GET[Helper::getPasteId()]       = '';
+        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_GET[Helper::getPasteId()] = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'PUT';
-        $_SERVER['REMOTE_ADDR']           = '::1';
+        $_SERVER['REQUEST_METHOD'] = 'PUT';
+        $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -118,15 +118,15 @@ class JsonApiTest extends TestCase
         $this->_model->create(Helper::getPasteId(), $data);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
-        $file  = Helper::createTempFile();
+        $file = Helper::createTempFile();
         file_put_contents($file, json_encode([
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
         ]));
         Request::setInputStream($file);
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
-        $_GET[Helper::getPasteId()]       = '';
+        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_GET[Helper::getPasteId()] = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -146,14 +146,14 @@ class JsonApiTest extends TestCase
         $this->_model->create(Helper::getPasteId(), $data);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
-        $file  = Helper::createTempFile();
+        $file = Helper::createTempFile();
         file_put_contents($file, json_encode([
             'pasteid'     => Helper::getPasteId(),
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
         ]));
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -168,10 +168,10 @@ class JsonApiTest extends TestCase
      */
     public function testRead()
     {
-        $paste                            = Helper::getPaste();
+        $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
-        $_GET[Helper::getPasteId()]       = '';
+        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_GET[Helper::getPasteId()] = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
@@ -278,7 +278,7 @@ class JsonApiTest extends TestCase
     public function testJsonLdPathBypass()
     {
         $_SERVER['REQUEST_URI'] = '/","bypass\\';
-        $_GET['jsonld']         = 'paste';
+        $_GET['jsonld'] = 'paste';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -309,18 +309,18 @@ class JsonApiTest extends TestCase
      */
     public function testShortenViaYourls($baseUri)
     {
-        $mock_yourls_service                = $this->_path . DIRECTORY_SEPARATOR . 'yourls.json';
-        $options                            = parse_ini_file(CONF, true);
-        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
-        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
-        $options['yourls']['apiurl']        = $mock_yourls_service;
+        $mock_yourls_service = $this->_path . DIRECTORY_SEPARATOR . 'yourls.json';
+        $options = parse_ini_file(CONF, true);
+        $options['main']['basepath'] = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener'] = 'https://example.com' . $baseUri . 'link=';
+        $options['yourls']['apiurl'] = $mock_yourls_service;
         Helper::createIniFile(CONF, $options);
 
         // the real service answer is more complex, but we only look for the shorturl & statusCode
         file_put_contents($mock_yourls_service, '{"shorturl":"https:\/\/example.com\/1","statusCode":200}');
 
         $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
-        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        $_GET['link'] = 'https://example.com/path/?foo#bar';
         if (str_contains($baseUri, '?shortenviayourls')) {
             $_GET['shortenviayourls'] = null;
         }
@@ -337,18 +337,18 @@ class JsonApiTest extends TestCase
      */
     public function testShortenViaShlink($baseUri)
     {
-        $mock_shlink_service                = $this->_path . DIRECTORY_SEPARATOR . 'shlink.json';
-        $options                            = parse_ini_file(CONF, true);
-        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
-        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
-        $options['shlink']['apiurl']        = $mock_shlink_service;
+        $mock_shlink_service = $this->_path . DIRECTORY_SEPARATOR . 'shlink.json';
+        $options = parse_ini_file(CONF, true);
+        $options['main']['basepath'] = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener'] = 'https://example.com' . $baseUri . 'link=';
+        $options['shlink']['apiurl'] = $mock_shlink_service;
         Helper::createIniFile(CONF, $options);
 
         // the real service answer is more complex, but we only look for the shorturl & statusCode
         file_put_contents($mock_shlink_service, '{"shortUrl":"https:\/\/example.com\/1"}');
 
         $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
-        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        $_GET['link'] = 'https://example.com/path/?foo#bar';
         if (str_contains($baseUri, '?shortenviashlink')) {
             $_GET['shortenviashlink'] = null;
         }
@@ -365,15 +365,15 @@ class JsonApiTest extends TestCase
      */
     public function testShortenViaShlinkFailureHttp($baseUri)
     {
-        $mock_shlink_service                = 'https://httpbin.org/status/403';
-        $options                            = parse_ini_file(CONF, true);
-        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
-        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
-        $options['shlink']['apiurl']        = $mock_shlink_service;
+        $mock_shlink_service = 'https://httpbin.org/status/403';
+        $options = parse_ini_file(CONF, true);
+        $options['main']['basepath'] = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener'] = 'https://example.com' . $baseUri . 'link=';
+        $options['shlink']['apiurl'] = $mock_shlink_service;
         Helper::createIniFile(CONF, $options);
 
         $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
-        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        $_GET['link'] = 'https://example.com/path/?foo#bar';
         if (str_contains($baseUri, '?shortenviashlink')) {
             $_GET['shortenviashlink'] = null;
         }
@@ -391,18 +391,18 @@ class JsonApiTest extends TestCase
      */
     public function testShortenViaShlinkSuccessButMissingShortUrl($baseUri)
     {
-        $mock_shlink_service                = $this->_path . DIRECTORY_SEPARATOR . 'shlink.json';
-        $options                            = parse_ini_file(CONF, true);
-        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
-        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
-        $options['shlink']['apiurl']        = $mock_shlink_service;
+        $mock_shlink_service = $this->_path . DIRECTORY_SEPARATOR . 'shlink.json';
+        $options = parse_ini_file(CONF, true);
+        $options['main']['basepath'] = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener'] = 'https://example.com' . $baseUri . 'link=';
+        $options['shlink']['apiurl'] = $mock_shlink_service;
         Helper::createIniFile(CONF, $options);
 
         // Ideally, this should never happen, just in case "shortUrl" is somehow missing in the 200 response
         file_put_contents($mock_shlink_service, '{}');
 
         $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
-        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        $_GET['link'] = 'https://example.com/path/?foo#bar';
         if (str_contains($baseUri, '?shortenviashlink')) {
             $_GET['shortenviashlink'] = null;
         }
@@ -436,11 +436,11 @@ class JsonApiTest extends TestCase
      */
     public function testShortenViaYourlsFailure()
     {
-        $options                            = parse_ini_file(CONF, true);
-        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options = parse_ini_file(CONF, true);
+        $options['main']['basepath'] = 'https://example.com/path'; // missing slash gets added by Configuration constructor
         Helper::createIniFile(CONF, $options);
         $_SERVER['REQUEST_URI'] = '/path/shortenviayourls?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
-        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        $_GET['link'] = 'https://example.com/path/?foo#bar';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -453,11 +453,11 @@ class JsonApiTest extends TestCase
      */
     public function testShortenViaShlinkFailure()
     {
-        $options                            = parse_ini_file(CONF, true);
-        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options = parse_ini_file(CONF, true);
+        $options['main']['basepath'] = 'https://example.com/path'; // missing slash gets added by Configuration constructor
         Helper::createIniFile(CONF, $options);
         $_SERVER['REQUEST_URI'] = '/path/shortenviashlink?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
-        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        $_GET['link'] = 'https://example.com/path/?foo#bar';
         ob_start();
         new Controller;
         $content = ob_get_contents();

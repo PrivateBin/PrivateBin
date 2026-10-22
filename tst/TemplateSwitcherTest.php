@@ -10,10 +10,10 @@ class TemplateSwitcherTest extends TestCase
     {
         $conf = new Configuration;
 
-        $defaultTemplateFallback        = 'bootstrap5';
-        $existingTemplateFallback       = 'bootstrap-dark';
+        $defaultTemplateFallback = 'bootstrap5';
+        $existingTemplateFallback = 'bootstrap-dark';
         $wrongBootstrapTemplateFallback = 'bootstrap-wrong';
-        $wrongTemplateFallback          = 'wrong-template';
+        $wrongTemplateFallback = 'wrong-template';
 
         TemplateSwitcher::setAvailableTemplates($conf->getKey('availabletemplates'));
 
@@ -29,7 +29,7 @@ class TemplateSwitcherTest extends TestCase
 
     public function testSetAvailableTemplates()
     {
-        $conf               = new Configuration;
+        $conf = new Configuration;
         $availableTemplates = $conf->getKey('availabletemplates');
 
         TemplateSwitcher::setAvailableTemplates($availableTemplates);
@@ -39,8 +39,8 @@ class TemplateSwitcherTest extends TestCase
     public function testGetTemplate()
     {
         $defaultTemplateFallback = 'bootstrap5';
-        $customTemplate          = 'bootstrap-dark';
-        $customWrongTemplate     = 'bootstrap-wrong';
+        $customTemplate = 'bootstrap-dark';
+        $customWrongTemplate = 'bootstrap-wrong';
         $escapeTemplateDirectory = '../index';
 
         TemplateSwitcher::setTemplateFallback($defaultTemplateFallback);
@@ -67,7 +67,7 @@ class TemplateSwitcherTest extends TestCase
     {
         $conf = new Configuration;
 
-        $existingTemplate    = 'bootstrap';
+        $existingTemplate = 'bootstrap';
         $nonExistentTemplate = 'bootstrap-wrong';
 
         TemplateSwitcher::setAvailableTemplates($conf->getKey('availabletemplates'));

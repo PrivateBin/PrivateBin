@@ -19,12 +19,12 @@ class ChhotoProxyTest extends TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        $this->_mock_chhoto_service           = $this->_path . DIRECTORY_SEPARATOR . 'chhoto.json';
-        $options                              = parse_ini_file(CONF_SAMPLE, true);
-        $options['main']['basepath']          = 'https://example.com/';
-        $options['main']['urlshortener']      = 'https://example.com/shortenviachhoto?link=';
-        $options['chhoto']['apiurl']          = $this->_mock_chhoto_service;
-        $options['chhoto']['apikey']          = 'test_api_key';
+        $this->_mock_chhoto_service = $this->_path . DIRECTORY_SEPARATOR . 'chhoto.json';
+        $options = parse_ini_file(CONF_SAMPLE, true);
+        $options['main']['basepath'] = 'https://example.com/';
+        $options['main']['urlshortener'] = 'https://example.com/shortenviachhoto?link=';
+        $options['chhoto']['apiurl'] = $this->_mock_chhoto_service;
+        $options['chhoto']['apikey'] = 'test_api_key';
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $this->_conf = new Configuration;

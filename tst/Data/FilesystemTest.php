@@ -14,9 +14,9 @@ class FilesystemTest extends TestCase
     public function setUp(): void
     {
         /* Setup Routine */
-        $this->_path        = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_invalidPath = $this->_path . DIRECTORY_SEPARATOR . 'bar';
-        $this->_model       = new Filesystem(['dir' => $this->_path]);
+        $this->_model = new Filesystem(['dir' => $this->_path]);
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
@@ -45,12 +45,12 @@ class FilesystemTest extends TestCase
         $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
-        $comment             = Helper::getComment();
+        $comment = Helper::getComment();
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'store comment');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store the same comment twice');
-        $comment['id']       = Helper::getCommentId();
+        $comment['id'] = Helper::getCommentId();
         $comment['parentid'] = Helper::getPasteId();
         $this->assertEquals(
             [$comment['meta']['created'] => $comment],
@@ -77,9 +77,9 @@ class FilesystemTest extends TestCase
 
     public function testCorruptCommentsAreIgnored()
     {
-        $pasteid   = Helper::getPasteId();
+        $pasteid = Helper::getPasteId();
         $commentid = Helper::getCommentId();
-        $comment   = Helper::getComment();
+        $comment = Helper::getComment();
         $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
 
         $discussionPath = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
@@ -117,9 +117,9 @@ class FilesystemTest extends TestCase
     {
         mkdir($this->_path . DIRECTORY_SEPARATOR . '00', 0777, true);
         $expired = Helper::getPaste(['expire_date' => 1344803344]);
-        $paste   = Helper::getPaste(['expire_date' => time() + 3600]);
-        $keys    = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
-        $ids     = [];
+        $paste = Helper::getPaste(['expire_date' => time() + 3600]);
+        $keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
+        $ids = [];
         foreach ($keys as $key) {
             $ids[$key] = hash('fnv164', $key);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
@@ -161,7 +161,7 @@ class FilesystemTest extends TestCase
     {
         $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
-        $data    = Helper::getPaste();
+        $data = Helper::getPaste();
         $comment = Helper::getComment(['icon' => "Invalid UTF-8 sequence: \xB1\x31"]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
@@ -176,12 +176,12 @@ class FilesystemTest extends TestCase
     public function testOldFilesGetConverted()
     {
         // generate 10 (default purge batch size) pastes in the old format
-        $paste     = Helper::getPaste();
-        $comment   = Helper::getComment();
+        $paste = Helper::getPaste();
+        $comment = Helper::getComment();
         $commentid = Helper::getCommentId();
-        $ids       = [];
+        $ids = [];
         for ($i = 0, $max = 10; $i < $max; ++$i) {
-            $dataid     = Helper::getRandomId();
+            $dataid = Helper::getRandomId();
             $storagedir = $this->_path . DIRECTORY_SEPARATOR . substr($dataid, 0, 2) .
                 DIRECTORY_SEPARATOR . substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
             $ids[$dataid] = $storagedir;
@@ -225,8 +225,8 @@ class FilesystemTest extends TestCase
             );
             $this->assertFileDoesNotExist($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
             $this->assertTrue($this->_model->existsComment($dataid, $dataid, $commentid), "comment in paste $dataid exists");
-            $comment             = $comment;
-            $comment['id']       = $commentid;
+            $comment = $comment;
+            $comment['id'] = $commentid;
             $comment['parentid'] = $dataid;
             $this->assertEquals($this->_model->readComments($dataid), [$comment['meta']['created'] => $comment], "comment of $dataid wasn't modified in the conversion");
         }

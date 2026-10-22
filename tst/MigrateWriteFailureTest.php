@@ -18,9 +18,9 @@ class MigrateWriteFailureTest extends TestCase
         mkdir($this->_path . DIRECTORY_SEPARATOR . 'source_cfg');
         mkdir($this->_path . DIRECTORY_SEPARATOR . 'destination_cfg');
 
-        $options                         = parse_ini_file(CONF_SAMPLE, true);
+        $options = parse_ini_file(CONF_SAMPLE, true);
         $options['model_options']['dir'] = $this->_path . DIRECTORY_SEPARATOR . 'source';
-        $this->_source                   = new Filesystem($options['model_options']);
+        $this->_source = new Filesystem($options['model_options']);
         Helper::createIniFile(
             $this->_path . DIRECTORY_SEPARATOR . 'source_cfg' . DIRECTORY_SEPARATOR . 'conf.php',
             $options

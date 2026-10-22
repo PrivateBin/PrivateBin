@@ -144,7 +144,7 @@ class TrafficLimiter extends AbstractPersistence
             $ipRange = trim($ipRange);
         }
         $address = Factory::parseAddressString($_SERVER[self::$_ipKey]);
-        $range   = Factory::parseRangeString(
+        $range = Factory::parseRangeString(
             $ipRange,
             ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4SUBNET_MAYBE_COMPACT | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED
         );
@@ -200,8 +200,8 @@ class TrafficLimiter extends AbstractPersistence
 
         // used as array key, which are limited in length, hence using algo with shorter range
         $hash = self::getHash('sha256');
-        $now  = time();
-        $tl   = (int) self::$_store->getValue('traffic_limiter', $hash);
+        $now = time();
+        $tl = (int) self::$_store->getValue('traffic_limiter', $hash);
         self::$_store->purgeValues('traffic_limiter', $now - self::$_limit);
         if ($tl === 0 || ($tl + self::$_limit) < $now) {
             if (!self::$_store->setValue((string) $now, 'traffic_limiter', $hash)) {
