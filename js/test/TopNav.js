@@ -10,10 +10,56 @@ function query(selector) {
 }
 
 describe('TopNav', function () {
+    describe('hideBurnAfterReadingButtons', function () {
+        it(
+            'hides buttons when the QR code button is disabled',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><button id="clonebutton"></button></nav>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.hideBurnAfterReadingButtons();
+                });
+                assert.ok(query('#clonebutton').classList.contains('hidden'));
+                cleanup();
+            }
+        );
+    });
+
     describe('showViewButtons & hideViewButtons', function () {
         before(function () {
             cleanup();
         });
+
+        it(
+            'shows and hides navigation elements when the QR code button is disabled',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><button id="newbutton" class="hidden"></button>' +
+                    '<button id="clonebutton" class="hidden"></button>' +
+                    '<button id="rawtextbutton" class="hidden"></button>' +
+                    '<button id="downloadtextbutton" class="hidden"></button></nav>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.showViewButtons();
+                });
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+                assert.ok(!query('#clonebutton').classList.contains('hidden'));
+                assert.ok(!query('#rawtextbutton').classList.contains('hidden'));
+                assert.ok(!query('#downloadtextbutton').classList.contains('hidden'));
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.hideViewButtons();
+                });
+                assert.ok(query('#newbutton').classList.contains('hidden'));
+                assert.ok(query('#clonebutton').classList.contains('hidden'));
+                assert.ok(query('#rawtextbutton').classList.contains('hidden'));
+                assert.ok(query('#downloadtextbutton').classList.contains('hidden'));
+                cleanup();
+            }
+        );
 
         it(
             'displays & hides navigation elements for viewing an existing document',
