@@ -10,6 +10,8 @@ describe('UiHelper', function () {
             cleanup();
         });
 
+
+        /** @param {object?} state */
         function dispatchPopState(state = null) {
             let eventError = null;
             const captureError = event => {
