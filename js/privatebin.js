@@ -1587,7 +1587,7 @@ window.PrivateBin = (function () {
          * @name   UiHelper.historyChange
          * @private
          * @function
-         * @param  {Event} event
+         * @param  {PopStateEvent} event
          */
         function historyChange(event) {
             let currentLocation = Helper.baseUri();
