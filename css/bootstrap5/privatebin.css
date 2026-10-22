@@ -60,3 +60,86 @@ html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
 #sendbutton svg {
 	transform: translateY(1.5px);
 }
+
+/* Markdown rendering */
+
+#plaintext {
+	max-width: 1050px;
+	margin: 2rem auto 5rem;
+	padding: 0 1.5rem;
+	font-size: 16px;
+	line-height: 1.7;
+}
+
+#plaintext h1 {
+	margin: 0 0 1.75rem;
+	padding-bottom: 0.65rem;
+	border-bottom: 2px solid var(--bs-border-color);
+	font-size: 2.25rem;
+}
+
+#plaintext h2 {
+	margin: 2.75rem 0 1.25rem;
+	padding-bottom: 0.4rem;
+	border-bottom: 1px solid var(--bs-border-color);
+	font-size: 1.65rem;
+}
+
+#plaintext h3 {
+	margin: 2rem 0 1rem;
+	font-size: 1.3rem;
+}
+
+#plaintext p {
+	margin-bottom: 1.15rem;
+}
+
+#plaintext pre {
+	margin: 1rem 0 1.5rem;
+	padding: 1rem 1.2rem;
+	overflow-x: auto;
+	background: var(--bs-tertiary-bg);
+	border: 1px solid var(--bs-border-color);
+	border-radius: 0.5rem;
+	box-shadow: inset 3px 0 0 var(--bs-primary);
+	line-height: 1.55;
+}
+
+#plaintext pre code {
+	padding: 0;
+	color: var(--bs-body-color);
+	background: transparent;
+	white-space: pre;
+}
+
+#plaintext :not(pre) > code {
+	padding: 0.15em 0.4em;
+	color: var(--bs-body-color);
+	background: var(--bs-tertiary-bg);
+	border: 1px solid var(--bs-border-color);
+	border-radius: 0.3rem;
+}
+
+#plaintext ul,
+#plaintext ol {
+	margin-bottom: 1.25rem;
+}
+
+#plaintext blockquote {
+	padding: 0.5rem 1rem;
+	color: var(--bs-secondary-color);
+	border-left: 4px solid var(--bs-primary);
+}
+
+#plaintext table {
+	width: 100%;
+	margin: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+	#plaintext {
+		margin-top: 1rem;
+		padding: 0 1rem;
+		font-size: 15px;
+	}
+}

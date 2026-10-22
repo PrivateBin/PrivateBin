@@ -122,6 +122,30 @@ describe('Model', function () {
                 }
             ));
         });
+        it('throws exception on non-hexadecimal document IDs', () => {
+            const clean = globalThis.cleanup('', {
+                url: 'https://example.com/?gggggggggggggggg#key'
+            });
+            assert.throws(() => PrivateBin.Model.getPasteId());
+            PrivateBin.Model.reset();
+            clean();
+        });
+    });
+
+    describe('hasDeleteToken', function () {
+        it('only recognizes an exact query parameter name', () => {
+            const cases = [
+                ['https://example.com/?abcdefghijklmnop&deletetoken=secret', true],
+                ['https://example.com/?abcdefghijklmnop&redirect=deletetoken', false],
+                ['https://example.com/?abcdefghijklmnop&notdeletetoken=secret', false]
+            ];
+
+            cases.forEach(function (testCase) {
+                const clean = globalThis.cleanup('', {url: testCase[0]});
+                assert.strictEqual(PrivateBin.Model.hasDeleteToken(), testCase[1]);
+                clean();
+            });
+        });
     });
 
     describe('getPasteKey', function () {
@@ -254,4 +278,3 @@ describe('Model', function () {
         });
     });
 });
-

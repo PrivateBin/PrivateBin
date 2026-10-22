@@ -24,6 +24,23 @@ use PrivateBin\Json;
 class Filesystem extends AbstractData
 {
     /**
+     * line in generated .htaccess files, to protect exposed directories from being browsable on apache web servers
+     *
+     * @const string
+     */
+    const HTACCESS_LINE = 'Require all denied';
+
+    /**
+     * ID glob() pattern of valid document IDs as well as parent and comment IDs
+     * 16 lower case characters for 8 bytes in hexadecimal encoding
+     *
+     * @const string
+     */
+    const ID_PATTERN =
+        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]' .
+        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]';
+
+    /**
      * glob() pattern of the two folder levels and the paste files under the
      * configured path. Needs to return both files with and without .php suffix,
      * so they can be hardened by _prependRename(), which is hooked into exists().
@@ -36,8 +53,7 @@ class Filesystem extends AbstractData
      */
     const PASTE_FILE_PATTERN = DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' .
         DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
-        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]' .
-        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*';
+        self::ID_PATTERN . '*';
 
     /**
      * first line in paste or comment files, to protect their contents from browsing exposed data directories
@@ -45,13 +61,6 @@ class Filesystem extends AbstractData
      * @const string
      */
     const PROTECTION_LINE = '<?php http_response_code(403); /*';
-
-    /**
-     * line in generated .htaccess files, to protect exposed directories from being browsable on apache web servers
-     *
-     * @const string
-     */
-    const HTACCESS_LINE = 'Require all denied';
 
     /**
      * path in which to persist something
@@ -163,8 +172,10 @@ class Filesystem extends AbstractData
             // convert comments, too
             $discdir = $this->_dataid2discussionpath($pasteid);
             if (is_dir($discdir)) {
-                foreach (new DirectoryIterator($discdir) as $file) {
-                    if ($file->getExtension() !== 'php' && strlen($file->getFilename()) >= 16) {
+                foreach (new GlobIterator($discdir . DIRECTORY_SEPARATOR . $pasteid .
+                    '.' . self::ID_PATTERN . '.' . self::ID_PATTERN) as $file
+                ) {
+                    if ($file->isFile()) {
                         $this->_prependRename($file->getPathname(), $file->getPathname() . '.php');
                     }
                 }
@@ -208,14 +219,23 @@ class Filesystem extends AbstractData
         $comments = [];
         $discdir  = $this->_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
-            foreach (new DirectoryIterator($discdir) as $file) {
+            foreach (new GlobIterator($discdir . DIRECTORY_SEPARATOR . $pasteid .
+                '.' . self::ID_PATTERN . '.' . self::ID_PATTERN . '.php') as $file
+            ) {
                 // Filename is in the form pasteid.commentid.parentid.php:
                 // - pasteid is the paste this reply belongs to.
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if ($file->isFile()) {
                     $comment = $this->_get($file->getPathname());
-                    $items   = explode('.', $file->getBasename('.php'));
+                    if (
+                        !is_array($comment) ||
+                        !isset($comment['meta']['created']) ||
+                        !(is_int($comment['meta']['created']) || is_string($comment['meta']['created']))
+                    ) {
+                        continue;
+                    }
+                    $items = explode('.', $file->getBasename('.php'));
                     // Add some meta information not contained in file.
                     $comment['id']       = $items[1];
                     $comment['parentid'] = $items[2];
@@ -228,11 +248,8 @@ class Filesystem extends AbstractData
                     $comments[$key] = $comment;
                 }
             }
-
-            // Sort comments by date, oldest first.
-            ksort($comments);
         }
-        return $comments;
+        return $this->sortComments($comments);
     }
 
     /**
@@ -516,10 +533,23 @@ class Filesystem extends AbstractData
     {
         // don't overwrite already converted file
         if (!is_readable($destFile)) {
-            $handle = fopen($srcFile, 'r', false, stream_context_create());
-            file_put_contents($destFile, self::PROTECTION_LINE . PHP_EOL);
-            file_put_contents($destFile, $handle, FILE_APPEND);
+            $handle = @fopen($srcFile, 'r', false, stream_context_create());
+            if ($handle === false) {
+                error_log('Error reading to be converted document: ' . $srcFile);
+                return;
+            }
+            $written = @file_put_contents($destFile, self::PROTECTION_LINE . PHP_EOL);
+            if ($written !== false) {
+                $written = @file_put_contents($destFile, $handle, FILE_APPEND);
+            }
+            if ($written === false) {
+                error_log('Error writing converted document: ' . $destFile);
+            }
             fclose($handle);
+            chmod($destFile, 0640); // protect file from access by other users on the host
+            if ($written === false) {
+                return;
+            }
         }
         if (!unlink($srcFile)) {
             error_log('Error deleting converted document: ' . $srcFile);

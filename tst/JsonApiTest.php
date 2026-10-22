@@ -199,7 +199,7 @@ class JsonApiTest extends TestCase
         ob_end_clean();
         $this->assertEquals(str_replace(
             '?jsonld=',
-            '/?jsonld=',
+            '\/?jsonld=',
             file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
         ), $content, 'outputs data correctly');
     }
@@ -216,7 +216,7 @@ class JsonApiTest extends TestCase
         ob_end_clean();
         $this->assertEquals(str_replace(
             '?jsonld=',
-            '/?jsonld=',
+            '\/?jsonld=',
             file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
         ), $content, 'outputs data correctly');
     }
@@ -233,7 +233,7 @@ class JsonApiTest extends TestCase
         ob_end_clean();
         $this->assertEquals(str_replace(
             '?jsonld=',
-            '/?jsonld=',
+            '\/?jsonld=',
             file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
         ), $content, 'outputs data correctly');
     }
@@ -250,7 +250,7 @@ class JsonApiTest extends TestCase
         ob_end_clean();
         $this->assertEquals(str_replace(
             '?jsonld=',
-            '/?jsonld=',
+            '\/?jsonld=',
             file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
         ), $content, 'outputs data correctly');
     }
@@ -267,8 +267,26 @@ class JsonApiTest extends TestCase
         ob_end_clean();
         $this->assertEquals(str_replace(
             '?jsonld=',
-            '/?jsonld=',
+            '\/?jsonld=',
             file_get_contents(PUBLIC_PATH . '/js/types.jsonld')
+        ), $content, 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testJsonLdPathBypass()
+    {
+        $_SERVER['REQUEST_URI'] = '/","bypass\\';
+        $_GET['jsonld']         = 'paste';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals(str_replace(
+            '?jsonld=',
+            '\/\",\"bypass\\\\?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
         ), $content, 'outputs data correctly');
     }
 

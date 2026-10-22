@@ -126,7 +126,7 @@ class IPv4 implements AddressInterface
         $flags = (int) $flags;
         $matches = null;
         if ($flags & ParseStringFlag::ADDRESS_MAYBE_RDNS) {
-            if (preg_match('/^([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})\.in-addr\.arpa\.?$/i', $address, $matches)) {
+            if (preg_match('/^([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})\.in-addr\.arpa\.?$/Di', $address, $matches)) {
                 $address = implode('.', array_reverse(explode('.', $matches[1])));
                 $flags = $flags & ~(ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED);
             }
@@ -162,7 +162,7 @@ class IPv4 implements AddressInterface
         if ($flags & ParseStringFlag::MAY_INCLUDE_PORT) {
             $rx .= '(?::\d+)?';
         }
-        if (!preg_match('/^' . $rx . '$/', $address, $matches)) {
+        if (!preg_match('/^' . $rx . '$/D', $address, $matches)) {
             return null;
         }
         $math = new \IPLib\Service\UnsignedIntegerMath();
@@ -535,7 +535,7 @@ class IPv4 implements AddressInterface
         }
         $absBits = abs($bits);
         if ($absBits >= 32) {
-            return new self('0.0.0.0');
+            return new static('0.0.0.0');
         }
         $pad = str_repeat('0', $absBits);
         $paddedBits = $this->getBits();

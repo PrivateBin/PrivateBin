@@ -121,7 +121,7 @@ class Administration
             self::_error('instance not using Filesystem storage, no directories to empty', 4);
         }
         $dir = $this->_conf->getKey('dir', 'model_options');
-        passthru("find $dir -type d -empty -delete", $code);
+        passthru('find ' . escapeshellarg($dir) . ' -type d -empty -delete', $code);
         exit($code);
     }
 
@@ -205,7 +205,7 @@ EOT, PHP_EOL;
     private function _option($short, $long)
     {
         foreach (array($short, $long) as $key) {
-            if (array_key_exists($key, $this->_opts)) {
+            if ($key !== null && array_key_exists($key, $this->_opts)) {
                 return $this->_opts[$key];
             }
         }
@@ -233,9 +233,13 @@ EOT, PHP_EOL;
             self::_help(2);
         }
 
-        $this->_opts = getopt('hd:elps', array('help', 'delete:', 'delete-all', 'delete-v1', 'empty-dirs', 'list-ids', 'purge', 'statistics'));
+        $this->_opts = getopt(
+            'hd:elps',
+            array('help', 'delete:', 'delete-all', 'delete-v1', 'empty-dirs', 'list-ids', 'purge', 'statistics'),
+            $restIndex
+        );
 
-        if (!$this->_opts) {
+        if (!$this->_opts || count($this->_opts) !== 1 || $restIndex < $arguments) {
             self::_error_echo('unsupported arguments given');
             echo PHP_EOL;
             self::_help(3);

@@ -114,6 +114,17 @@ class ViewTest extends TestCase
         }
     }
 
+    public function testBootstrap5RetryButtonStartsHiddenInItsListItem()
+    {
+        $this->assertArrayHasKey('bootstrap5', $this->_content);
+        $this->assertMatchesRegularExpression(
+            '#<li class="nav-item d-flex flex-lg-row flex-column hidden">\s*'
+            . '<button id="retrybutton" type="button" class="reloadlink hidden\b#',
+            $this->_content['bootstrap5'],
+            'bootstrap5: retry button stays inside an initially hidden list item'
+        );
+    }
+
     public function testMissingTemplate()
     {
         $test = new View;

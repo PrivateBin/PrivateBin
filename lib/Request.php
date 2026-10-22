@@ -130,6 +130,7 @@ class Request
                     'pasteid'          => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviayourls' => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviashlink' => FILTER_SANITIZE_SPECIAL_CHARS,
+                    'shortenviachhoto' => FILTER_SANITIZE_SPECIAL_CHARS,
                 ], false);
         }
         if (
@@ -143,20 +144,39 @@ class Request
         }
 
         // prepare operation, depending on current parameters
-        if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
-            if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
+        if (
+            array_key_exists('pasteid', $this->_params) &&
+            is_string($this->_params['pasteid']) &&
+            !empty($this->_params['pasteid'])
+        ) {
+            if (
+                array_key_exists('deletetoken', $this->_params) &&
+                is_string($this->_params['deletetoken']) &&
+                !empty($this->_params['deletetoken'])
+            ) {
                 $this->_operation = 'delete';
             } elseif ($this->_operation !== 'create') {
                 $this->_operation = 'read';
             }
-        } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
+        } elseif (
+            array_key_exists('jsonld', $this->_params) &&
+            is_string($this->_params['jsonld']) &&
+            !empty($this->_params['jsonld'])
+        ) {
             $this->_operation = 'jsonld';
-        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+        } elseif (
+            array_key_exists('link', $this->_params) &&
+            is_string($this->_params['link']) &&
+            !empty($this->_params['link'])
+        ) {
             if (str_contains($this->getRequestUri(), '/shortenviayourls') || array_key_exists('shortenviayourls', $this->_params)) {
                 $this->_operation = 'yourlsproxy';
             }
             if (str_contains($this->getRequestUri(), '/shortenviashlink') || array_key_exists('shortenviashlink', $this->_params)) {
                 $this->_operation = 'shlinkproxy';
+            }
+            if (str_contains($this->getRequestUri(), '/shortenviachhoto') || array_key_exists('shortenviachhoto', $this->_params)) {
+                $this->_operation = 'chhotoproxy';
             }
         }
     }
@@ -230,8 +250,9 @@ class Request
      */
     public function getRequestUri()
     {
-        $uri = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
-        return empty($uri) ? '/' : parse_url($uri, PHP_URL_PATH);
+        $uri  = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
+        $path = empty($uri) ? '' : parse_url($uri, PHP_URL_PATH);
+        return is_string($path) && $path !== '' ? $path : '/';
     }
 
     /**

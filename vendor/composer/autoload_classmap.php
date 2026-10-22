@@ -88,6 +88,7 @@ return array(
     'PrivateBin\\Persistence\\ServerSalt' => $baseDir . '/lib/Persistence/ServerSalt.php',
     'PrivateBin\\Persistence\\TrafficLimiter' => $baseDir . '/lib/Persistence/TrafficLimiter.php',
     'PrivateBin\\Proxy\\AbstractProxy' => $baseDir . '/lib/Proxy/AbstractProxy.php',
+    'PrivateBin\\Proxy\\ChhotoProxy' => $baseDir . '/lib/Proxy/ChhotoProxy.php',
     'PrivateBin\\Proxy\\ShlinkProxy' => $baseDir . '/lib/Proxy/ShlinkProxy.php',
     'PrivateBin\\Proxy\\YourlsProxy' => $baseDir . '/lib/Proxy/YourlsProxy.php',
     'PrivateBin\\Request' => $baseDir . '/lib/Request.php',

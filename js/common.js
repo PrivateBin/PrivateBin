@@ -31,7 +31,7 @@ require('./prettify');
 global.prettyPrint = window.PR ? window.PR.prettyPrint : function() {};
 global.prettyPrintOne = window.PR ? window.PR.prettyPrintOne : function() {};
 global.showdown = require('./showdown-2.1.0');
-global.DOMPurify = require('./purify-3.4.12');
+global.DOMPurify = require('./purify-3.4.17');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
 require('./privatebin');
@@ -51,7 +51,7 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
         })
     ),
     schemas = ['ftp','http','https'],
-    supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'],
+    supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh', 'zh-tw'],
     mimeTypes = ['image/png', 'application/octet-stream'].concat(Object.keys(require('mime-db'))),
     formats = ['plaintext', 'markdown', 'syntaxhighlighting'];
 

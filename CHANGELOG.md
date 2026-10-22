@@ -1,17 +1,37 @@
 # PrivateBin version history
 
-## 2.1.0 (not yet released)
+## 2.1.1 (not yet released)
+* ADDED: Translation for Korean (#2071)
+* FIXED: Creating a document failed with a JavaScript error when the `discussion` or `password` option is disabled, as the top navigation accessed the omitted elements
+* FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
+* FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
+
+## 2.1.0 (2026-10-18)
+* ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
+* ADDED: Translation for Chinese (Traditional)
+* ADDED: Subject line to the "Email" share button's mailto link (#928)
+* ADDED: Send the document with Ctrl+S, or Cmd+S on macOS (#739)
 * CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
 * CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
 * CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
 * CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
+* CHANGED: Encode documents with `TextEncoder` in `compress()`, instead of the `utf16To8()` percent-encoding round trip, which allocated ~20 times the payload
+* CHANGED: Upgrading libraries to: DOMpurify 3.4.17, ip-lib 1.22.1 & polyfill-php80 1.43.0
+* FIXED: Decode decompressed documents with `TextDecoder` instead of `utf8To16()`, which allocated ~3.4 GB for a 100 MB document and killed the tab (#2027)
+* FIXED: Prevent browsers guessing MIME types on JSON(LD) API responses (#164)
+* FIXED: Insert quoted base path into JSON-LD documents
+* FIXED: Several potential issues in handling comment files (#1901)
+* FIXED: Sanitize Markdown HTML from CSS classes & styles
 
-## 2.0.6 (not yet released)
+## 2.0.6 (2026-08-08)
+* CHANGED: Stricter MIME type validation, divergent files get no preview and forced download link
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12
 * CHANGED: Switch to PHP native JsonException type
+* FIXED: Restrict MIME types accepted for PDF & sanitized SVG previews to prevent HTML render fallback, incl. DOMpurify bypass using multi-byte encoded HTML entities
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
 * FIXED: Return "Invalid data." instead of HTTP 500 on malformed v2 JSON payloads (#1883)
 * FIXED: Dead PATH validation guard in Controller, the check for a missing trailing directory separator never ran (#1887)
+* FIXED: Only treat an exact deletetoken query parameter as a deletion response
 
 ## 2.0.5 (2026-07-11)
 * CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)

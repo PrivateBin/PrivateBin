@@ -22,17 +22,17 @@ class UnsignedIntegerMath
     {
         $m = null;
         if ($onlyDecimal) {
-            if (preg_match('/^0*(\d+)$/', $value, $m)) {
+            if (preg_match('/^0*(\d+)$/D', $value, $m)) {
                 return $this->getBytesFromDecimal($m[1], $numBytes);
             }
         } else {
-            if (preg_match('/^0[Xx]0*([0-9A-Fa-f]+)$/', $value, $m)) {
+            if (preg_match('/^0[Xx]0*([0-9A-Fa-f]+)$/D', $value, $m)) {
                 return $this->getBytesFromHexadecimal($m[1], $numBytes);
             }
-            if (preg_match('/^0+([0-7]*)$/', $value, $m)) {
+            if (preg_match('/^0+([0-7]*)$/D', $value, $m)) {
                 return $this->getBytesFromOctal($m[1], $numBytes);
             }
-            if (preg_match('/^[1-9][0-9]*$/', $value)) {
+            if (preg_match('/^[1-9][0-9]*$/D', $value)) {
                 return $this->getBytesFromDecimal($value, $numBytes);
             }
         }

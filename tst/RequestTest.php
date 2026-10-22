@@ -20,7 +20,7 @@ class RequestTest extends TestCase
      */
     public function getRandomQueryChars()
     {
-        $queryChars     = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=';
+        $queryChars     = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=-_.!~*()';
         $queryCharCount = strlen($queryChars) - 1;
         $resultLength   = random_int(1, 10);
         $result         = '';
@@ -37,6 +37,30 @@ class RequestTest extends TestCase
         $request                   = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals('view', $request->getOperation());
+    }
+
+    /**
+     * @dataProvider provideRequestUris
+     */
+    public function testRequestUriValidation($uri, $expected)
+    {
+        $this->reset();
+        if ($uri !== null) {
+            $_SERVER['REQUEST_URI'] = $uri;
+        }
+        $request = new Request;
+        $this->assertSame($expected, $request->getRequestUri());
+    }
+
+    public function provideRequestUris()
+    {
+        return [
+            [null, '/'],
+            ['/', '/'],
+            ['/path/to/privatebin?query=value', '/path/to/privatebin'],
+            ['?query=value', '/'],
+            ['http://[', '/'],
+        ];
     }
 
     public function testRead()
@@ -176,6 +200,34 @@ class RequestTest extends TestCase
             $this->assertEquals('create', $request->getOperation());
             $this->assertEquals('', $request->getParam('ct'), "scalar body {$scalar} yields no parameters");
         }
+    }
+
+    /**
+     * @dataProvider provideInvalidRoutingParameters
+     */
+    public function testPostInvalidRoutingParameters($parameters)
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $file                             = Helper::createTempFile();
+        file_put_contents($file, json_encode($parameters));
+        Request::setInputStream($file);
+        $request = new Request;
+        unlink($file);
+        $this->assertSame('create', $request->getOperation());
+    }
+
+    public function provideInvalidRoutingParameters()
+    {
+        return [
+            [['pasteid' => '0123456789abcdef', 'deletetoken' => ['invalid']]],
+            [['pasteid' => '0123456789abcdef', 'deletetoken' => 123]],
+            [['pasteid' => ['0123456789abcdef'], 'deletetoken' => 'invalid']],
+            [['jsonld' => ['paste']]],
+            [['link' => ['https://example.com/'], 'shortenviayourls' => true]],
+            [['link' => 123, 'shortenviashlink' => true]],
+        ];
     }
 
     public function testReadWithNegotiation()
