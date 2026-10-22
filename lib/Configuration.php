@@ -139,8 +139,8 @@ class Configuration
      */
     public function __construct()
     {
-        $basePaths  = [];
-        $config     = [];
+        $basePaths = [];
+        $config = [];
         $configPath = getenv('CONFIG_PATH');
         if ($configPath !== false && !empty($configPath)) {
             $basePaths[] = $configPath;
@@ -149,7 +149,7 @@ class Configuration
         foreach ($basePaths as $basePath) {
             $configFile = $basePath . DIRECTORY_SEPARATOR . 'conf.php';
             if (is_readable($configFile)) {
-                $config = parse_ini_string (file_get_contents($configFile), true);
+                $config = parse_ini_string(file_get_contents($configFile), true);
                 foreach (['main', 'model', 'model_options'] as $section) {
                     if (!array_key_exists($section, $config)) {
                         $name = $config['main']['name'] ?? self::getDefaults()['main']['name'];
