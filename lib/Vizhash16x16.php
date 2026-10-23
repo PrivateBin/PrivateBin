@@ -123,7 +123,9 @@ class Vizhash16x16
         imagepng($image);
         $imagedata = ob_get_contents();
         ob_end_clean();
-        imagedestroy($image);
+        if (version_compare(PHP_VERSION, '8.5', '<') && defined('imagedestroy')) {
+            imagedestroy($image);
+        }
 
         return $imagedata;
     }
