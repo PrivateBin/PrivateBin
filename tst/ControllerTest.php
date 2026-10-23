@@ -173,7 +173,7 @@ class ControllerTest extends TestCase
     {
         $newConfig   = new class extends Configuration {};
         $configValue = (new ReflectionClass(Controller::class))->getProperty('_conf');
-        if (version_compare(PHP_VERSION, '8.1') < 0) {
+        if (version_compare(PHP_VERSION, '8.1', '<')) {
             // > This function has been DEPRECATED as of PHP 8.5.0. [...]
             // > As of PHP 8.1.0, calling this method has no effect; all properties are accessible by default.
             // @see: https://www.php.net/manual/en/reflectionproperty.setaccessible.php
