@@ -139,8 +139,8 @@ class Configuration
      */
     public function __construct()
     {
-        $basePaths  = [];
-        $config     = [];
+        $basePaths = [];
+        $config = [];
         $configPath = getenv('CONFIG_PATH');
         if ($configPath !== false && !empty($configPath)) {
             $basePaths[] = $configPath;
