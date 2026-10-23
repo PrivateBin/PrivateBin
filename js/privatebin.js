@@ -5803,12 +5803,135 @@ window.PrivateBin = (function () {
     })();
 
     /**
+     * Show or hide password fields and generate random passwords for them
+     *
+     * Works with any template: buttons with the class "toggle-password" or
+     * "generate-password" act on the ".input-password" field that is in the
+     * same ".input-group".
      *
      * @name PasswordPeek
      * @class
      */
     const PasswordPeek = (function () {
         const me = {};
+
+        /**
+         * Number of characters of a generated password
+         *
+         * @name PasswordPeek.passwordLength
+         * @private
+         * @const
+         * @type {number}
+         */
+        const passwordLength = 20;
+
+        /**
+         * Character classes of generated passwords. Look-alike characters
+         * (0 O o, 1 l I) and punctuation that is easily missed or mangled
+         * (quotes, commas, dots, colons, semicolons, pipes, backticks) are left out.
+         *
+         * @name PasswordPeek.passwordClasses
+         * @private
+         * @const
+         * @type {string[]}
+         */
+        const passwordClasses = [
+            'ABCDEFGHJKLMNPQRSTUVWXYZ',
+            'abcdefghijkmnpqrstuvwxyz',
+            '23456789',
+            '!@#$%&*+-=?^_~'
+        ];
+
+        /**
+         * Find the password field a button belongs to
+         *
+         * @name PasswordPeek.findInput
+         * @private
+         * @function
+         * @param {HTMLElement} element
+         * @return {HTMLInputElement|null}
+         */
+        function findInput(element) {
+            const inputGroup = element.closest('.input-group');
+            return inputGroup ? inputGroup.querySelector('.input-password') : null;
+        }
+
+        /**
+         * Show or hide the password of a field and update its reveal button
+         *
+         * @name PasswordPeek.setVisible
+         * @function
+         * @param {HTMLInputElement} passwordInput
+         * @param {boolean} visible
+         */
+        me.setVisible = function (passwordInput, visible) {
+            passwordInput.setAttribute('type', visible ? 'text' : 'password');
+
+            const inputGroup = passwordInput.closest('.input-group');
+            const element = inputGroup ? inputGroup.querySelector('.toggle-password') : null;
+            if (!element) {
+                return;
+            }
+
+            const tooltip = I18n._(visible ? 'Hide password' : 'Show password');
+            element.setAttribute('title', tooltip);
+            element.setAttribute('aria-label', tooltip);
+
+            // handle bootstrap 5 icons: eye & eye-slash
+            const buttonSvg = element.querySelector('use');
+            if (buttonSvg) {
+                const iconHref = buttonSvg.getAttribute('href');
+                if (iconHref) {
+                    const base = iconHref.replace(/-slash$/, '');
+                    buttonSvg.setAttribute('href', visible ? `${base}-slash` : base);
+                }
+                return;
+            }
+
+            // handle bootstrap 3 icons: eye-open & eye-close
+            const buttonSpan = element.querySelector('span');
+            if (buttonSpan) {
+                buttonSpan.classList.toggle('glyphicon-eye-close', visible);
+                buttonSpan.classList.toggle('glyphicon-eye-open', !visible);
+            }
+        };
+
+        /**
+         * Create a random password: upper and lower case letters, digits and
+         * punctuation, at least one of each, drawn without bias from the
+         * browser's cryptographically secure random number generator
+         *
+         * @name PasswordPeek.generatePassword
+         * @function
+         * @param {number} [length=20]
+         * @return {string}
+         */
+        me.generatePassword = function (length = passwordLength) {
+            const characters = passwordClasses.join('');
+            // values at or above the largest multiple of the alphabet size are discarded
+            const limit = 256 - (256 % characters.length);
+            const draw = () => {
+                let password = '';
+                while (password.length < length) {
+                    const values = crypto.getRandomValues(new Uint8Array(length));
+                    for (let i = 0; i < values.length && password.length < length; ++i) {
+                        if (values[i] < limit) {
+                            password += characters[values[i] % characters.length];
+                        }
+                    }
+                }
+                return password;
+            };
+            const hasAllClasses = password => passwordClasses.every(
+                set => Array.from(password).some(char => set.includes(char))
+            );
+
+            let password = draw();
+            while (length >= passwordClasses.length && !hasAllClasses(password)) {
+                password = draw();
+            }
+            return password;
+        };
 
         /**
          * Switch between visible and hidden password
@@ -5818,41 +5941,29 @@ window.PrivateBin = (function () {
          * @function
          */
         function handleRevealButtonClick() {
-            const element = this;
-            const inputGroup = element.closest('.input-group');
-            const passwordInput = inputGroup ? inputGroup.querySelector('.input-password') : null;
+            const passwordInput = findInput(this);
+            if (passwordInput) {
+                me.setVisible(passwordInput, passwordInput.getAttribute('type') === 'password');
+            }
+        }
+
+        /**
+         * Fill the field with a random password and show it, so it can be copied
+         *
+         * @name PasswordPeek.handleGenerateButtonClick
+         * @private
+         * @function
+         */
+        function handleGenerateButtonClick() {
+            const passwordInput = findInput(this);
             if (!passwordInput) {
                 return;
             }
-
-            const isHidden = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isHidden ? 'text' : 'password');
-
-            const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password');
-            element.setAttribute('title', tooltip);
-            element.setAttribute('aria-label', tooltip);
-
-            // handle bootstrap 5 icons: eye & eye-slash
-            const buttonSvg = element.querySelector('use');
-            if (buttonSvg) {
-                const iconHref = buttonSvg.getAttribute('href');
-                if (iconHref) {
-                    buttonSvg.setAttribute('href', isHidden ? `${iconHref}-slash` : iconHref.substring(0, iconHref.length - 6));
-                }
-                return;
-            }
-
-            // handle bootstrap 3 icons: eye-open & eye-close
-            const buttonSpan = element.querySelector('span');
-            if (buttonSpan) {
-                if (isHidden) {
-                    buttonSpan.classList.add('glyphicon-eye-close');
-                    buttonSpan.classList.remove('glyphicon-eye-open');
-                } else {
-                    buttonSpan.classList.add('glyphicon-eye-open');
-                    buttonSpan.classList.remove('glyphicon-eye-close');
-                }
-            }
+            passwordInput.value = me.generatePassword();
+            me.setVisible(passwordInput, true);
+            passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+            passwordInput.focus();
+            passwordInput.select();
         }
 
         /**
@@ -5862,11 +5973,12 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            const revealButton = document.querySelector('.toggle-password');
-            if (!revealButton) {
-                return;
-            }
-            revealButton.addEventListener('click', handleRevealButtonClick);
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', handleRevealButtonClick);
+            });
+            document.querySelectorAll('.generate-password').forEach(button => {
+                button.addEventListener('click', handleGenerateButtonClick);
+            });
         };
 
         return me;

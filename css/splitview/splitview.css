@@ -1,0 +1,493 @@
+/*
+ * PrivateBin "splitview" template
+ *
+ * Layout (edit mode):
+ *
+ *   +-----------------------------+------------+
+ *   |  editor (top)               |            |
+ *   +-----------------------------+  options   |
+ *   |  file drop area (bottom)    | (full ht)  |
+ *   +-----------------------------+------------+
+ *
+ * When a document is being viewed (textarea hidden by privatebin.js) the grid
+ * collapses to a single column and only the rendered document is shown.
+ *
+ * Note: this file only adds layout on top of css/bootstrap5/*.css and never
+ * sets `display` on elements that privatebin.js shows/hides via `.hidden`
+ * (the one exception is #attach.split-taking-over, see below).
+ */
+
+/*
+ * Page height: while a document is being written the page is exactly one
+ * window tall (navigation bar + panes + footer) and the panes scroll inside
+ * themselves. The body may grow beyond the window only when the window is
+ * too short for the panes' minimum height, so nothing overlaps the footer.
+ */
+body.h-100 {
+	height: auto !important;
+	min-height: 100vh;
+	min-height: 100dvh;
+}
+
+main.split-main {
+	flex: 1 1 0;
+	min-height: 28rem;
+	display: flex;
+	flex-direction: column;
+}
+
+main.split-main > .split-notices {
+	flex: 0 0 auto;
+}
+
+/* ---------- grid ---------- */
+
+#splitlayout {
+	flex: 1 1 0;
+	min-height: 0;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 22rem;
+	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 0.75rem;
+	padding: 0 0.75rem 0.75rem;
+}
+
+#splitlayout > .split-pane {
+	min-width: 0;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	padding: 0.75rem;
+	overflow: hidden;
+	background: var(--bs-body-bg);
+	border: 1px solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+}
+
+#splitedit    { grid-column: 1; grid-row: 1; }
+#splitdrop    { grid-column: 1; grid-row: 2; }
+#splitoptions { grid-column: 2; grid-row: 1 / span 2; }
+
+/* file upload disabled on the server: editor takes the whole left column */
+#splitlayout.split-no-upload #splitedit {
+	grid-row: 1 / span 2;
+}
+
+/* ---------- pane headings ---------- */
+
+.split-heading {
+	flex: 0 0 auto;
+	margin: 0 0 0.5rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--bs-secondary-color);
+}
+
+/* ---------- top: editor ---------- */
+
+#splitedit #editorTabs {
+	flex: 0 0 auto;
+	margin-bottom: 0.5rem;
+}
+
+#splitedit .split-editor-body {
+	flex: 1 1 auto;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	/* room for the focus glow of the textarea, which a scrolling box would
+	   otherwise clip; the negative margin keeps everything where it was */
+	padding: 0.3rem;
+	margin: -0.3rem;
+}
+
+#splitedit #message {
+	flex: 1 1 auto;
+	min-height: 6rem;
+	height: 100%;
+	resize: none;
+	font-family: var(--bs-font-monospace);
+}
+
+#splitedit #prettymessage {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: auto;
+}
+
+#splitedit #plaintext,
+#splitedit #placeholder,
+#splitedit #attachmentPreview {
+	overflow: auto;
+}
+
+#splitedit .split-tabkey {
+	flex: 0 0 auto;
+	margin: 0.5rem 0 0;
+	font-size: 0.85rem;
+}
+
+/* ---------- bottom: drop area + attachment list ---------- */
+
+#splitdrop #attach {
+	position: relative;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+/*
+ * js/splitview.js briefly adds "hidden" to #attach while a drop or paste is
+ * being handled, so PrivateBin's own (list-replacing) handler skips it. Keep
+ * the pane visible during that moment so it cannot flash.
+ */
+#splitdrop #attach.split-taking-over {
+	display: block !important;
+}
+
+/* the dashed box: prompt on top, list of attached files below */
+#splitdrop .split-drop-inner {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.75rem;
+	overflow: hidden;
+	cursor: pointer;
+	border: 2px dashed var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+	background: var(--bs-tertiary-bg);
+	color: var(--bs-secondary-color);
+	transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+#splitdrop .split-drop-inner:hover,
+#splitdrop .split-drop-inner:has(#file:focus-visible) {
+	border-color: var(--bs-primary);
+	background: var(--bs-primary-bg-subtle);
+}
+
+/* while files are being dragged over the page (PrivateBin shows #dropzone), pulse the box */
+body:has(#dropzone:not(.hidden)) #splitdrop .split-drop-inner {
+	border-color: var(--bs-primary);
+	border-style: solid;
+	animation: split-drag-pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes split-drag-pulse {
+	from { background: var(--bs-tertiary-bg); }
+	to   { background: var(--bs-primary-bg-subtle); }
+}
+
+/* wrapper PrivateBin hides when a cloned document brings its own attachments */
+#splitdrop .split-filewrap {
+	position: static;
+	flex: 1 1 auto;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+/* no files yet: centre the prompt in the box */
+#splitdrop .split-drop-inner:not(:has(.split-file)) .split-filewrap {
+	justify-content: center;
+}
+
+#splitdrop .split-drop-prompt {
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.25rem;
+	text-align: center;
+	cursor: pointer;
+}
+
+/*
+ * The <label> for the (visually hidden) file input stretches over the whole
+ * box, like Bootstrap's ".stretched-link": clicking anywhere in the box opens
+ * the file dialog and the keyboard can reach it through the input itself.
+ * Everything that has to stay clickable sits above it.
+ */
+#splitdrop .split-drop-prompt::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+}
+
+#splitdrop .split-file,
+#splitdrop .split-file-notice,
+#splitdrop .split-remove-all,
+#splitdrop #customattachment {
+	position: relative;
+	z-index: 1;
+}
+
+/* with files: shrink the prompt to a single line to leave room for the list */
+#splitdrop .split-drop-inner:has(.split-file) .split-drop-prompt {
+	flex-direction: row;
+	justify-content: center;
+	font-size: 0.85rem;
+}
+
+#splitdrop .split-drop-inner:has(.split-file) .split-drop-prompt svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* the list of attached files, one row each with an x */
+#splitdrop .split-filelist {
+	flex: 1 1 auto;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	text-align: left;
+	cursor: default;
+	pointer-events: none; /* empty space in the list still opens the file dialog */
+}
+
+#splitdrop .split-filelist:empty {
+	display: none;
+}
+
+#splitdrop .split-file {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: 0.625rem;
+	padding: 0.375rem 0.5rem;
+	color: var(--bs-body-color);
+	background: var(--bs-body-bg);
+	border: 1px solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+}
+
+#splitdrop .split-file {
+	pointer-events: auto;
+	animation: split-slide-in 0.18s ease-out;
+}
+
+@keyframes split-slide-in {
+	from { opacity: 0; transform: translateY(-0.375rem); }
+	to   { opacity: 1; transform: none; }
+}
+
+#splitdrop .split-file-thumb {
+	flex: 0 0 2rem;
+	width: 2rem;
+	height: 2rem;
+	object-fit: cover;
+	border-radius: 0.25rem;
+}
+
+#splitdrop .split-file-ext {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	font-size: 0.6rem;
+	font-weight: 600;
+	color: var(--bs-secondary-color);
+	background: var(--bs-secondary-bg);
+}
+
+#splitdrop .split-file-name {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#splitdrop .split-file-size {
+	flex: 0 0 auto;
+	font-size: 0.8rem;
+	color: var(--bs-secondary-color);
+}
+
+#splitdrop .split-file-remove {
+	flex: 0 0 auto;
+}
+
+/* a file that is 0 bytes: nothing could be read from it */
+#splitdrop .split-file-empty {
+	border-color: var(--bs-warning);
+	background: var(--bs-warning-bg-subtle);
+}
+
+#splitdrop .split-file-empty .split-file-size {
+	font-weight: 600;
+	color: var(--bs-warning-text-emphasis);
+}
+
+/* shown when the browser would not let the page read dragged files */
+#splitdrop .split-file-notice {
+	flex: 0 0 auto;
+	animation: split-slide-in 0.18s ease-out;
+	padding: 0.5rem 0.75rem;
+	font-size: 0.85rem;
+	text-align: left;
+	cursor: pointer;
+	color: var(--bs-danger-text-emphasis);
+	background: var(--bs-danger-bg-subtle);
+	border: 1px solid var(--bs-danger-border-subtle);
+	border-radius: var(--bs-border-radius);
+}
+
+/* attachments carried over by "Clone" */
+#splitdrop #customattachment {
+	flex: 0 0 auto;
+	text-align: left;
+	cursor: default;
+	overflow-wrap: anywhere;
+}
+
+/* "Remove attachment": only shown when there is something to remove */
+#splitdrop .split-remove-all {
+	flex: 0 0 auto;
+	display: none;
+	align-self: flex-end;
+	font-size: 0.85rem;
+}
+
+#splitdrop .split-drop-inner:has(.split-file) .split-remove-all,
+#splitdrop .split-drop-inner:has(#customattachment:not(.hidden)) .split-remove-all {
+	display: inline;
+}
+
+/* ---------- right: options ---------- */
+
+#splitoptions .split-options-scroll {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: auto;
+	/* room for the focus glow of the checkboxes and inputs, which a scrolling
+	   box would otherwise cut off; the negative margin keeps the layout the same */
+	padding: 0.3rem;
+	margin: -0.3rem;
+}
+
+#splitoptions .split-options-scroll > * + * {
+	margin-top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#splitdrop .split-file,
+	#splitdrop .split-file-notice,
+	body:has(#dropzone:not(.hidden)) #splitdrop .split-drop-inner {
+		animation: none;
+		transition: none;
+	}
+}
+
+#splitoptions .split-options-footer {
+	flex: 0 0 auto;
+	padding-top: 0.75rem;
+}
+
+/* ---------- view mode (document is displayed, editor hidden) ---------- */
+
+/* while a document is shown the page simply flows and scrolls with its content */
+main.split-main:has(#message.hidden) {
+	flex: 1 0 auto;
+	min-height: 0;
+}
+
+#splitlayout:has(#message.hidden) {
+	flex: 0 0 auto;
+	display: block;
+	min-height: 0;
+}
+
+#splitlayout:has(#message.hidden) #splitdrop,
+#splitlayout:has(#message.hidden) #splitoptions {
+	display: none;
+}
+
+#splitlayout:has(#message.hidden) #splitedit {
+	display: block;
+	padding: 0;
+	overflow: visible;
+	border: 0;
+	background: transparent;
+}
+
+#splitlayout:has(#message.hidden) #splitedit .split-editor-body {
+	display: block;
+	overflow: visible;
+	padding: 0;
+	margin: 0;
+}
+
+#splitlayout:has(#message.hidden) #splitedit .split-heading,
+#splitlayout:has(#message.hidden) #splitedit .split-tabkey {
+	display: none;
+}
+
+/* ---------- narrow screens: stack everything ---------- */
+
+@media (max-width: 991.98px) {
+	/* stacked panes are taller than the window: let the page scroll */
+	main.split-main {
+		flex: 1 0 auto;
+		min-height: 0;
+	}
+
+	#splitlayout {
+		flex: 0 0 auto;
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: none;
+		min-height: 0;
+	}
+
+	#splitedit,
+	#splitdrop,
+	#splitoptions,
+	#splitlayout.split-no-upload #splitedit {
+		grid-column: 1;
+		grid-row: auto;
+	}
+
+	#splitedit #message {
+		min-height: 16rem;
+	}
+
+	/* the pane has no fixed height here, so the box sizes itself */
+	#splitdrop #attach {
+		position: static;
+		flex: 0 0 auto;
+	}
+
+	#splitdrop .split-drop-inner {
+		position: relative;
+		inset: auto;
+		min-height: 9rem;
+	}
+
+	#splitdrop .split-filelist {
+		max-height: 14rem;
+	}
+}
+
+/* ---------- footer: every text size 0.25rem smaller than the default ---------- */
+
+body > footer h5 {
+	font-size: 1rem;                 /* was 1.25rem */
+}
+
+body > footer h5 small {
+	font-size: 0.84375rem;           /* was 1.09375rem (0.875em of the title) */
+}
+
+body > footer p {
+	font-size: 0.75rem;              /* was 1rem: version and about text */
+}
