@@ -17,9 +17,9 @@ class ControllerWithGcsTest extends ControllerTest
     public static function setUpBeforeClass(): void
     {
         $httpClient = new Client(['debug'=>false]);
-        $handler    = HttpHandlerFactory::build($httpClient);
+        $handler = HttpHandlerFactory::build($httpClient);
 
-        $name     = 'pb-';
+        $name = 'pb-';
         $alphabet = 'abcdefghijklmnopqrstuvwxyz';
         for ($i = 0; $i < 29; ++$i) {
             $name .= $alphabet[rand(0, strlen($alphabet) - 1)];
@@ -39,7 +39,7 @@ class ControllerWithGcsTest extends ControllerTest
             'bucket' => self::$_bucket->name(),
             'prefix' => 'pastes',
         ];
-        $this->_data    = new GoogleCloudStorage($this->_options);
+        $this->_data = new GoogleCloudStorage($this->_options);
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
         $this->reset();
@@ -49,7 +49,7 @@ class ControllerWithGcsTest extends ControllerTest
     {
         parent::reset();
         // but then inject a db config
-        $options          = parse_ini_file(CONF, true);
+        $options = parse_ini_file(CONF, true);
         $options['model'] = [
             'class' => 'GoogleCloudStorage',
         ];

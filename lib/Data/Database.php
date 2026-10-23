@@ -71,12 +71,12 @@ class Database extends AbstractData
             array_key_exists('opt', $options)
         ) {
             // set default options
-            $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
+            $options['opt'][PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
             $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
             if (!array_key_exists(PDO::ATTR_PERSISTENT, $options['opt'])) {
                 $options['opt'][PDO::ATTR_PERSISTENT] = true;
             }
-            $db_tables_exist                            = true;
+            $db_tables_exist = true;
 
             // setup type and dabase connection
             $this->_type = strtolower(
@@ -93,7 +93,7 @@ class Database extends AbstractData
                 }
             }
             $tableQuery = $this->_getTableQuery($this->_type);
-            $this->_db  = new PDO(
+            $this->_db = new PDO(
                 $options['dsn'],
                 $options['usr'],
                 $options['pwd'],
@@ -148,8 +148,8 @@ class Database extends AbstractData
      */
     public function create($pasteid, array &$paste)
     {
-        $expire_date      = 0;
-        $meta             = $paste['meta'];
+        $expire_date = 0;
+        $meta = $paste['meta'];
         if (array_key_exists('expire_date', $meta)) {
             $expire_date = (int) $meta['expire_date'];
             unset($meta['expire_date']);
@@ -316,11 +316,11 @@ class Database extends AbstractData
                     error_log('Error while reading a comment from the database: ' . $e->getMessage());
                     $data = [];
                 }
-                $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $comments[$i]               = $data;
-                $comments[$i]['id']         = $row['dataid'];
-                $comments[$i]['parentid']   = $row['parentid'];
-                $comments[$i]['meta']       = ['created' => (int) $row['postdate']];
+                $i = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $comments[$i] = $data;
+                $comments[$i]['id'] = $row['dataid'];
+                $comments[$i]['parentid'] = $row['parentid'];
+                $comments[$i]['meta'] = ['created' => (int) $row['postdate']];
                 if (array_key_exists('vizhash', $row) && !empty($row['vizhash'])) {
                     $comments[$i]['meta']['icon'] = $row['vizhash'];
                 }
@@ -389,7 +389,7 @@ class Database extends AbstractData
     public function getValue($namespace, $key = '')
     {
         $configKey = strtoupper($namespace);
-        $value     = $this->_getConfig($configKey);
+        $value = $this->_getConfig($configKey);
         if ($value === '') {
             // initialize the row, so that setValue can rely on UPDATE queries
             $this->_exec(
@@ -401,7 +401,7 @@ class Database extends AbstractData
             // migrate filesystem based salt into database
             $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
             if ($namespace === 'salt' && is_readable($file)) {
-                $fs    = new Filesystem(['dir' => 'data']);
+                $fs = new Filesystem(['dir' => 'data']);
                 $value = $fs->getValue('salt');
                 $this->setValue($value, 'salt');
                 if (!unlink($file)) {
@@ -469,7 +469,7 @@ class Database extends AbstractData
     private function _exec($sql, array $params)
     {
         $statement = $this->_db->prepare($sql);
-        $position  = 1;
+        $position = 1;
         foreach ($params as &$parameter) {
             if (is_int($parameter)) {
                 $statement->bindParam($position, $parameter, PDO::PARAM_INT);
@@ -672,8 +672,8 @@ class Database extends AbstractData
     private function _createPasteTable()
     {
         list($main_key, $after_key) = $this->_getPrimaryKeyClauses();
-        $attachmentType             = $this->_getAttachmentType();
-        $metaType                   = $this->_getMetaType();
+        $attachmentType = $this->_getAttachmentType();
+        $metaType = $this->_getMetaType();
         $this->_db->exec(
             'CREATE TABLE "' . $this->_sanitizeIdentifier('paste') . '" ( ' .
             "\"dataid\" CHAR(16) NOT NULL$main_key, " .
@@ -691,7 +691,7 @@ class Database extends AbstractData
     private function _createCommentTable()
     {
         list($main_key, $after_key) = $this->_getPrimaryKeyClauses();
-        $dataType                   = $this->_getDataType();
+        $dataType = $this->_getDataType();
         $this->_db->exec(
             'CREATE TABLE "' . $this->_sanitizeIdentifier('comment') . '" ( ' .
             "\"dataid\" CHAR(16) NOT NULL$main_key, " .
@@ -733,8 +733,8 @@ class Database extends AbstractData
     private function _createConfigTable()
     {
         list($main_key, $after_key) = $this->_getPrimaryKeyClauses('id');
-        $charType                   = $this->_type === 'oci' ? 'VARCHAR2(16)' : 'CHAR(16)';
-        $textType                   = $this->_getMetaType();
+        $charType = $this->_type === 'oci' ? 'VARCHAR2(16)' : 'CHAR(16)';
+        $textType = $this->_getMetaType();
         $this->_db->exec(
             'CREATE TABLE "' . $this->_sanitizeIdentifier('config') .
             "\" ( \"id\" $charType NOT NULL$main_key, \"value\" $textType$after_key )"
@@ -787,7 +787,7 @@ class Database extends AbstractData
         $supportsDropColumn = true;
         if ($this->_type === 'sqlite') {
             try {
-                $row                = $this->_select('SELECT sqlite_version() AS "v"', [], true);
+                $row = $this->_select('SELECT sqlite_version() AS "v"', [], true);
                 $supportsDropColumn = (bool) version_compare($row['v'], '3.35.0', '>=');
             } catch (PDOException $e) {
                 $supportsDropColumn = false;
@@ -804,7 +804,7 @@ class Database extends AbstractData
      */
     private function _upgradeDatabase($oldversion)
     {
-        $dataType       = $this->_getDataType();
+        $dataType = $this->_getDataType();
         $attachmentType = $this->_getAttachmentType();
         if (version_compare($oldversion, '0.21', '<=')) {
             // create the meta column if necessary (pre 0.21 change)

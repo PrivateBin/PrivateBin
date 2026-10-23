@@ -26,9 +26,9 @@ class ModelTest extends TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        $options                   = parse_ini_file(CONF_SAMPLE, true);
+        $options = parse_ini_file(CONF_SAMPLE, true);
         $options['purge']['limit'] = 0;
-        $options['model']          = [
+        $options['model'] = [
             'class' => 'Database',
         ];
         $options['model_options'] = [
@@ -40,8 +40,8 @@ class ModelTest extends TestCase
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         ServerSalt::setStore(new Database($options['model_options']));
-        $this->_conf            = new Configuration;
-        $this->_model           = new Model($this->_conf);
+        $this->_conf = new Configuration;
+        $this->_model = new Model($this->_conf);
         $_SERVER['REMOTE_ADDR'] = '::1';
     }
 
@@ -81,8 +81,8 @@ class ModelTest extends TestCase
 
         // storing comments
         $commentData = Helper::getCommentPost();
-        $paste       = $this->_model->getPaste(Helper::getPasteId());
-        $comment     = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
         $comment = $paste->getComment(Helper::getPasteId());
@@ -91,9 +91,9 @@ class ModelTest extends TestCase
 
         $comments = $this->_model->getPaste(Helper::getPasteId())->get()['comments'];
         $this->assertTrue(count($comments) === 1, 'comment exists after storing it');
-        $commentData['id']              = Helper::getPasteId();
+        $commentData['id'] = Helper::getPasteId();
         $commentData['meta']['created'] = current($comments)['meta']['created'];
-        $commentData['meta']['icon']    = current($comments)['meta']['icon'];
+        $commentData['meta']['icon'] = current($comments)['meta']['icon'];
         $this->assertEquals($commentData, current($comments));
 
         // deleting pastes
@@ -105,7 +105,7 @@ class ModelTest extends TestCase
 
     public function testCommentDefaults()
     {
-        $class   = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
+        $class = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $comment = new Comment(
             $this->_conf,
             new $class(
@@ -139,9 +139,9 @@ class ModelTest extends TestCase
         if (is_file($path)) {
             unlink($path);
         }
-        $options                   = parse_ini_file(CONF_SAMPLE, true);
+        $options = parse_ini_file(CONF_SAMPLE, true);
         $options['purge']['limit'] = 0;
-        $options['model']          = [
+        $options['model'] = [
             'class' => 'Database',
         ];
         $options['model_options'] = [
@@ -153,7 +153,7 @@ class ModelTest extends TestCase
         Helper::createIniFile(CONF, $options);
         $model = new Model(new Configuration);
 
-        $pasteData   = Helper::getPastePost();
+        $pasteData = Helper::getPastePost();
         $model->getPaste(Helper::getPasteId())->delete();
         $model->getPaste(Helper::getPasteId())->exists();
 
@@ -180,9 +180,9 @@ class ModelTest extends TestCase
         if (is_file($path)) {
             unlink($path);
         }
-        $options                   = parse_ini_file(CONF_SAMPLE, true);
+        $options = parse_ini_file(CONF_SAMPLE, true);
         $options['purge']['limit'] = 0;
-        $options['model']          = [
+        $options['model'] = [
             'class' => 'Database',
         ];
         $options['model_options'] = [
@@ -194,7 +194,7 @@ class ModelTest extends TestCase
         Helper::createIniFile(CONF, $options);
         $model = new Model(new Configuration);
 
-        $pasteData   = Helper::getPastePost();
+        $pasteData = Helper::getPastePost();
         $commentData = Helper::getCommentPost();
         $model->getPaste(Helper::getPasteId())->delete();
 
@@ -223,7 +223,7 @@ class ModelTest extends TestCase
 
     public function testCommentDuplicate()
     {
-        $pasteData   = Helper::getPastePost();
+        $pasteData = Helper::getPastePost();
         $commentData = Helper::getCommentPost();
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
@@ -244,7 +244,7 @@ class ModelTest extends TestCase
 
     public function testImplicitDefaults()
     {
-        $pasteData   = Helper::getPastePost();
+        $pasteData = Helper::getPastePost();
         $commentData = Helper::getCommentPost();
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
@@ -292,9 +292,9 @@ class ModelTest extends TestCase
 
     public function testInvalidPasteFormat()
     {
-        $pasteData             = Helper::getPastePost();
+        $pasteData = Helper::getPastePost();
         $pasteData['adata'][1] = 'format does not exist';
-        $paste                 = $this->_model->getPaste();
+        $paste = $this->_model->getPaste();
         $this->expectException(Exception::class);
         $this->expectExceptionCode(75);
         $paste->setData($pasteData);
@@ -318,7 +318,7 @@ class ModelTest extends TestCase
     public function testInvalidCommentDeletedPaste()
     {
         $pasteData = Helper::getPastePost();
-        $paste     = $this->_model->getPaste(Helper::getPasteId());
+        $paste = $this->_model->getPaste(Helper::getPasteId());
         $paste->setData($pasteData);
         $paste->store();
 
@@ -331,9 +331,9 @@ class ModelTest extends TestCase
 
     public function testInvalidCommentData()
     {
-        $pasteData             = Helper::getPastePost();
+        $pasteData = Helper::getPastePost();
         $pasteData['adata'][2] = 0;
-        $paste                 = $this->_model->getPaste(Helper::getPasteId());
+        $paste = $this->_model->getPaste(Helper::getPasteId());
         $paste->setData($pasteData);
         $paste->store();
 
@@ -345,7 +345,7 @@ class ModelTest extends TestCase
 
     public function testInvalidCommentParent()
     {
-        $paste     = $this->_model->getPaste(Helper::getPasteId());
+        $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->expectException(Exception::class);
         $this->expectExceptionCode(65);
         $paste->getComment('');
@@ -368,13 +368,13 @@ class ModelTest extends TestCase
 
     public function testPurge()
     {
-        $conf  = new Configuration;
+        $conf = new Configuration;
         $store = new Database($conf->getSection('model_options'));
         $store->delete(Helper::getPasteId());
         $expired = Helper::getPaste(['expire_date' => 1344803344]);
-        $paste   = Helper::getPaste(['expire_date' => time() + 3600]);
-        $keys    = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z'];
-        $ids     = [];
+        $paste = Helper::getPaste(['expire_date' => time() + 3600]);
+        $keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z'];
+        $ids = [];
         foreach ($keys as $key) {
             $ids[$key] = hash('fnv164', $key);
             $store->delete($ids[$key]);
@@ -399,13 +399,13 @@ class ModelTest extends TestCase
 
     public function testCommentWithDisabledVizhash()
     {
-        $options                                  = parse_ini_file(CONF, true);
+        $options = parse_ini_file(CONF, true);
         $options['main']['discussiondatedisplay'] = 'false';
-        $options['main']['icon']                  = 'none';
-        $options['model']                         = [
+        $options['main']['icon'] = 'none';
+        $options['model'] = [
             'class' => 'Database',
         ];
-        $options['model_options']                 = [
+        $options['model_options'] = [
             'dsn' => 'sqlite::memory:',
             'usr' => null,
             'pwd' => null,
@@ -429,8 +429,8 @@ class ModelTest extends TestCase
         // storing comments
         $commentData = Helper::getCommentPost();
         unset($commentData['meta']['icon']);
-        $paste       = $model->getPaste(Helper::getPasteId());
-        $comment     = $paste->getComment(Helper::getPasteId(), Helper::getPasteId());
+        $paste = $model->getPaste(Helper::getPasteId());
+        $comment = $paste->getComment(Helper::getPasteId(), Helper::getPasteId());
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
         $comment = $paste->getComment(Helper::getPasteId());
@@ -450,9 +450,9 @@ class ModelTest extends TestCase
 
     public function testCommentVizhash()
     {
-        $options                 = parse_ini_file(CONF, true);
+        $options = parse_ini_file(CONF, true);
         $options['main']['icon'] = 'vizhash';
-        $options['model']        = [
+        $options['model'] = [
             'class' => 'Database',
         ];
         $options['model_options'] = [
@@ -464,7 +464,7 @@ class ModelTest extends TestCase
         Helper::createIniFile(CONF, $options);
         $model = new Model(new Configuration);
 
-        $pasteData   = Helper::getPastePost();
+        $pasteData = Helper::getPastePost();
         $commentData = Helper::getCommentPost();
         $model->getPaste(Helper::getPasteId())->delete();
 
@@ -476,9 +476,9 @@ class ModelTest extends TestCase
         $comment->setData($commentData);
         $comment->store();
 
-        $vz        = new Vizhash16x16();
-        $pngdata   = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
-        $comment   = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
+        $vz = new Vizhash16x16();
+        $pngdata = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
+        $comment = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
         $this->assertEquals($pngdata, $comment['meta']['icon'], 'vizhash was generated');
     }
 }

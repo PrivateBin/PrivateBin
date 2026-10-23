@@ -124,7 +124,7 @@ class Configuration
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
             'js/legacy.js'           => 'sha512-pRofxsrf5UItjiP22Dcjh3FAcBjF/n7h8U9/W5xqJk17U0N2U1oajhXypq/omo9jhwS1iVGOhWrRepoPeFns+w==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-FoX2CiD07QhMoHUw4qi6nCi/lQl6GTfobNeYNPTT7dQnQEwPalx3/fbK3D9bCT8rm9HhZt1DtDO152WZ5Vz2Qw==',
+            'js/privatebin.js'       => 'sha512-Rsz83AgXfc00RxHiCM4bqkAGfps0hQPVYX0P3A66iqUOBaeLgPgq0NeebFDdvUqV+nLYCIMZPZQARfGjjk5YRA==',
             'js/purify-3.4.17.js'    => 'sha512-udF2zPdEyVCAxIGeBbeSGFK1Fj5c4eHGi6NqOSsr8M75lGs39POzgUNxO3SFxOg4cHfAoZJgR2EaXdmDi6v6AQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.2.js'       => 'sha512-RAhJgxg9siMIA8ky4c10Rc2zUgnK80olHB8Tt1IOYWY4Eh1WmrviQkDn+sgBlb38ZHq3tzufGC41kP360gmosQ==',
@@ -139,8 +139,8 @@ class Configuration
      */
     public function __construct()
     {
-        $basePaths  = [];
-        $config     = [];
+        $basePaths = [];
+        $config = [];
         $configPath = getenv('CONFIG_PATH');
         if ($configPath !== false && !empty($configPath)) {
             $basePaths[] = $configPath;

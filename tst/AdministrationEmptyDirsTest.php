@@ -17,7 +17,7 @@ class AdministrationEmptyDirsTest extends TestCase
         mkdir($dataPath . DIRECTORY_SEPARATOR . 'empty' . DIRECTORY_SEPARATOR . 'nested', 0777, true);
         file_put_contents($dataPath . DIRECTORY_SEPARATOR . 'keep.txt', 'keep');
 
-        $options                         = parse_ini_file(CONF_SAMPLE, true);
+        $options = parse_ini_file(CONF_SAMPLE, true);
         $options['model_options']['dir'] = $dataPath;
         Helper::createIniFile(
             $this->_path . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php',

@@ -95,7 +95,7 @@ class Filesystem extends AbstractData
     public function create($pasteid, array &$paste)
     {
         $storagedir = $this->_dataid2path($pasteid);
-        $file       = $storagedir . $pasteid . '.php';
+        $file = $storagedir . $pasteid . '.php';
         if (is_file($file)) {
             return false;
         }
@@ -163,7 +163,7 @@ class Filesystem extends AbstractData
      */
     public function exists($pasteid)
     {
-        $basePath  = $this->_dataid2path($pasteid) . $pasteid;
+        $basePath = $this->_dataid2path($pasteid) . $pasteid;
         $pastePath = $basePath . '.php';
         // convert to PHP protected files if needed
         if (is_readable($basePath)) {
@@ -197,7 +197,7 @@ class Filesystem extends AbstractData
     public function createComment($pasteid, $parentid, $commentid, array &$comment)
     {
         $storagedir = $this->_dataid2discussionpath($pasteid);
-        $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid . '.php';
+        $file = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid . '.php';
         if (is_file($file)) {
             return false;
         }
@@ -217,7 +217,7 @@ class Filesystem extends AbstractData
     public function readComments($pasteid)
     {
         $comments = [];
-        $discdir  = $this->_dataid2discussionpath($pasteid);
+        $discdir = $this->_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
             foreach (new GlobIterator($discdir . DIRECTORY_SEPARATOR . $pasteid .
                 '.' . self::ID_PATTERN . '.' . self::ID_PATTERN . '.php') as $file
@@ -237,11 +237,11 @@ class Filesystem extends AbstractData
                     }
                     $items = explode('.', $file->getBasename('.php'));
                     // Add some meta information not contained in file.
-                    $comment['id']       = $items[1];
+                    $comment['id'] = $items[1];
                     $comment['parentid'] = $items[2];
 
                     // Store in array
-                    $key            = $this->getOpenSlot(
+                    $key = $this->getOpenSlot(
                         $comments,
                         $comment['meta']['created']
                     );
@@ -293,7 +293,7 @@ class Filesystem extends AbstractData
                 break;
             case 'traffic_limiter':
                 $this->_last_cache[$key] = $value;
-                $content                 = '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';';
+                $content = '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';';
                 break;
             default:
                 return false;
@@ -377,11 +377,11 @@ class Filesystem extends AbstractData
     protected function _getExpiredPastes($batchsize)
     {
         $pastes = [];
-        $count  = 0;
+        $count = 0;
         $opened = 0;
-        $limit  = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
-        $time   = time();
-        $files  = $this->getAllPastes();
+        $limit = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
+        $time = time();
+        $files = $this->getAllPastes();
         shuffle($files);
         foreach ($files as $pasteid) {
             if ($this->exists($pasteid)) {
@@ -506,7 +506,7 @@ class Filesystem extends AbstractData
             }
         }
 
-        $fileCreated  = true;
+        $fileCreated = true;
         $writtenBytes = 0;
         if (!is_file($filename)) {
             $fileCreated = @touch($filename);

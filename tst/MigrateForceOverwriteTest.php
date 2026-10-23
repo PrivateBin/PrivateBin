@@ -18,16 +18,16 @@ class MigrateForceOverwriteTest extends TestCase
         mkdir($this->_path . DIRECTORY_SEPARATOR . 'source_cfg');
         mkdir($this->_path . DIRECTORY_SEPARATOR . 'destination_cfg');
 
-        $options                         = parse_ini_file(CONF_SAMPLE, true);
+        $options = parse_ini_file(CONF_SAMPLE, true);
         $options['model_options']['dir'] = $this->_path . DIRECTORY_SEPARATOR . 'source';
-        $this->_source                   = new Filesystem($options['model_options']);
+        $this->_source = new Filesystem($options['model_options']);
         Helper::createIniFile(
             $this->_path . DIRECTORY_SEPARATOR . 'source_cfg' . DIRECTORY_SEPARATOR . 'conf.php',
             $options
         );
 
         $options['model_options']['dir'] = $this->_path . DIRECTORY_SEPARATOR . 'destination';
-        $this->_destination              = new Filesystem($options['model_options']);
+        $this->_destination = new Filesystem($options['model_options']);
         Helper::createIniFile(
             $this->_path . DIRECTORY_SEPARATOR . 'destination_cfg' . DIRECTORY_SEPARATOR . 'conf.php',
             $options
@@ -41,10 +41,10 @@ class MigrateForceOverwriteTest extends TestCase
 
     public function testForceReplacesPasteAndDiscussion()
     {
-        $sourcePaste       = Helper::getPaste();
+        $sourcePaste = Helper::getPaste();
         $sourcePaste['ct'] = 'source paste';
         $this->_source->create(Helper::getPasteId(), $sourcePaste);
-        $sourceComment       = Helper::getComment();
+        $sourceComment = Helper::getComment();
         $sourceComment['ct'] = 'source comment';
         $this->_source->createComment(
             Helper::getPasteId(),
@@ -53,10 +53,10 @@ class MigrateForceOverwriteTest extends TestCase
             $sourceComment
         );
 
-        $destinationPaste       = Helper::getPaste();
+        $destinationPaste = Helper::getPaste();
         $destinationPaste['ct'] = 'old paste';
         $this->_destination->create(Helper::getPasteId(), $destinationPaste);
-        $destinationComment       = Helper::getComment();
+        $destinationComment = Helper::getComment();
         $destinationComment['ct'] = 'old comment';
         $this->_destination->createComment(
             Helper::getPasteId(),
