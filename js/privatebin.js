@@ -1587,11 +1587,11 @@ window.PrivateBin = (function () {
          * @name   UiHelper.historyChange
          * @private
          * @function
-         * @param  {Event} event
+         * @param  {PopStateEvent} event
          */
         function historyChange(event) {
             let currentLocation = Helper.baseUri();
-            if (event.originalEvent.state === null && // no state object passed
+            if (event.state === null && // no state object passed
                 event.target.location.href === currentLocation && // target location is home page
                 window.location.href === currentLocation // and we are not already on the home page
             ) {
@@ -1612,22 +1612,6 @@ window.PrivateBin = (function () {
             window.location.href = Helper.baseUri();
         };
 
-
-        /**
-         * trigger a history (pop) state change
-         *
-         * used to test the UiHelper.historyChange private function
-         *
-         * @name   UiHelper.mockHistoryChange
-         * @function
-         * @param  {string} state   (optional) state to mock
-         */
-        me.mockHistoryChange = function (state) {
-            if (typeof state === 'undefined') {
-                state = null;
-            }
-            historyChange({ originalEvent: new PopStateEvent('popstate', { state: state }), target: window });
-        };
 
         /**
          * initialize
