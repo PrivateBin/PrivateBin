@@ -124,7 +124,7 @@ class Controller
      */
     public function __construct(?Configuration $config = null)
     {
-        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
+        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION, '<')) {
             error_log(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION));
             return;
         }

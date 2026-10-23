@@ -86,7 +86,7 @@ class Database extends AbstractData
             // tell it to expect ANSI SQL double quotes
             if ($this->_type === 'mysql') {
                 // deprecated as of PHP 8.5
-                if (version_compare(PHP_VERSION, '8.5') < 0 && defined('PDO::MYSQL_ATTR_INIT_COMMAND')) {
+                if (version_compare(PHP_VERSION, '8.5', '<') && defined('PDO::MYSQL_ATTR_INIT_COMMAND')) {
                     $options['opt'][PDO::MYSQL_ATTR_INIT_COMMAND] = "SET SESSION sql_mode='ANSI_QUOTES'";
                 } elseif (defined('Pdo\Mysql::ATTR_INIT_COMMAND')) {
                     $options['opt'][Pdo\Mysql::ATTR_INIT_COMMAND] = "SET SESSION sql_mode='ANSI_QUOTES'";
