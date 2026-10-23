@@ -14,9 +14,9 @@ class GoogleCloudStorageTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $httpClient = new Client(['debug'=>false]);
-        $handler    = HttpHandlerFactory::build($httpClient);
+        $handler = HttpHandlerFactory::build($httpClient);
 
-        $name     = 'pb-';
+        $name = 'pb-';
         $alphabet = 'abcdefghijklmnopqrstuvwxyz';
         for ($i = 0; $i < 29; ++$i) {
             $name .= $alphabet[rand(0, strlen($alphabet) - 1)];
@@ -59,12 +59,12 @@ class GoogleCloudStorageTest extends TestCase
         $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
-        $comment             = Helper::getComment();
+        $comment = Helper::getComment();
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'store comment');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store the same comment twice');
-        $comment['id']       = Helper::getCommentId();
+        $comment['id'] = Helper::getCommentId();
         $comment['parentid'] = Helper::getPasteId();
         $this->assertEquals(
             [$comment['meta']['created'] => $comment],
@@ -84,9 +84,9 @@ class GoogleCloudStorageTest extends TestCase
     public function testPurge()
     {
         $expired = Helper::getPaste(['expire_date' => 1344803344]);
-        $paste   = Helper::getPaste(['expire_date' => time() + 3600]);
-        $keys    = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
-        $ids     = [];
+        $paste = Helper::getPaste(['expire_date' => time() + 3600]);
+        $keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
+        $ids = [];
         foreach ($keys as $key) {
             $ids[$key] = hash('fnv164', $key);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
@@ -123,7 +123,7 @@ class GoogleCloudStorageTest extends TestCase
     public function testCommentErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
-        $data    = Helper::getPaste();
+        $data = Helper::getPaste();
         $comment = Helper::getComment(['icon' => "Invalid UTF-8 sequence: \xB1\x31"]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
@@ -170,7 +170,7 @@ class GoogleCloudStorageTest extends TestCase
      */
     public function testKeyValuePurgeTrafficLimiter()
     {
-        $salt   = bin2hex(random_bytes(256));
+        $salt = bin2hex(random_bytes(256));
         $client = hash_hmac('sha512', '127.0.0.1', $salt);
         $expire = time();
         $this->_model->setValue(strval($expire), 'traffic_limiter', $client);

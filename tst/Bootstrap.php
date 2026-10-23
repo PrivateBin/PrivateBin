@@ -112,9 +112,9 @@ class Helper
      */
     public static function getPaste(array $meta = []): array
     {
-        $example                 = self::$pasteV2;
+        $example = self::$pasteV2;
         $example['meta']['salt'] = ServerSalt::generate();
-        $example['meta']         = array_merge($example['meta'], $meta);
+        $example['meta'] = array_merge($example['meta'], $meta);
         return $example;
     }
 
@@ -126,7 +126,7 @@ class Helper
      */
     public static function getPastePost(array $meta = []): array
     {
-        $example         = self::getPaste($meta);
+        $example = self::getPaste($meta);
         $example['meta'] = ['expire' => $example['meta']['expire']];
         return $example;
     }
@@ -160,8 +160,8 @@ class Helper
      */
     public static function getComment(array $meta = []): array
     {
-        $example            = self::$pasteV2;
-        $example['adata']   = $example['adata'][0];
+        $example = self::$pasteV2;
+        $example['adata'] = $example['adata'][0];
         $example['pasteid'] = $example['parentid'] = self::getPasteId();
         unset($example['meta']['expire']);
         $example['meta'] = array_merge($example['meta'], self::$commentV2);
@@ -351,7 +351,7 @@ class Helper
         }
 
         $counter = 0;
-        $file    = PATH . 'lib' . DIRECTORY_SEPARATOR . 'Configuration.php';
+        $file = PATH . 'lib' . DIRECTORY_SEPARATOR . 'Configuration.php';
         $content = preg_replace_callback(
             '#\'js/([a-z0-9.-]+.js)(\' +)=\> \'[^\']*\',#',
             function ($matches) use (&$counter) {
@@ -385,11 +385,11 @@ class BucketStub extends Bucket
 
     public function __construct(ConnectionInterface $connection, $name, array $info = [], $client = null)
     {
-        $this->_name       = $name;
-        $this->_info       = $info;
+        $this->_name = $name;
+        $this->_info = $info;
         $this->_connection = $connection;
-        $this->_objects    = [];
-        $this->_client     = $client;
+        $this->_objects = [];
+        $this->_client = $client;
     }
 
     public function acl()
@@ -413,9 +413,9 @@ class BucketStub extends Bucket
             throw new BadMethodCallException('not supported by this stub');
         }
 
-        $name                             = $options['name'];
-        $generation                       = '1';
-        $o                                = new StorageObjectStub($this->_connection, $name, $this, $generation, $options);
+        $name = $options['name'];
+        $generation = '1';
+        $o = new StorageObjectStub($this->_connection, $name, $this, $generation, $options);
         $this->_objects[$options['name']] = $o;
         $o->setData($data);
     }
@@ -548,12 +548,12 @@ class StorageObjectStub extends StorageObject
 
     public function __construct(ConnectionInterface $connection, $name, $bucket, $generation = null, array $info = [], $encryptionKey = null, $encryptionKeySHA256 = null)
     {
-        $this->_name                            = $name;
-        $this->_bucket                          = $bucket;
-        $this->_generation                      = $generation;
-        $this->_info                            = $info;
-        $this->_connection                      = $connection;
-        $timeCreated                            = new DateTime();
+        $this->_name = $name;
+        $this->_bucket = $bucket;
+        $this->_generation = $generation;
+        $this->_info = $info;
+        $this->_connection = $connection;
+        $timeCreated = new DateTime();
         $this->_info['metadata']['timeCreated'] = $timeCreated->format('Y-m-d\TH:i:s.u\Z');
     }
 
@@ -677,7 +677,7 @@ class StorageObjectStub extends StorageObject
 
     public function setData($data)
     {
-        $this->_data   = $data;
+        $this->_data = $data;
         $this->_exists = true;
     }
 }
@@ -878,14 +878,14 @@ class ConnectionInterfaceStub implements ConnectionInterface
  */
 class StorageClientStub extends StorageClient
 {
-    private $_config         = null;
-    private $_connection     = null;
+    private $_config = null;
+    private $_connection = null;
     private static $_buckets = [];
 
     public function __construct(array $config = [])
     {
-        $this->_config     = $config;
-        $this->_connection =  new ConnectionInterfaceStub();
+        $this->_config = $config;
+        $this->_connection = new ConnectionInterfaceStub();
     }
 
     public function bucket($name, $userProject = false, array $config = [])
@@ -958,7 +958,7 @@ class StorageClientStub extends StorageClient
         if (array_key_exists($name, self::$_buckets)) {
             throw new BadRequestException('already exists');
         }
-        $b                     = new BucketStub($this->_connection, $name, [], $this);
+        $b = new BucketStub($this->_connection, $name, [], $this);
         self::$_buckets[$name] = $b;
         return $b;
     }

@@ -18,7 +18,7 @@ class MigrateTest extends TestCase
     public function setUp(): void
     {
         /* Setup Routine */
-        $this->_path            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_path_instance_1 = $this->_path . DIRECTORY_SEPARATOR . 'instance_1';
         $this->_path_instance_2 = $this->_path . DIRECTORY_SEPARATOR . 'instance_2';
         if (!is_dir($this->_path)) {
@@ -28,13 +28,13 @@ class MigrateTest extends TestCase
         mkdir($this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg');
         mkdir($this->_path_instance_2);
         mkdir($this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg');
-        $options                         = parse_ini_file(CONF_SAMPLE, true);
-        $options['purge']['limit']       = 0;
+        $options = parse_ini_file(CONF_SAMPLE, true);
+        $options['purge']['limit'] = 0;
         $options['model_options']['dir'] = $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'data';
-        $this->_model_1                  = new Filesystem($options['model_options']);
+        $this->_model_1 = new Filesystem($options['model_options']);
         Helper::createIniFile($this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php', $options);
 
-        $options['model']          = [
+        $options['model'] = [
             'class' => 'Database',
         ];
         $options['model_options'] = [
@@ -65,7 +65,7 @@ class MigrateTest extends TestCase
         $this->_model_1->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $data);
 
         // migrate files to database
-        $output    = null;
+        $output = null;
         $exit_code = 255;
         exec('php ' . PATH . 'bin' . DIRECTORY_SEPARATOR . 'migrate --delete-after ' . $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg ' . $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg', $output, $exit_code);
         $this->assertEquals(0, $exit_code, 'migrate script exits 0');
@@ -95,7 +95,7 @@ class MigrateTest extends TestCase
             Filesystem::PROTECTION_LINE . PHP_EOL . '{'
         );
 
-        $output    = null;
+        $output = null;
         $exit_code = 0;
         exec(
             'php ' . PATH . 'bin' . DIRECTORY_SEPARATOR . 'migrate --delete-after ' .

@@ -189,7 +189,7 @@ class Controller
      */
     private function _init()
     {
-        $this->_model   = new Model($this->_conf);
+        $this->_model = new Model($this->_conf);
         $this->_request = new Request;
         $this->_urlBase = $this->_request->getRequestUri();
 
@@ -226,7 +226,7 @@ class Controller
     private function _setDefaultTemplate()
     {
         $templates = $this->_conf->getKey('availabletemplates');
-        $template  = $this->_conf->getKey('template');
+        $template = $this->_conf->getKey('template');
         if (!in_array($template, $templates, true)) {
             $templates[] = $template;
         }
@@ -287,7 +287,7 @@ class Controller
             return;
         }
 
-        $data      = $this->_request->getData();
+        $data = $this->_request->getData();
         $isComment = array_key_exists('pasteid', $data) &&
             !empty($data['pasteid']) &&
             array_key_exists('parentid', $data) &&
@@ -356,7 +356,7 @@ class Controller
                 if (hash_equals($paste->getDeleteToken(), $deletetoken)) {
                     // Document exists and deletion token is valid: Delete the it.
                     $paste->delete();
-                    $this->_status     = 'Document was properly deleted.';
+                    $this->_status = 'Document was properly deleted.';
                     $this->_is_deleted = true;
                 } else {
                     $this->_error = 'Wrong deletion token. Document was not deleted.';
@@ -517,7 +517,7 @@ class Controller
             $type = '';
         }
         $content = '{}';
-        $file    = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
+        $file = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
         if (is_readable($file)) {
             $content = str_replace(
                 '?jsonld=',

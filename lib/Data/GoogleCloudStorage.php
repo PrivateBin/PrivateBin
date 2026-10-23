@@ -151,7 +151,7 @@ class GoogleCloudStorage extends AbstractData
     public function read($pasteid)
     {
         try {
-            $o    = $this->_bucket->object($this->_getKey($pasteid));
+            $o = $this->_bucket->object($this->_getKey($pasteid));
             $data = $o->downloadAsString();
             return Json::decode($data);
         } catch (NotFoundException $e) {
@@ -216,18 +216,18 @@ class GoogleCloudStorage extends AbstractData
     public function readComments($pasteid)
     {
         $comments = [];
-        $prefix   = $this->_getKey($pasteid) . '/discussion/';
+        $prefix = $this->_getKey($pasteid) . '/discussion/';
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $key) {
-                $data            = $this->_bucket->object($key->name())->downloadAsString();
+                $data = $this->_bucket->object($key->name())->downloadAsString();
                 try {
                     $comment = Json::decode($data);
                 } catch (JsonException $e) {
                     error_log('failed to read comment from ' . $key->name() . ', ' . $e->getMessage());
                     $comment = [];
                 }
-                $comment['id']   = basename($key->name());
-                $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
+                $comment['id'] = basename($key->name());
+                $slot = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
                 $comments[$slot] = $comment;
             }
         } catch (NotFoundException $e) {
@@ -242,7 +242,7 @@ class GoogleCloudStorage extends AbstractData
     public function existsComment($pasteid, $parentid, $commentid)
     {
         $name = $this->_getKey($pasteid) . '/discussion/' . $parentid . '/' . $commentid;
-        $o    = $this->_bucket->object($name);
+        $o = $this->_bucket->object($name);
         return $o->exists();
     }
 
@@ -335,7 +335,7 @@ class GoogleCloudStorage extends AbstractData
     {
         $expired = [];
 
-        $now    = time();
+        $now = time();
         $prefix = $this->_prefix;
         if (!empty($prefix)) {
             $prefix .= '/';

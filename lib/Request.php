@@ -111,7 +111,7 @@ class Request
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
                 try {
-                    $data          = file_get_contents(self::$_inputStream);
+                    $data = file_get_contents(self::$_inputStream);
                     $this->_params = Json::decode($data);
                     // a valid JSON scalar (number, bool or string) decodes
                     // without error, but is not a usable set of parameters
@@ -204,7 +204,7 @@ class Request
             'adata' => $this->getParam('adata'),
         ];
         $required_keys = ['v', 'ct'];
-        $meta          = $this->getParam('meta');
+        $meta = $this->getParam('meta');
         if (empty($meta)) {
             $required_keys[] = 'pasteid';
             $required_keys[] = 'parentid';
@@ -250,7 +250,7 @@ class Request
      */
     public function getRequestUri()
     {
-        $uri  = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
+        $uri = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
         $path = empty($uri) ? '' : parse_url($uri, PHP_URL_PATH);
         return is_string($path) && $path !== '' ? $path : '/';
     }

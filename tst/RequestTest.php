@@ -8,8 +8,8 @@ class RequestTest extends TestCase
     public function reset()
     {
         $_SERVER = [];
-        $_GET    = [];
-        $_POST   = [];
+        $_GET = [];
+        $_POST = [];
     }
 
     /**
@@ -20,10 +20,10 @@ class RequestTest extends TestCase
      */
     public function getRandomQueryChars()
     {
-        $queryChars     = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=-_.!~*()';
+        $queryChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=-_.!~*()';
         $queryCharCount = strlen($queryChars) - 1;
-        $resultLength   = random_int(1, 10);
-        $result         = '';
+        $resultLength = random_int(1, 10);
+        $result = '';
         for ($i = 0; $i < $resultLength; ++$i) {
             $result .= $queryChars[random_int(0, $queryCharCount)];
         }
@@ -34,7 +34,7 @@ class RequestTest extends TestCase
     {
         $this->reset();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $request                   = new Request;
+        $request = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals('view', $request->getOperation());
     }
@@ -66,11 +66,11 @@ class RequestTest extends TestCase
     public function testRead()
     {
         $this->reset();
-        $id                        = Helper::getRandomId();
+        $id = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING']   = $id;
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
@@ -84,11 +84,11 @@ class RequestTest extends TestCase
     public function testReadNumeric()
     {
         $this->reset();
-        $id                        = '1234567812345678';
+        $id = '1234567812345678';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING']   = $id;
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
@@ -97,11 +97,11 @@ class RequestTest extends TestCase
     public function testDelete()
     {
         $this->reset();
-        $id                        = Helper::getRandomId();
+        $id = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['pasteid']           = $id;
-        $_GET['deletetoken']       = 'bar';
-        $request                   = new Request;
+        $_GET['pasteid'] = $id;
+        $_GET['deletetoken'] = 'bar';
+        $request = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals('delete', $request->getOperation());
         $this->assertEquals($id, $request->getParam('pasteid'));
@@ -111,9 +111,9 @@ class RequestTest extends TestCase
     public function testApiCreate()
     {
         $this->reset();
-        $_SERVER['REQUEST_METHOD']        = 'PUT';
+        $_SERVER['REQUEST_METHOD'] = 'PUT';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $file                             = Helper::createTempFile();
+        $file = Helper::createTempFile();
         file_put_contents($file, '{"ct":"foo"}');
         Request::setInputStream($file);
         $request = new Request;
@@ -127,8 +127,8 @@ class RequestTest extends TestCase
     {
         $this->reset();
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
-        $file                      = Helper::createTempFile();
+        $_SERVER['HTTP_ACCEPT'] = 'application/json, text/javascript, */*; q=0.01';
+        $file = Helper::createTempFile();
         file_put_contents($file, '{"ct":"foo"}');
         Request::setInputStream($file);
         $request = new Request;
@@ -140,12 +140,12 @@ class RequestTest extends TestCase
     public function testApiRead()
     {
         $this->reset();
-        $id                        = Helper::getRandomId();
+        $id = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
-        $_SERVER['QUERY_STRING']   = $id;
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['HTTP_ACCEPT'] = 'application/json, text/javascript, */*; q=0.01';
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
@@ -154,12 +154,12 @@ class RequestTest extends TestCase
     public function testApiDelete()
     {
         $this->reset();
-        $id                               = Helper::getRandomId();
-        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $id = Helper::getRandomId();
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['QUERY_STRING']          = $id;
-        $_GET                             = [$id => ''];
-        $file                             = Helper::createTempFile();
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET = [$id => ''];
+        $file = Helper::createTempFile();
         file_put_contents($file, '{"deletetoken":"bar"}');
         Request::setInputStream($file);
         $request = new Request;
@@ -172,8 +172,8 @@ class RequestTest extends TestCase
     public function testPostGarbage()
     {
         $this->reset();
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $file                             = Helper::createTempFile();
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $file = Helper::createTempFile();
         file_put_contents($file, random_bytes(256));
         Request::setInputStream($file);
         $request = new Request;
@@ -189,9 +189,9 @@ class RequestTest extends TestCase
         // instead of triggering a type error further down
         foreach (['1', '0.0', 'true', 'false', '"example"'] as $scalar) {
             $this->reset();
-            $_SERVER['REQUEST_METHOD']        = 'POST';
+            $_SERVER['REQUEST_METHOD'] = 'POST';
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-            $file                             = Helper::createTempFile();
+            $file = Helper::createTempFile();
             file_put_contents($file, $scalar);
             Request::setInputStream($file);
             $request = new Request;
@@ -208,9 +208,9 @@ class RequestTest extends TestCase
     public function testPostInvalidRoutingParameters($parameters)
     {
         $this->reset();
-        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $file                             = Helper::createTempFile();
+        $file = Helper::createTempFile();
         file_put_contents($file, json_encode($parameters));
         Request::setInputStream($file);
         $request = new Request;
@@ -233,12 +233,12 @@ class RequestTest extends TestCase
     public function testReadWithNegotiation()
     {
         $this->reset();
-        $id                        = Helper::getRandomId();
+        $id = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['HTTP_ACCEPT']    = 'text/html,text/html; charset=UTF-8,application/xhtml+xml, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
-        $_SERVER['QUERY_STRING']   = $id;
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html,text/html; charset=UTF-8,application/xhtml+xml, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
@@ -247,12 +247,12 @@ class RequestTest extends TestCase
     public function testReadWithXhtmlNegotiation()
     {
         $this->reset();
-        $id                        = Helper::getRandomId();
+        $id = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['HTTP_ACCEPT']    = 'application/xhtml+xml,text/html,text/html; charset=UTF-8, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
-        $_SERVER['QUERY_STRING']   = $id;
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['HTTP_ACCEPT'] = 'application/xhtml+xml,text/html,text/html; charset=UTF-8, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
@@ -261,12 +261,12 @@ class RequestTest extends TestCase
     public function testApiReadWithNegotiation()
     {
         $this->reset();
-        $id                        = Helper::getRandomId();
+        $id = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, application/json, text/html,text/html; charset=UTF-8,application/xhtml+xml, */*;q=0.8';
-        $_SERVER['QUERY_STRING']   = $id;
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['HTTP_ACCEPT'] = 'text/plain,text/csv, application/xml;q=0.9, application/json, text/html,text/html; charset=UTF-8,application/xhtml+xml, */*;q=0.8';
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
@@ -275,12 +275,12 @@ class RequestTest extends TestCase
     public function testReadWithFailedNegotiation()
     {
         $this->reset();
-        $id                        = Helper::getRandomId();
+        $id = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, */*;q=0.8';
-        $_SERVER['QUERY_STRING']   = $id;
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['HTTP_ACCEPT'] = 'text/plain,text/csv, application/xml;q=0.9, */*;q=0.8';
+        $_SERVER['QUERY_STRING'] = $id;
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
@@ -289,19 +289,19 @@ class RequestTest extends TestCase
     public function testPasteIdExtraction()
     {
         $this->reset();
-        $id              = Helper::getRandomId();
-        $path            = '/' . $this->getRandomQueryChars() . '/';
-        $queryParams     = [$id];
+        $id = Helper::getRandomId();
+        $path = '/' . $this->getRandomQueryChars() . '/';
+        $queryParams = [$id];
         $queryParamCount = random_int(1, 5);
         for ($i = 0; $i < $queryParamCount; ++$i) {
             array_push($queryParams, $this->getRandomQueryChars());
         }
         shuffle($queryParams);
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING']   = implode('&', $queryParams);
-        $_SERVER['REQUEST_URI']    = $path . '?' . $_SERVER['QUERY_STRING'];
-        $_GET[$id]                 = '';
-        $request                   = new Request;
+        $_SERVER['QUERY_STRING'] = implode('&', $queryParams);
+        $_SERVER['REQUEST_URI'] = $path . '?' . $_SERVER['QUERY_STRING'];
+        $_GET[$id] = '';
+        $request = new Request;
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals($path, $request->getRequestUri());
     }

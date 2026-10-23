@@ -15,10 +15,10 @@ class ConfigurationTest extends TestCase
     {
         /* Setup Routine */
         Helper::confBackup();
-        $this->_minimalConfig                   = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
-        $this->_options                         = Configuration::getDefaults();
+        $this->_minimalConfig = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
+        $this->_options = Configuration::getDefaults();
         $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
-        $this->_path                            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_cfg';
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_cfg';
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
@@ -98,19 +98,19 @@ class ConfigurationTest extends TestCase
 
     public function testHandleWrongTypes()
     {
-        $original_options                                    = $this->_options;
+        $original_options = $this->_options;
         $original_options['main']['syntaxhighlightingtheme'] = 'foo';
-        $options                                             = $original_options;
-        $options['main']['discussion']                       = 'true';
-        $options['main']['opendiscussion']                   = 0;
-        $options['main']['password']                         = -1; // evaluates to TRUE
-        $options['main']['fileupload']                       = 'false';
-        $options['expire_options']['foo']                    = 'bar';
-        $options['formatter_options'][]                      = 'foo';
+        $options = $original_options;
+        $options['main']['discussion'] = 'true';
+        $options['main']['opendiscussion'] = 0;
+        $options['main']['password'] = -1; // evaluates to TRUE
+        $options['main']['fileupload'] = 'false';
+        $options['expire_options']['foo'] = 'bar';
+        $options['formatter_options'][] = 'foo';
         Helper::createIniFile(CONF, $options);
-        $conf                                      = new Configuration;
+        $conf = new Configuration;
         $original_options['expire_options']['foo'] = intval('bar');
-        $original_options['formatter_options'][0]  = 'foo';
+        $original_options['formatter_options'][0] = 'foo';
         $this->assertEquals($original_options, $conf->get(), 'incorrect types are corrected');
     }
 
@@ -120,23 +120,23 @@ class ConfigurationTest extends TestCase
         unset($options['expire_options']['1week']);
         unset($options['expire_options']['1year']);
         unset($options['expire_options']['never']);
-        $sri_key                         = array_key_first($options['sri']);
-        $valid_sri                       = $options['sri'][$sri_key];
-        $options['sri'][$sri_key]        = ''; // empty string should get replaced with default
+        $sri_key = array_key_first($options['sri']);
+        $valid_sri = $options['sri'][$sri_key];
+        $options['sri'][$sri_key] = ''; // empty string should get replaced with default
         $options['sri']['js/example.js'] = 'some invalid SRI hash';
         Helper::createIniFile(CONF, $options);
-        $conf                         = new Configuration;
+        $conf = new Configuration;
         // restore expected results
         $options['expire']['default'] = '5min';
-        $options['sri'][$sri_key]     = $valid_sri;
+        $options['sri'][$sri_key] = $valid_sri;
         $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');
     }
 
     public function testConfigPath()
     {
         // setup
-        $configFile              = $this->_path . DIRECTORY_SEPARATOR . 'conf.php';
-        $options                 = $this->_options;
+        $configFile = $this->_path . DIRECTORY_SEPARATOR . 'conf.php';
+        $options = $this->_options;
         $options['main']['name'] = 'OtherBin';
         Helper::createIniFile($configFile, $options);
 

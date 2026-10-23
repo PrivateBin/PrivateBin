@@ -25,7 +25,7 @@ class ControllerWithDbTest extends ControllerTest
             mkdir($this->_path);
         }
         $this->_options['dsn'] = 'sqlite:' . $this->_path . DIRECTORY_SEPARATOR . 'tst.sq3';
-        $this->_data           = new Database($this->_options);
+        $this->_data = new Database($this->_options);
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
         $this->reset();
@@ -35,7 +35,7 @@ class ControllerWithDbTest extends ControllerTest
     {
         parent::reset();
         // but then inject a db config
-        $options          = parse_ini_file(CONF, true);
+        $options = parse_ini_file(CONF, true);
         $options['model'] = [
             'class' => 'Database',
         ];
