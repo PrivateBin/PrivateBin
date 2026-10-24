@@ -2599,7 +2599,7 @@ window.PrivateBin = (function () {
                     simplifiedAutoLink: true,
                     strikethrough: true,
                     tables: true,
-                    tablesHeaderId: true,
+                    tablesHeaderId: true
                 });
                 // let showdown convert the HTML and sanitize HTML *afterwards*!
                 if (plainText) {
