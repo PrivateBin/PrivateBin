@@ -13,8 +13,8 @@
  * encryption and upload are untouched.
  *
  * External file, because the default content security policy forbids inline
- * scripts. Needs no library, only the global `PrivateBin` of js/privatebin.js
- * (optional: without it only the wait for pending reads in remove() is skipped).
+ * scripts. Needs no library, only the global `PrivateBin` of js/privatebin.js,
+ * whose helpers it reuses (for example `Helper.formatBytes` for file sizes).
  */
 (function () {
     'use strict';
@@ -47,16 +47,6 @@
     let notice = null;        // the "could not read" message, if shown
 
     const keyOf = file => [file.name, file.size, file.lastModified].join('|');
-
-    const formatSize = bytes => {
-        if (bytes < 1024) {
-            return bytes + ' B';
-        }
-        if (bytes < 1048576) {
-            return (bytes / 1024).toFixed(1) + ' KB';
-        }
-        return (bytes / 1048576).toFixed(1) + ' MB';
-    };
 
     const warn = message => {
         if (window.console && console.warn) {
@@ -172,7 +162,7 @@
 
         const size = document.createElement('span');
         size.className = 'split-file-size';
-        size.textContent = formatSize(file.size);
+        size.textContent = window.PrivateBin.Helper.formatBytes(file.size);
         if (file.size === 0) {
             // nothing could be read: say so instead of silently attaching an empty file
             row.classList.add('split-file-empty');

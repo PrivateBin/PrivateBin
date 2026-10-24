@@ -127,7 +127,7 @@ class Configuration
             'js/privatebin.js'       => 'sha512-kpv+GvU9NEssTaStwqcshVkw7qFgovIreR6nrTlx4sK8GBFzcw6M4rxH2qAb9tWlp0apMm/uwG0SkBhX6i6i4g==',
             'js/purify-3.4.17.js'    => 'sha512-udF2zPdEyVCAxIGeBbeSGFK1Fj5c4eHGi6NqOSsr8M75lGs39POzgUNxO3SFxOg4cHfAoZJgR2EaXdmDi6v6AQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
-            'js/splitview.js'        => 'sha512-lftMIxENtxP5/dypZdmKgQTxZsk+UopMh0ddB7izQaB2bo6pcbO6m7xs/lv6becF5t49R12GXaCtsfQybp7UUg==',
+            'js/splitview.js'        => 'sha512-1EHUc/LlwPxaPGnefPEa+pBWo4f4AkP9ScW6/N7LcztgBFfME/tV+93DbabfzLNv1MzaBSVc1dWxdvwdCjJlNQ==',
             'js/zlib-1.3.2.js'       => 'sha512-RAhJgxg9siMIA8ky4c10Rc2zUgnK80olHB8Tt1IOYWY4Eh1WmrviQkDn+sgBlb38ZHq3tzufGC41kP360gmosQ==',
             'js/zlib.js'             => 'sha512-QOaEwssHqHRRcWJ2Un3Kl2Zhyprzl7T8zmsKN2FppFxW3VR+8UChYOx2iuL0HbXK42fuBWJm5PNQJxufulrt/w==',
         ],
