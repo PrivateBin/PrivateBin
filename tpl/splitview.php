@@ -1,0 +1,605 @@
+<?php declare(strict_types=1);
+use PrivateBin\I18n;
+/*
+ * PrivateBin "splitview" template, based on tpl/bootstrap5.php
+ *
+ *   +-----------------------------+------------+
+ *   |  text entry (top)           |            |
+ *   +-----------------------------+  options   |
+ *   |  file drag & drop (bottom)  | (full ht)  |
+ *   +-----------------------------+------------+
+ *
+ * Files: tpl/splitview.php, css/splitview/splitview.css, js/splitview.js
+ * Enable it in cfg/conf.php with:
+ *   availabletemplates[] = "splitview"
+ *   template = "splitview"
+ * All element IDs used by js/privatebin.js are unchanged.
+ */
+?><!DOCTYPE html>
+<html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?> class="h-100">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex" />
+		<meta name="google" content="notranslate">
+		<title><?php echo I18n::_($NAME); ?></title>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap5/bootstrap<?php echo I18n::isRtl() ? '.rtl' : ''; ?>-5.3.8.css" />
+		<link type="text/css" rel="stylesheet" href="css/bootstrap5/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
+		<link type="text/css" rel="stylesheet" href="css/splitview/splitview.css?<?php echo rawurlencode($VERSION); ?>" />
+<?php
+if ($SYNTAXHIGHLIGHTING) :
+?>
+		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
+<?php
+    if (!empty($SYNTAXHIGHLIGHTINGTHEME)) :
+?>
+		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
+<?php
+    endif;
+endif;
+?>
+		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
+		<?php $this->_linkTag('js/zlib-1.3.2.js'); ?>
+<?php
+if ($QRCODE) :
+?>
+		<?php $this->_scriptTag('js/kjua-0.10.0.js', 'defer'); ?>
+<?php
+endif;
+?>
+		<?php $this->_scriptTag('js/zlib.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/bootstrap-5.3.8.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
+<?php
+if ($SYNTAXHIGHLIGHTING) :
+?>
+		<?php $this->_scriptTag('js/prettify.js', 'defer'); ?>
+<?php
+endif;
+if ($MARKDOWN) :
+?>
+		<?php $this->_scriptTag('js/showdown-2.1.0.js', 'defer'); ?>
+<?php
+endif;
+?>
+		<?php $this->_scriptTag('js/purify-3.4.17.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/splitview.js', 'defer'); ?>
+		<!-- icon -->
+		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
+		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
+		<link rel="icon" type="image/png" href="img/favicon-16x16.png" sizes="16x16" />
+		<link rel="manifest" href="manifest.json?<?php echo rawurlencode($VERSION); ?>" />
+		<link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#ffcc00" />
+		<link rel="shortcut icon" href="img/favicon.ico">
+		<meta name="msapplication-config" content="browserconfig.xml">
+		<meta name="theme-color" content="#ffe57e" />
+		<!-- Twitter/social media cards -->
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on %s', I18n::_($NAME)) ?>" />
+		<meta name="twitter:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
+		<meta name="twitter:image" content="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" />
+		<meta property="og:title" content="<?php echo I18n::_($NAME); ?>" />
+		<meta property="og:site_name" content="<?php echo I18n::_($NAME); ?>" />
+		<meta property="og:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
+		<meta property="og:image" content="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="180" />
+		<meta property="og:image:height" content="180" />
+	</head>
+	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>" class="d-flex flex-column h-100">
+		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form id="passwordform" role="form">
+							<div class="mb-3">
+								<label for="passworddecrypt"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg> <?php echo I18n::_('Please enter the password for this document:') ?></label>
+								<div class="input-group">
+									<input id="passworddecrypt" type="password" class="form-control input-password" placeholder="<?php echo I18n::_('Enter password') ?>" required="required" />
+									<button class="btn btn-outline-secondary toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
+										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
+									</button>
+								</div>
+							</div>
+							<button type="submit" class="btn btn-success btn-block"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#power" /></svg> <?php echo I18n::_('Decrypt') ?></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="loadconfirmmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"><?php echo I18n::_('This secret message can only be displayed once. Would you like to see it now?') ?></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"></button>
+					</div>
+					<div class="modal-body text-center">
+						<button id="loadconfirm-open-now" type="button" class="btn btn-success" data-bs-dismiss="modal"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#cloud-download" /></svg> <?php echo I18n::_('Yes, see it') ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+<?php
+if ($QRCODE) :
+?>
+		<div id="qrcodemodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"><?php echo I18n::_('QR code') ?></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"></button>
+					</div>
+					<div class="modal-body">
+						<div class="mx-auto" id="qrcode-display"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+<?php
+endif;
+if ($EMAIL) :
+?>
+		<div id="emailconfirmmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"><?php echo I18n::_('Recipient may become aware of your timezone, convert time to UTC?') ?></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"></button>
+					</div>
+					<div class="modal-body row">
+						<div class="col-xs-12 col-md-6">
+							<button id="emailconfirm-timezone-current" type="button" class="btn btn-danger"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg> <?php echo I18n::_('Use Current Timezone') ?></button>
+						</div>
+						<div class="col-xs-12 col-md-6 text-right">
+							<button id="emailconfirm-timezone-utc" type="button" class="btn btn-success"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#globe" /></svg> <?php echo I18n::_('Convert To UTC') ?></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<?php
+endif;
+?>
+		<nav class="navbar navbar-expand-lg bg-body-tertiary text-nowrap mb-3">
+			<div class="container-fluid">
+				<a class="reloadlink navbar-brand" href="">
+					<img alt="<?php echo I18n::_($NAME); ?>" src="img/icon.svg" height="38" />
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="<?php echo I18n::_('Toggle navigation'); ?>">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div id="navbar" class="collapse navbar-collapse">
+					<ul class="navbar-nav me-auto gap-2 align-items-lg-center align-items-stretch flex-wrap">
+						<li id="loadingindicator" class="navbar-text hidden me-auto">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg>
+							<?php echo I18n::_('Loading…'), PHP_EOL; ?>
+						</li>
+						<li class="nav-item d-flex flex-lg-row flex-column hidden">
+							<button id="retrybutton" type="button" class="reloadlink hidden btn btn-primary d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Retry'), PHP_EOL; ?>
+							</button>
+						</li>
+						<li class="nav-item d-flex flex-lg-row flex-column gap-2">
+							<button id="newbutton" type="button" class="hidden btn btn-secondary flex-fill d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark" /></svg> <?php echo I18n::_('New'), PHP_EOL; ?>
+							</button>
+							<button id="clonebutton" type="button" class="hidden btn btn-secondary flex-fill d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Clone'), PHP_EOL; ?>
+							</button>
+							<button id="rawtextbutton" type="button" class="hidden btn btn-secondary flex-fill d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt" /></svg> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
+							</button>
+							<button id="downloadtextbutton" type="button" class="hidden btn btn-secondary flex-fill d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg> <?php echo I18n::_('Save document'), PHP_EOL; ?>
+							</button>
+<?php
+if ($EMAIL) :
+?>
+							<button id="emaillink" type="button" class="hidden btn btn-secondary flex-fill d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#envelope" /></svg> <?php echo I18n::_('Email'), PHP_EOL; ?>
+							</button>
+<?php
+endif;
+if ($QRCODE) :
+?>
+							<button id="qrcodelink" type="button" data-bs-toggle="modal" data-bs-target="#qrcodemodal" class="hidden btn btn-secondary flex-fill d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code" /></svg> <?php echo I18n::_('QR code'), PHP_EOL; ?>
+							</button>
+<?php
+endif;
+?>
+						</li>
+					</ul>
+					<ul class="navbar-nav gap-2">
+						<li class="nav-item">
+							<div class="form-check form-switch navbar-text">
+								<input id="bd-theme" type="checkbox" class="form-check-input" />
+								<label for="bd-theme" class="form-check-label"><?php echo I18n::_('Dark Mode'); ?></label>
+							</div>
+						</li>
+<?php
+if (!empty($LANGUAGESELECTION)) :
+?>
+						<li id="language" class="nav-item dropdown">
+							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#flag" /></svg> <?php echo $LANGUAGES[$LANGUAGESELECTION][0], PHP_EOL; ?>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end" role="menu">
+<?php
+    foreach ($LANGUAGES as $key => $value) :
+?>
+								<li>
+									<a href="#" class="dropdown-item" data-lang="<?php echo $key; ?>">
+										<?php echo $value[0]; ?> (<?php echo $value[1]; ?>)
+									</a>
+								</li>
+<?php
+    endforeach;
+?>
+							</ul>
+						</li>
+<?php
+endif;
+if (!empty($TEMPLATESELECTION)) :
+?>
+						<li id="template" class="nav-item dropdown">
+							<a href="#" class="nav-link dropdown-toggle d-flex align-items-center gap-1" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+								<?php echo I18n::_('Theme'); ?>: <?php echo $TEMPLATESELECTION, PHP_EOL; ?>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end" role="menu">
+<?php
+    foreach ($TEMPLATES as $value) :
+?>
+								<li>
+									<a href="#" class="dropdown-item" data-template="<?php echo $value; ?>">
+										<?php echo $value; ?>
+									</a>
+								</li>
+<?php
+    endforeach;
+?>
+							</ul>
+						</li>
+<?php
+endif;
+?>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<main class="split-main">
+			<section class="container-fluid split-notices">
+<?php
+if (!empty($NOTICE)) :
+?>
+				<div role="alert" class="alert alert-info">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
+					<?php echo I18n::encode($NOTICE), PHP_EOL; ?>
+				</div>
+<?php
+endif;
+?>
+				<div id="remainingtime" role="alert" class="hidden alert alert-info">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#fire" /></svg>
+				</div>
+<?php
+if ($FILEUPLOAD) :
+?>
+				<div id="attachment" class="hidden"></div>
+<?php
+endif;
+?>
+				<div id="status" role="alert" class="d-flex align-items-center gap-2 alert alert-<?php echo $ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
+					<div>
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
+						<?php echo I18n::encode($STATUS), PHP_EOL; ?>
+					</div>
+<?php
+if ($ISDELETED) :
+?>
+					<button type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1 ms-auto" id="new-from-alert">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg>
+						<?php echo I18n::_('Start over'), PHP_EOL; ?>
+					</button>
+<?php
+endif;
+?>
+				</div>
+				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
+					<?php echo I18n::encode($ERROR), PHP_EOL; ?>
+				</div>
+				<noscript>
+					<div id="noscript" role="alert" class="alert alert-warning">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
+						<?php echo I18n::_('JavaScript is required for %s to work. Sorry for the inconvenience.', I18n::_($NAME)), PHP_EOL; ?>
+					</div>
+				</noscript>
+				<div id="oldnotice" role="alert" class="hidden alert alert-danger">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
+					<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
+					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
+					<a href="https://www.opera.com/">Opera</a>,
+					<a href="https://www.google.com/chrome">Chrome</a>…<br />
+					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-the-error-privatebin-requires-a-modern-browser-to-work'); ?></span>
+				</div>
+<?php
+if ($HTTPWARNING) :
+?>
+				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
+					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'); ?><br />
+					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
+				</div>
+				<div id="insecurecontextnotice" role="alert" class="hidden alert alert-danger">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
+					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK), PHP_EOL; ?>
+				</div>
+<?php
+endif;
+?>
+				<div id="pastesuccess" class="hidden">
+					<div class="nav justify-content-between mb-2">
+						<button id="copyLink" type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Copy link') ?>
+						</button>
+						<a href="#" id="deletelink" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#trash" /></svg>
+							<span></span>
+						</a>
+					</div>
+					<div role="alert" class="alert alert-success">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
+						<div id="pastelink"></div>
+					</div>
+<?php
+if (!empty($URLSHORTENER)) :
+?>
+					<p>
+						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>"
+								<?php if ($SHORTENBYDEFAULT) : ?>
+								data-autoshorten="true"
+								<?php endif; ?>
+								type="button" class="btn btn-primary btn-block d-flex justify-content-center align-items-center gap-1"
+						>
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#send" /></svg> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
+						</button>
+					</p>
+					<div role="alert" class="alert alert-danger">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
+						<?php if ($SHORTENBYDEFAULT) : ?>
+							<?php echo I18n::_('URL shortener is enabled by default.'), PHP_EOL; ?>
+						<?php endif; ?>
+						<?php echo I18n::_('URL shortener may expose your decrypt key in URL.'), PHP_EOL; ?>
+					</div>
+<?php
+endif;
+?>
+				</div>
+			</section>
+
+			<!-- ===== three-pane layout ===== -->
+			<div id="splitlayout"<?php echo $FILEUPLOAD ? '' : ' class="split-no-upload"'; ?>>
+
+				<!-- top: text entry (also shows the rendered document when viewing) -->
+				<section id="splitedit" class="split-pane" aria-label="<?php echo I18n::_('Document text'); ?>">
+					<h2 class="split-heading"><?php echo I18n::_('Document text'); ?></h2>
+					<ul id="editorTabs" class="nav nav-tabs hidden">
+						<li role="presentation" class="nav-item me-1"><a class="nav-link active" role="tab" id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
+						<li role="presentation" class="nav-item me-1"><a class="nav-link" role="tab" id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
+					</ul>
+					<div class="split-editor-body">
+						<div id="placeholder" class="hidden"><?php echo I18n::_('+++ no document text +++'); ?></div>
+						<div id="attachmentPreview" class="text-center hidden"></div>
+						<h6 id="copyShortcutHint" class="nav justify-content-between align-items-center mb-2 hidden">
+							<small id="copyShortcutHintText" class="d-none d-md-inline">
+								<?php
+									echo I18n::_("To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>", I18n::getCopyHotkey())
+								?>
+							</small>
+							<button type="button" id="copyShortcutHintBtn" class="btn btn-secondary ms-auto"><?php echo I18n::_('Copy'); ?></button>
+						</h6>
+						<div id="prettymessage" class="card hidden">
+							<pre id="prettyprint" class="card-body prettyprint linenums:1"></pre>
+						</div>
+						<div id="plaintext" class="hidden"></div>
+						<textarea id="message" name="message" cols="80" rows="12" aria-label="<?php echo I18n::_('Document text'); ?>" tabindex="1" class="form-control hidden"></textarea>
+					</div>
+					<div class="split-tabkey form-check form-switch">
+						<input id="messagetab" type="checkbox" tabindex="3" class="form-check-input" checked="checked" />
+						<label for="messagetab" class="form-check-label">
+							<?php echo I18n::_('Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)'), PHP_EOL; ?>
+						</label>
+					</div>
+				</section>
+
+<?php
+if ($FILEUPLOAD) :
+?>
+				<!-- bottom: file drag & drop -->
+				<section id="splitdrop" class="split-pane" aria-label="<?php echo I18n::_('Attach a file'); ?>">
+					<h2 class="split-heading"><?php echo I18n::_('Attachments'); ?></h2>
+					<div id="attach" class="hidden">
+						<div id="splitdropbox" class="split-drop-inner"
+							data-remove-label="<?php echo I18n::encode(I18n::_('Remove attachment')); ?>"
+							data-empty-label="<?php echo I18n::encode(I18n::_('This file is empty (0 bytes). If it should have content, add it with click-to-browse instead.')); ?>"
+							data-unreadable-label="<?php echo I18n::encode(I18n::_('Could not read: %s. The browser did not give access to the dragged file(s). Click here to choose them with the file dialog instead.', '%s')); ?>">
+							<div id="filewrap" class="split-filewrap">
+								<input type="file" id="file" name="file" class="visually-hidden" multiple />
+								<!-- the label stretches over the whole box (see the CSS), so a click anywhere in it opens the file dialog -->
+								<label for="file" class="split-drop-prompt">
+									<svg width="32" height="32" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#cloud-upload" /></svg>
+									<span><?php echo I18n::_('Drag & drop files here, paste an image, or click to browse'); ?></span>
+								</label>
+								<div id="dragAndDropFileName" class="visually-hidden" aria-hidden="true"></div>
+								<ul id="splitfilelist" class="split-filelist" aria-live="polite"></ul>
+							</div>
+							<div id="customattachment" class="hidden d-flex flex-column"></div>
+							<a id="fileremovebutton" href="#" class="split-remove-all">
+								<?php echo I18n::_('Remove attachment'), PHP_EOL; ?>
+							</a>
+						</div>
+					</div>
+				</section>
+<?php
+endif;
+?>
+
+				<!-- right: options, full height -->
+				<aside id="splitoptions" class="split-pane" aria-label="<?php echo I18n::_('Options'); ?>">
+					<h2 class="split-heading"><?php echo I18n::_('Options'); ?></h2>
+					<div class="split-options-scroll">
+						<div id="expiration" class="hidden">
+							<label for="pasteExpiration" class="form-label"><?php echo I18n::_('Expires'); ?></label>
+							<select id="pasteExpiration" name="pasteExpiration" class="form-select">
+<?php
+foreach ($EXPIRE as $key => $value) :
+?>
+								<option value="<?php echo $key; ?>"<?php
+    if ($key === $EXPIREDEFAULT) :
+?> selected="selected"<?php
+    endif;
+?>><?php echo $value; ?></option>
+<?php
+endforeach;
+?>
+							</select>
+						</div>
+						<div id="formatter" class="hidden">
+							<label for="pasteFormatter" class="form-label"><?php echo I18n::_('Format'); ?></label>
+							<select id="pasteFormatter" name="pasteFormatter" class="form-select">
+<?php
+foreach ($FORMATTER as $key => $value) :
+?>
+								<option value="<?php echo $key; ?>"<?php
+    if ($key === $FORMATTERDEFAULT) :
+?> selected="selected"<?php
+    endif;
+?>><?php echo $value; ?></option>
+<?php
+endforeach;
+?>
+							</select>
+						</div>
+						<div id="burnafterreadingoption" class="form-check hidden">
+							<input class="form-check-input" type="checkbox" id="burnafterreading" name="burnafterreading"<?php
+if ($BURNAFTERREADINGSELECTED) :
+?> checked="checked"<?php
+endif;
+?> />
+							<label class="form-check-label" for="burnafterreading">
+								<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
+							</label>
+						</div>
+<?php
+if ($DISCUSSION) :
+?>
+						<div id="opendiscussionoption" class="form-check hidden">
+							<input class="form-check-input" type="checkbox" id="opendiscussion" name="opendiscussion"<?php
+    if ($OPENDISCUSSION) :
+?> checked="checked"<?php
+    endif;
+?> />
+							<label class="form-check-label" for="opendiscussion">
+								<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
+							</label>
+						</div>
+<?php
+endif;
+if ($PASSWORD) :
+?>
+						<div id="password" class="hidden">
+							<label for="passwordinput" class="form-label"><?php echo I18n::_('Password (recommended)'); ?></label>
+							<div class="input-group">
+								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control input-password" />
+								<button class="btn btn-outline-secondary toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
+									<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
+								</button>
+								<button class="btn btn-outline-secondary generate-password" type="button" title="<?php echo I18n::_('Generate password'); ?>" aria-label="<?php echo I18n::_('Generate password'); ?>">
+									<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg>
+								</button>
+							</div>
+						</div>
+<?php
+endif;
+?>
+					</div>
+					<div class="split-options-footer">
+						<button id="sendbutton" type="button" tabindex="2" class="hidden btn btn-primary w-100 d-flex justify-content-center align-items-center gap-1" title="<?php echo I18n::_('Hit %s+s to create the document, storing it on %s', I18n::getCopyHotkey(), I18n::_($NAME)); ?>" aria-keyshortcuts="Control+S Meta+S">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#cloud-upload" /></svg> <?php echo I18n::_('Create'), PHP_EOL; ?>
+						</button>
+					</div>
+				</aside>
+			</div>
+
+			<section class="container-fluid">
+				<div id="discussion" class="hidden">
+					<h4><?php echo I18n::_('Discussion'); ?></h4>
+					<div id="commentcontainer"></div>
+				</div>
+			</section>
+			<section class="container-fluid">
+				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
+					<?php echo I18n::_('Loading…'); ?><br />
+					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
+				</div>
+			</section>
+		</main>
+		<footer class="container-fluid mt-auto">
+			<div class="row">
+				<h5 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h5>
+				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
+				<p id="aboutbox" class="col-md-6 col-xs-12">
+					<?php echo sprintf(
+                        I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.',
+                            I18n::_($NAME),
+                            '%s', '%s'
+                        ),
+                        '<i>', '</i>'), ' ', $INFO, PHP_EOL;
+                    ?>
+				</p>
+			</div>
+		</footer>
+		<div id="serverdata" class="hidden" aria-hidden="true">
+			<div id="templates">
+				<article id="commenttemplate" class="comment px-2 pb-3">
+					<div class="commentmeta">
+						<span class="nickname">name</span>
+						<span class="commentdate">0000-00-00</span>
+					</div>
+					<div class="commentdata">c</div>
+					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Reply'); ?></button>
+				</article>
+				<p id="commenttailtemplate" class="comment px-2 pb-3">
+					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Add comment'); ?></button>
+				</p>
+				<div id="replytemplate" class="reply hidden">
+					<input type="text" id="nickname" class="form-control my-2" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
+					<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br />
+					<div id="replystatus" role="alert" class="statusmessage hidden alert">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
+					</div>
+					<button id="replybutton" class="btn btn-secondary btn-sm"><?php echo I18n::_('Post comment'); ?></button>
+				</div>
+				<div id="attachmenttemplate" role="alert" class="hidden alert alert-info">
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg>
+					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?><span></span></a>
+				</div>
+			</div>
+		</div>
+<?php
+if ($FILEUPLOAD) :
+?>
+		<div id="dropzone" class="hidden" tabindex="-1" aria-hidden="true"></div>
+<?php
+endif;
+?>
+	</body>
+</html>
