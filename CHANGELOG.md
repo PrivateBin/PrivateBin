@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.1.1 (not yet released)
+* ADDED: Warn before discarding unsent text or an opened burn after reading document, when changing the language or template, creating a new document or leaving the page (#1509)
 * FIXED: Creating a document failed with a JavaScript error when the `discussion`, `password`, e-mail or QR code option is disabled, as the top navigation accessed the omitted elements
 * ADDED: Translation for Korean (#2071)
 * FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
