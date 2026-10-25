@@ -140,9 +140,11 @@
         const row = document.createElement('li');
         row.className = 'split-file';
 
+        // Thumbnails only for raster images (never SVG), shown from a blob: URL
+        // the browser made of the file itself; the URL scheme is checked before use.
         let thumb;
-        if (/^image\/(png|jpe?g|gif|webp|bmp|avif)$/i.test(file.type)) {
-            const url = URL.createObjectURL(file);
+        const url = /^image\/(png|jpe?g|gif|webp|bmp|avif)$/i.test(file.type) ? URL.createObjectURL(file) : '';
+        if (url.startsWith('blob:')) {
             thumbs.set(key, url);
             thumb = document.createElement('img');
             thumb.alt = '';
