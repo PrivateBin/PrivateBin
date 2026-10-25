@@ -50,12 +50,6 @@ class Configuration
             'template'                 => 'bootstrap5',
             'availabletemplates'       => [
                 'bootstrap5',
-                'bootstrap',
-                'bootstrap-page',
-                'bootstrap-dark',
-                'bootstrap-dark-page',
-                'bootstrap-compact',
-                'bootstrap-compact-page',
             ],
             'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
             'notice'                   => '',
