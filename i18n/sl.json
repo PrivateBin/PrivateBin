@@ -235,5 +235,8 @@
     "Copy": "Kopiraj",
     "Cmd": "Cmd",
     "Ctrl": "Ctrl",
-    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s"
+    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s",
+    "You have unsaved data that will be lost. Do you want to continue?": "You have unsaved data that will be lost. Do you want to continue?",
+    "Cancel": "Cancel",
+    "Continue": "Continue"
 }

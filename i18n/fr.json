@@ -235,5 +235,8 @@
     "Copy": "Copier",
     "Cmd": "Cmd",
     "Ctrl": "Ctrl",
-    "Hit %s+s to create the document, storing it on %s": "Appuyer sur %s+s pour créer le document, le stocker sur %s"
+    "Hit %s+s to create the document, storing it on %s": "Appuyer sur %s+s pour créer le document, le stocker sur %s",
+    "You have unsaved data that will be lost. Do you want to continue?": "You have unsaved data that will be lost. Do you want to continue?",
+    "Cancel": "Cancel",
+    "Continue": "Continue"
 }

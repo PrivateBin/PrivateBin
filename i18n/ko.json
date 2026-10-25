@@ -235,5 +235,8 @@
     "Copy": "복사",
     "Cmd": "Cmd",
     "Ctrl": "Ctrl",
-    "Hit %s+s to create the document, storing it on %s": "%s+s를 눌러 문서를 생성하고 %s에 저장하세요."
+    "Hit %s+s to create the document, storing it on %s": "%s+s를 눌러 문서를 생성하고 %s에 저장하세요.",
+    "You have unsaved data that will be lost. Do you want to continue?": "You have unsaved data that will be lost. Do you want to continue?",
+    "Cancel": "Cancel",
+    "Continue": "Continue"
 }
