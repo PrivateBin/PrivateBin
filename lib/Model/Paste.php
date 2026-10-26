@@ -116,10 +116,14 @@ class Paste extends AbstractModel
      * Delete the paste.
      *
      * @access public
+     * @throws TranslatedException
      */
     public function delete()
     {
         $this->_store->delete($this->getId());
+        if ($this->exists()) {
+            throw new TranslatedException('Error deleting document. Sorry.', 77);
+        }
     }
 
     /**
