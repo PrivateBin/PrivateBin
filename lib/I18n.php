@@ -192,7 +192,7 @@ class I18n
     }
 
     /**
-     * get languages bsed on the HTTP header
+     * get languages based on the HTTP header
      *
      * @access private
      * @static
@@ -205,14 +205,17 @@ class I18n
             return self::$_languageFallback;
         }
 
-        // as per https://stackoverflow.com/a/9051957/5008962 we can use the I10n module
-        // if loaded, but it only returns the primary preference (aka one string)
+        /* TODO: Once https://github.com/php/php-src/issues/24074 makes it into
+         * all supported PHP releases, we can use the intl module like so:
         if (function_exists('locale_accept_from_http')) {
-            $detectedBestLanguage = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-            if (in_array($detectedBestLanguage, $availableLanguages)) {
+            $detectedBestLanguage = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE'], $availableLanguages);
+            if ($detectedBestLanguage !== false) {
                 return $detectedBestLanguage;
             }
         }
+        * disabled for now as it's order depends on the ICU version installed
+        * and showed large inconsistencies between different test environments
+        */
 
         return self::_getMatchingLanguage(
             self::_normalizeBrowserLanguages(self::getBrowserLanguages(), $availableLanguages),
