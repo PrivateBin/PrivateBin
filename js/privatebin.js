@@ -4105,8 +4105,8 @@ window.PrivateBin = (function () {
                 return;
             }
             event.preventDefault();
-            // required by some older browsers to show the dialog
-            event.returnValue = '';
+            // legacy support, e.g. Chrome/Edge < 119 (see MDN)
+            event.returnValue = true;
         }
 
         /**
