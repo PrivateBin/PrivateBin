@@ -56,7 +56,7 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-        ALLOWED_ATTR: ['href'],
+        FORBID_ATTR: ['id', 'class', 'style'],
         USE_PROFILES: {
             html: true
         }
@@ -2619,11 +2619,13 @@ window.PrivateBin = (function () {
 
             if (format === 'markdown') {
                 const converter = new showdown.Converter({
+                    disallowRawHTML: true,
+                    excludeTrailingPunctuationFromURLs: true,
+                    safeMode: true,
+                    simplifiedAutoLink: true,
                     strikethrough: true,
                     tables: true,
-                    tablesHeaderId: true,
-                    simplifiedAutoLink: true,
-                    excludeTrailingPunctuationFromURLs: true
+                    tablesHeaderId: true
                 });
                 // let showdown convert the HTML and sanitize HTML *afterwards*!
                 if (plainText) {
