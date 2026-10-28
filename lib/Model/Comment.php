@@ -58,8 +58,8 @@ class Comment extends AbstractModel
 
         // Comment IDs must be unique within the paste, regardless of the
         // parent, and the parent must be either the paste or an existing comment.
-        $commentid    = $this->getId();
-        $parentid     = $this->getParentId();
+        $commentid = $this->getId();
+        $parentid = $this->getParentId();
         $parentExists = $parentid === $pasteid;
         if ($commentid === $pasteid) {
             throw new TranslatedException(self::COLLISION_ERROR, 72);
