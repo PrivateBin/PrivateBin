@@ -75,7 +75,14 @@ class Helper
      *
      * @var string
      */
-    private static $commentid = '5a52eebf11c4c94b';
+    private static $commentid = '33a5671d11b29d01';
+
+    /**
+     * example comment cipher text, its hash is the comment ID
+     *
+     * @var string
+     */
+    private static $commentCt = 'XNE9E3AGszrjQfV5bxxSuaflS05MViI3rYtG1Nph0Qc=';
 
     /**
      * example comment meta data
@@ -162,6 +169,7 @@ class Helper
     {
         $example = self::$pasteV2;
         $example['adata'] = $example['adata'][0];
+        $example['ct'] = self::$commentCt;
         $example['pasteid'] = $example['parentid'] = self::getPasteId();
         unset($example['meta']['expire']);
         $example['meta'] = array_merge($example['meta'], self::$commentV2);

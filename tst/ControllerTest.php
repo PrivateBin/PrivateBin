@@ -663,8 +663,8 @@ class ControllerTest extends TestCase
         $paste = Helper::getPaste();
         $this->_data->create(Helper::getPasteId(), $paste);
         $comment = Helper::getComment();
-        $this->_data->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), $comment);
-        $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
+        $this->_data->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment);
+        $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists before posting data');
         $comment = Helper::getCommentJson();
         $file = Helper::createTempFile();
         file_put_contents($file, $comment);
@@ -678,7 +678,7 @@ class ControllerTest extends TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
