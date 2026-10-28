@@ -108,6 +108,20 @@ endif;
 				</div>
 			</div>
 		</div>
+		<div id="unsavedconfirmmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"><?php echo I18n::_('You have unsaved data that will be lost. Do you want to continue?') ?></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"></button>
+					</div>
+					<div class="modal-body text-center">
+						<button id="unsavedconfirm-cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo I18n::_('Cancel') ?></button>
+						<button id="unsavedconfirm-continue" type="button" class="btn btn-danger" data-bs-dismiss="modal"><?php echo I18n::_('Continue') ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
 <?php
 if ($QRCODE) :
 ?>

@@ -2255,6 +2255,32 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * ask the user to confirm an action that would discard unsaved data
+         *
+         * @name   Prompt.requestUnsavedDataConfirmation
+         * @function
+         * @param  {function} onConfirm - called if the user chooses to continue
+         */
+        me.requestUnsavedDataConfirmation = function (onConfirm) {
+            const modal = document.getElementById('unsavedconfirmmodal');
+            const continueButton = modal ? modal.querySelector('#unsavedconfirm-continue') : null;
+            const cancelButton = modal ? modal.querySelector('#unsavedconfirm-cancel') : null;
+            if (!modal || !(continueButton instanceof HTMLElement) || !(cancelButton instanceof HTMLElement) ||
+                typeof bootstrap === 'undefined' || typeof bootstrap.Modal !== 'function') {
+                // fallback when the modal or Bootstrap isn't available
+                if (window.confirm(I18n._('You have unsaved data that will be lost. Do you want to continue?'))) {
+                    onConfirm();
+                }
+                return;
+            }
+
+            // assign (not add) the handler, so repeated prompts don't stack callbacks
+            continueButton.onclick = onConfirm;
+            modal.addEventListener('shown.bs.modal', () => cancelButton.focus(), { once: true });
+            bootstrap.Modal.getOrCreateInstance(modal).show();
+        };
+
+        /**
          * init status manager
          *
          * preloads HTMLElements
@@ -3784,6 +3810,8 @@ window.PrivateBin = (function () {
 
         let createButtonsDisplayed = false,
             viewButtonsDisplayed = false,
+            burnAfterReadingDisplayed = false,
+            leaveConfirmed = false,
             burnAfterReadingDefault = false,
             openDiscussionDefault = false,
             attach,
@@ -4010,11 +4038,13 @@ window.PrivateBin = (function () {
          * @param  {Event} event
          */
         function setLanguage(event) {
-            let lang = event.target.getAttribute('data-lang') || event.target.value;
-
-            document.cookie = 'lang=' + lang + '; SameSite=Lax; Secure';
-            window.location.reload();
             event.preventDefault();
+            const lang = event.target.getAttribute('data-lang') || event.target.value;
+
+            confirmDiscardingUnsavedData(function () {
+                document.cookie = 'lang=' + lang + '; SameSite=Lax; Secure';
+                reloadPage();
+            });
         }
 
         /**
@@ -4026,11 +4056,59 @@ window.PrivateBin = (function () {
          * @param {Event} event
          */
         function setTemplate(event) {
-            let template = event.target.getAttribute('data-template') || event.target.value;
-
-            document.cookie = 'template=' + template + '; SameSite=Lax; Secure';
-            window.location.reload();
             event.preventDefault();
+            const template = event.target.getAttribute('data-template') || event.target.value;
+
+            confirmDiscardingUnsavedData(function () {
+                document.cookie = 'template=' + template + '; SameSite=Lax; Secure';
+                reloadPage();
+            });
+        }
+
+        /**
+         * reloads the page, without triggering the unsaved data warning again
+         *
+         * @name   TopNav.reloadPage
+         * @private
+         * @function
+         */
+        function reloadPage() {
+            leaveConfirmed = true;
+            window.location.reload();
+        }
+
+        /**
+         * runs the given action right away, or after the user confirmed it,
+         * if it would discard unsaved data
+         *
+         * @name   TopNav.confirmDiscardingUnsavedData
+         * @private
+         * @function
+         * @param  {function} action
+         */
+        function confirmDiscardingUnsavedData(action) {
+            if (me.hasUnsavedData()) {
+                Prompt.requestUnsavedDataConfirmation(action);
+            } else {
+                action();
+            }
+        }
+
+        /**
+         * warns the user before leaving the page, if there is unsaved data
+         *
+         * @name   TopNav.warnBeforeUnload
+         * @private
+         * @function
+         * @param  {BeforeUnloadEvent} event
+         */
+        function warnBeforeUnload(event) {
+            if (leaveConfirmed || !me.hasUnsavedData()) {
+                return;
+            }
+            event.preventDefault();
+            // legacy support, e.g. Chrome/Edge < 119 (see MDN)
+            event.returnValue = true;
         }
 
         /**
@@ -4041,8 +4119,10 @@ window.PrivateBin = (function () {
          * @function
          */
         function clickNewPaste() {
-            Controller.hideStatusMessages();
-            Controller.newPaste();
+            confirmDiscardingUnsavedData(function () {
+                Controller.hideStatusMessages();
+                Controller.newPaste();
+            });
         }
 
         /**
@@ -4279,6 +4359,7 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideViewButtons = function () {
+            burnAfterReadingDisplayed = false;
             if (!viewButtonsDisplayed) {
                 return;
             }
@@ -4490,6 +4571,34 @@ window.PrivateBin = (function () {
             if (qrCodeLink) {
                 qrCodeLink.classList.add('hidden');
             }
+        };
+
+        /**
+         * returns true, if leaving the current view would lose data: either
+         * text or attachments not sent yet, or a displayed burn after reading
+         * document, which got already deleted on the server
+         *
+         * @name   TopNav.hasUnsavedData
+         * @function
+         * @return {boolean}
+         */
+        me.hasUnsavedData = function () {
+            if (createButtonsDisplayed) {
+                return Editor.getText().trim() !== '' || AttachmentViewer.hasAttachment();
+            }
+            return viewButtonsDisplayed && burnAfterReadingDisplayed;
+        };
+
+        /**
+         * remembers that a burn after reading document was opened and is
+         * displayed, so it got already deleted on the server
+         *
+         * @name   TopNav.setBurnAfterReadingDisplayed
+         * @function
+         * @param  {boolean} displayed
+         */
+        me.setBurnAfterReadingDisplayed = function (displayed) {
+            burnAfterReadingDisplayed = displayed;
         };
 
         /**
@@ -4782,6 +4891,7 @@ window.PrivateBin = (function () {
             if (newButton) {
                 newButton.addEventListener('click', clickNewPaste);
             }
+            window.addEventListener('beforeunload', warnBeforeUnload);
             if (sendButton) {
                 sendButton.addEventListener('click', PasteEncrypter.sendPaste);
                 document.addEventListener('keydown', sendOnShortcut);
@@ -5620,6 +5730,7 @@ window.PrivateBin = (function () {
                     // discourage cloning (it cannot really be prevented)
                     if (paste.isBurnAfterReadingEnabled()) {
                         TopNav.hideBurnAfterReadingButtons();
+                        TopNav.setBurnAfterReadingDisplayed(true);
                     } else {
                         // we have to pass in remaining_time here
                         TopNav.showEmailButton(
