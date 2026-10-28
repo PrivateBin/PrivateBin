@@ -79,8 +79,8 @@ class FormatV2
             )) {
                 return false;
             }
-        // For pastes: adata must have exactly 4 entries,
-        // and meta must contain only the 'expire' key.
+            // For pastes: adata must have exactly 4 entries,
+            // and meta must contain only the 'expire' key.
         } elseif ($adataLength !== 4 ||
             !is_array($message['meta']) ||
             count($message['meta']) !== 1 ||
