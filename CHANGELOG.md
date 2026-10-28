@@ -2,7 +2,7 @@
 
 ## 2.1.1 (not yet released)
 * ADDED: Translation for Korean (#2071)
-* ADDED: Comments authenticate the IDs of their document and parent comment by default. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled (#2101)
+* ADDED: Comments authenticate the IDs of their document and parent comment if present. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled to validate these fields (#2101)
 * CHANGED: Check `sizelimit` over full request, before attempting decoding
 * CHANGED: Database backend now logs errors when reading comments, like it already did for comment existence checks (#2100)
 * FIXED: Creating a document failed with a JavaScript error when the `discussion`, `password`, e-mail or QR code option is disabled, as the top navigation accessed the omitted elements
