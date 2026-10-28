@@ -168,7 +168,7 @@ class Comment extends AbstractModel
     protected function _validate(array &$data)
     {
         // reject comments without authenticated IDs, if required
-        if ($this->_conf->getKey('discussionrequireids') && count($data['adata']) !== 10) {
+        if ($this->_conf->getKey('discussionrequireauthenticatedids') && count($data['adata']) !== 10) {
             throw new TranslatedException(self::INVALID_DATA_ERROR, 77);
         }
     }

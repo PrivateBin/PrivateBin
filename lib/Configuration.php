@@ -40,7 +40,7 @@ class Configuration
             'discussion'               => true,
             'opendiscussion'           => false,
             'discussiondatedisplay'    => true,
-            'discussionrequireids'     => false,
+            'discussionrequireauthenticatedids'     => false,
             'password'                 => true,
             'fileupload'               => false,
             'burnafterreadingselected' => false,

@@ -224,7 +224,7 @@ class ModelTest extends TestCase
     public function testCommentRequireIds()
     {
         $options = parse_ini_file(CONF, true);
-        $options['main']['discussionrequireids'] = 'true';
+        $options['main']['discussionrequireauthenticatedids'] = 'true';
         Helper::createIniFile(CONF, $options);
         $model = new Model(new Configuration);
 

@@ -26,7 +26,7 @@ opendiscussion = false
 ; require new comments to authenticate the IDs of their document and parent
 ; comment, defaults to false. Comments sent by clients that don't, are rejected.
 ; This prevents copies of comments from getting moved elsewhere in the discussion.
-; discussionrequireids = true
+; discussionrequireauthenticatedids = true
 
 ; enable or disable the password feature, defaults to true
 password = true
