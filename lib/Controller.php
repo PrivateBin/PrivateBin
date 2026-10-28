@@ -92,7 +92,7 @@ class Controller
      * Factory of instance models
      *
      * @access private
-     * @var    model
+     * @var    Model
      */
     private $_model;
 
@@ -100,7 +100,7 @@ class Controller
      * request
      *
      * @access private
-     * @var    request
+     * @var    Request
      */
     private $_request;
 
@@ -280,31 +280,21 @@ class Controller
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
         TrafficLimiter::setStore($this->_model->getStore());
+        $data = [];
         try {
             TrafficLimiter::canPass();
+            $data = $this->_request->getData($this->_conf->getKey('sizelimit'));
         } catch (TranslatedException $e) {
             $this->_json_error($e->getMessage());
             return;
         }
 
-        $data = $this->_request->getData();
         $isComment = array_key_exists('pasteid', $data) &&
             !empty($data['pasteid']) &&
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
         if (!FormatV2::isValid($data, $isComment)) {
             $this->_json_error(I18n::_('Invalid data.'));
-            return;
-        }
-        $sizelimit = $this->_conf->getKey('sizelimit');
-        // Ensure content is not too big.
-        if (strlen($data['ct']) > $sizelimit) {
-            $this->_json_error(
-                I18n::_(
-                    'Document is limited to %s of encrypted data.',
-                    Filter::formatHumanReadableSize($sizelimit)
-                )
-            );
             return;
         }
 
