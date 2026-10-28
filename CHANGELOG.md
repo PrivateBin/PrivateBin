@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.1.1 (not yet released)
+* ADDED: Comments authenticate the IDs of their document and parent comment by default. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireids` option is enabled
 * FIXED: Creating a document failed with a JavaScript error when the `discussion`, `password`, e-mail or QR code option is disabled, as the top navigation accessed the omitted elements
 * ADDED: Translation for Korean (#2071)
 * FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)

@@ -63,6 +63,19 @@ class FormatV2
             return false;
         }
 
+        // Comments may authenticate their document and parent IDs, by
+        // appending them to the cipher parameters. These must match the
+        // unencrypted IDs, which are validated by the comment model.
+        if ($isComment && count($cipherParams) !== 8 && (
+            count($cipherParams) !== 10 ||
+            !is_string($cipherParams[8]) ||
+            !is_string($cipherParams[9]) ||
+            $cipherParams[8] !== $message['pasteid'] ||
+            $cipherParams[9] !== $message['parentid']
+        )) {
+            return false;
+        }
+
         // Make sure the ciphertext and the cipher parameters used in the
         // string operations below are actually strings, so that malformed
         // input yields "Invalid data." instead of a fatal type error.

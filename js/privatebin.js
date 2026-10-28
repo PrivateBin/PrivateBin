@@ -229,6 +229,25 @@ window.PrivateBin = (function () {
         this.getIcon = function () {
             return this.meta.icon || '';
         };
+
+        /**
+         * checks if the comment belongs to the given document and its parent
+         *
+         * Comments without authenticated IDs predate this check and are
+         * accepted.
+         *
+         * @name Comment.isBoundTo
+         * @function
+         * @param  {string} pasteId
+         * @return {bool}
+         */
+        this.isBoundTo = function (pasteId) {
+            return this.adata.length === 8 || (
+                this.adata.length === 10 &&
+                this.adata[8] === pasteId &&
+                this.adata[9] === this.parentid
+            );
+        };
     }
 
     /**
@@ -1235,12 +1254,12 @@ window.PrivateBin = (function () {
             for (let i = 0; i < spec.length; ++i) {
                 encodedSpec[i] = i < 2 ? btoa(spec[i]) : spec[i];
             }
-            if (adata.length === 0) {
-                // comment
-                adata = encodedSpec;
-            } else if (adata[0] === null) {
+            if (adata[0] === null) {
                 // paste
                 adata[0] = encodedSpec;
+            } else {
+                // comment, optionally followed by its document and parent IDs
+                adata = encodedSpec.concat(adata);
             }
 
             // finally, encrypt message
@@ -5279,14 +5298,16 @@ window.PrivateBin = (function () {
             });
 
             // fill it with unencrypted params
-            ServerInteraction.setUnencryptedData('pasteid', Model.getPasteId());
+            const pasteid = Model.getPasteId();
             if (typeof parentid === 'undefined') {
                 // if parent id is not set, this is the top-most comment, so use
                 // document id as parent, as the root element of the discussion tree
-                ServerInteraction.setUnencryptedData('parentid', Model.getPasteId());
-            } else {
-                ServerInteraction.setUnencryptedData('parentid', parentid);
+                parentid = pasteid;
             }
+            ServerInteraction.setUnencryptedData('pasteid', pasteid);
+            ServerInteraction.setUnencryptedData('parentid', parentid);
+            // authenticate the IDs, so the comment can't be moved elsewhere
+            ServerInteraction.setUnencryptedData('adata', [pasteid, parentid]);
 
             // prepare cypher message
             let cipherMessage = {
@@ -5542,11 +5563,15 @@ window.PrivateBin = (function () {
             const commentDecryptionPromises = [];
             // iterate over comments
             for (let i = 0; i < paste.comments.length; ++i) {
-                const comment = new Comment(paste.comments[i]),
-                    commentPromise = CryptTool.decipher(key, password, comment.getCipherData());
+                const comment = new Comment(paste.comments[i]);
                 paste.comments[i] = comment;
+                // skip comments that were moved from another document or parent
+                if (!comment.isBoundTo(Model.getPasteId())) {
+                    commentDecryptionPromises.push(Promise.resolve(['', '']));
+                    continue;
+                }
                 commentDecryptionPromises.push(
-                    commentPromise.then(function (commentJson) {
+                    CryptTool.decipher(key, password, comment.getCipherData()).then(function (commentJson) {
                         const commentMessage = JSON.parse(commentJson);
                         return [
                             commentMessage.comment || '',
