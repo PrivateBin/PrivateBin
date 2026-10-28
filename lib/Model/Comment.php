@@ -56,6 +56,26 @@ class Comment extends AbstractModel
             throw new TranslatedException(self::COLLISION_ERROR, 69);
         }
 
+        // Comment IDs must be unique within the paste, regardless of the
+        // parent, and the parent must be either the paste or an existing comment.
+        $commentid = $this->getId();
+        $parentid = $this->getParentId();
+        $parentExists = $parentid === $pasteid;
+        if ($commentid === $pasteid) {
+            throw new TranslatedException(self::COLLISION_ERROR, 72);
+        }
+        foreach ($this->_store->readComments($pasteid) as $comment) {
+            if ($comment['id'] === $commentid) {
+                throw new TranslatedException(self::COLLISION_ERROR, 69);
+            }
+            if ($comment['id'] === $parentid) {
+                $parentExists = true;
+            }
+        }
+        if (!$parentExists) {
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 71);
+        }
+
         $this->_data['meta']['created'] = time();
 
         // store comment

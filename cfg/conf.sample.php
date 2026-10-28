@@ -45,7 +45,7 @@ defaultformatter = "plaintext"
 ; syntaxhighlightingtheme = "sons-of-obsidian"
 
 ; size limit per document or comment in bytes, defaults to 10 Megabytes
-sizelimit = 10000000
+sizelimit = 10485760
 
 ; by default PrivateBin use "bootstrap5" template (tpl/bootstrap5.php).
 ; Optionally you can enable the template selection menu, which uses

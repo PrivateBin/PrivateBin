@@ -91,7 +91,7 @@ class ModelTest extends TestCase
 
         $comments = $this->_model->getPaste(Helper::getPasteId())->get()['comments'];
         $this->assertTrue(count($comments) === 1, 'comment exists after storing it');
-        $commentData['id'] = Helper::getPasteId();
+        $commentData['id'] = Helper::getCommentId();
         $commentData['meta']['created'] = current($comments)['meta']['created'];
         $commentData['meta']['icon'] = current($comments)['meta']['icon'];
         $this->assertEquals($commentData, current($comments));
@@ -269,6 +269,75 @@ class ModelTest extends TestCase
         $comment->setData($commentData);
         $this->expectException(Exception::class);
         $this->expectExceptionCode(69);
+        $comment->store();
+    }
+
+    public function testCommentDuplicateOtherParent()
+    {
+        $pasteData = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
+        $this->_model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
+        $comment->store();
+        $firstCommentId = $comment->getId();
+
+        // reply to the first comment, using a different ciphertext
+        $replyData = $commentData;
+        $replyData['ct'] = base64_encode('reply ciphertext');
+        $replyData['parentid'] = $firstCommentId;
+        $reply = $paste->getComment($firstCommentId);
+        $reply->setData($replyData);
+        $reply->store();
+        $this->assertTrue($reply->exists(), 'reply to existing comment can be stored');
+
+        // replay of the first comment under the reply as parent
+        $commentData['parentid'] = $reply->getId();
+        $comment = $paste->getComment($reply->getId());
+        $comment->setData($commentData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(69);
+        $comment->store();
+    }
+
+    public function testCommentNonexistentParent()
+    {
+        $pasteData = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
+        $commentData['parentid'] = '1111111111111111';
+        $this->_model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+
+        $comment = $paste->getComment('1111111111111111');
+        $comment->setData($commentData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(71);
+        $comment->store();
+    }
+
+    public function testCommentEqualsPaste()
+    {
+        $pasteData = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
+        $commentData['ct'] = $pasteData['ct'];
+        $this->_model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(72);
         $comment->store();
     }
 
@@ -460,14 +529,14 @@ class ModelTest extends TestCase
         $commentData = Helper::getCommentPost();
         unset($commentData['meta']['icon']);
         $paste = $model->getPaste(Helper::getPasteId());
-        $comment = $paste->getComment(Helper::getPasteId(), Helper::getPasteId());
+        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
         $comment->store();
 
-        $comment = $paste->getComment(Helper::getPasteId(), Helper::getPasteId());
+        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
         $this->assertTrue($comment->exists(), 'comment exists after storing it');
 
         $comment = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
