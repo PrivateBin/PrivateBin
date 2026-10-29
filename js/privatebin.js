@@ -1046,14 +1046,16 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * convert UTF-8 string into a Uint8Array
+         * convert binary string into a Uint8Array
          *
-         * Iterates over the bytes of the message, writing them to the array
+         * Iterates over the characters of the message, writing their codes to
+         * the array. Only use this for binary strings, i.e. the output of atob,
+         * characters above U+00FF get truncated to their lowest byte.
          *
          * @name   CryptTool.stringToArraybuffer
          * @function
          * @private
-         * @param  {string} message UTF-8 string
+         * @param  {string} message binary string
          * @return {Uint8Array} array
          */
         function stringToArraybuffer(message)
@@ -1140,16 +1142,15 @@ window.PrivateBin = (function () {
          * @async
          * @function
          * @private
-         * @param  {string} key
-         * @param  {string} password
-         * @param  {array}  spec cryptographic specification
-         * @return {CryptoKey} derived key
+         * @param  {string}     key
+         * @param  {Uint8Array} passwordArray encoded password
+         * @param  {array}      spec cryptographic specification
+         * @return {CryptoKey}  derived key
          */
-        async function deriveKey(key, password, spec) {
+        async function deriveKey(key, passwordArray, spec) {
             let keyArray = stringToArraybuffer(key);
-            if (password.length > 0) {
-                let passwordArray = stringToArraybuffer(password),
-                    newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
+            if (passwordArray.length > 0) {
+                const newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
                 newKeyArray.set(keyArray, 0);
                 newKeyArray.set(passwordArray, keyArray.length);
                 keyArray = newKeyArray;
@@ -1249,7 +1250,11 @@ window.PrivateBin = (function () {
                     arraybufferToString(
                         await window.crypto.subtle.encrypt(
                             cryptoSettings(JSON.stringify(adata), spec),
-                            await deriveKey(key, password, spec),
+                            await deriveKey(
+                                key,
+                                new TextEncoder().encode(password),
+                                spec
+                            ),
                             await compress(message, compression, zlib)
                         ).catch(Alert.showError)
                     )
@@ -1288,17 +1293,34 @@ window.PrivateBin = (function () {
                     throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.';
                 }
             }
+            const settings = cryptoSettings(adataString, spec),
+                cipherArray = stringToArraybuffer(
+                    atob(cipherMessage)
+                ),
+                decrypt = async passwordArray => window.crypto.subtle.decrypt(
+                    settings,
+                    await deriveKey(key, passwordArray, spec),
+                    cipherArray
+                );
             try {
-                plaintext = await window.crypto.subtle.decrypt(
-                    cryptoSettings(adataString, spec),
-                    await deriveKey(key, password, spec),
-                    stringToArraybuffer(
-                        atob(cipherMessage)
-                    )
+                plaintext = await decrypt(
+                    new TextEncoder().encode(password)
                 );
             } catch (err) {
-                console.error(err);
-                return '';
+                // documents created by earlier versions truncated the
+                // characters of non-ASCII passwords to their lowest byte
+                if (!/[\u0080-\uffff]/.test(password)) {
+                    console.error(err);
+                    return '';
+                }
+                try {
+                    plaintext = await decrypt(
+                        stringToArraybuffer(password)
+                    );
+                } catch (legacyErr) {
+                    console.error(legacyErr);
+                    return '';
+                }
             }
             try {
                 return await decompress(plaintext, spec[7], zlib);
@@ -2823,23 +2845,19 @@ window.PrivateBin = (function () {
             dropzone;
 
         /**
-         * get blob URL from string data and mime type
+         * get blob URL from binary data and mime type
          *
          * @name   AttachmentViewer.getBlobUrl
          * @private
          * @function
-         * @param {string} data - raw data of attachment
-         * @param {string} data - mime type of attachment
+         * @param {Uint8Array} data - raw data of attachment
+         * @param {string} mimeType - mime type of attachment
          * @return {string} objectURL
          */
         function getBlobUrl(data, mimeType) {
             // Transform into a Blob
-            const buf = Uint8Array.from(
-                data,
-                character => character.charCodeAt(0)
-            );
             const blob = new window.Blob(
-                [buf],
+                [data],
                 {
                     type: mimeType
                 }
@@ -2878,12 +2896,19 @@ window.PrivateBin = (function () {
                 sanitizedMimeType = mimeType;
             }
 
-            // extract data and convert to binary
+            // extract data and convert to binary - atob returns a binary
+            // string, each character representing a single byte, so taking
+            // the character codes is lossless here, as opposed to strings in
+            // general, that may contain characters above U+00FF
             const base64Data = attachmentData.substring(base64Start);
-            const plainData = base64Data.length > 0 ? atob(base64Data) : '';
+            const plainData = Uint8Array.from(
+                base64Data.length > 0 ? atob(base64Data) : '',
+                character => character.charCodeAt(0)
+            );
 
-            let blobUrl = getBlobUrl(plainData, sanitizedMimeType);
+            const blobUrl = getBlobUrl(plainData, sanitizedMimeType);
             attachmentLink.setAttribute('href', blobUrl);
+            let previewUrl = blobUrl;
 
             if (typeof fileName !== 'undefined') {
                 attachmentLink.setAttribute('download', fileName);
@@ -2895,39 +2920,39 @@ window.PrivateBin = (function () {
             }
 
             // sanitize SVG preview
-            // prevents executing embedded scripts when CSP is not set and user
-            // right-clicks/long-taps and opens the SVG in a new tab - prevented
-            // in the preview by use of an img tag, which disables scripts, too
+            // prevents executing embedded scripts when the user right-clicks/
+            // long-taps and opens the SVG in a new tab - prevented in the
+            // preview by use of an img tag, which disables scripts, too
             if (mimeType.startsWith('image/svg')) {
                 try {
                     // attempt to UTF-8 decode the SVG data
-                    const svgBuffer = Uint8Array.from(
-                        plainData,
-                        character => character.charCodeAt(0)
-                    );
                     const utf8ValidatedSvgString = new TextDecoder(
                         'utf-8',
                         {fatal: true}
-                    ).decode(svgBuffer);
+                    ).decode(plainData);
                     const sanitizedData = DOMPurify.sanitize(
                         utf8ValidatedSvgString,
                         purifySvgConfig
                     );
+                    // Use a data URL instead of a blob URL: blob URLs share the
+                    // origin of this page, so any script surviving sanitization
+                    // would run in it, if the user opens the image in a new tab.
+                    // Data URLs get an opaque origin or are blocked from being
+                    // opened in a new tab. encodeURIComponent UTF-8 encodes the
+                    // sanitized string, that may contain any unicode character,
+                    // i.e. from decoded character references.
+                    previewUrl = 'data:image/svg+xml;charset=utf-8,' +
+                        encodeURIComponent(sanitizedData);
                     sanitizedMimeType = 'image/svg+xml';
-                    blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
                 } catch (e) {
-                    // Invalid or non-UTF-8 SVG: download only, no preview as it
-                    // may be used to smuggle multi-byte sequences past DOMpurify
-                    // such as `&#x13c` to get `\x01<` & `&#x13e` to get `\x01>`
-                    sanitizedMimeType = 'application/octet-stream';
-                    blobUrl = getBlobUrl(plainData, sanitizedMimeType);
+                    // Invalid or non-UTF-8 SVG: download only, no preview
                 }
             }
 
             template.classList.remove('hidden');
             attachment.appendChild(template);
 
-            me.handleBlobAttachmentPreview(attachmentPreview, blobUrl, sanitizedMimeType);
+            me.handleBlobAttachmentPreview(attachmentPreview, previewUrl, sanitizedMimeType);
         };
 
 
@@ -3242,7 +3267,9 @@ window.PrivateBin = (function () {
                 return;
             }
 
-            const alreadyIncludesCurrentAttachment = targetElement.querySelectorAll(`[src='${blobUrl}']`).length > 0;
+            const alreadyIncludesCurrentAttachment = Array.from(
+                targetElement.querySelectorAll('[src]')
+            ).some(element => element.getAttribute('src') === blobUrl);
 
             if (blobUrl && !alreadyIncludesCurrentAttachment) {
                 if (mimeType.startsWith('image/')) {

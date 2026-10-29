@@ -322,15 +322,32 @@ describe('AttachmentViewer', function () {
             return new Uint8Array(buffer);
         }
 
-        // runs setAttachment on the given SVG source and returns the bytes of
-        // the sanitized image/svg+xml blob, used for the preview
-        async function getSvgPreviewBytes(svg) {
-            const blobs = getAttachmentBlobs(
-                    'data:image/svg+xml;base64,' + Buffer.from(svg, 'utf8').toString('base64')
+        // returns the bytes of a data URL, either base64 or percent-encoded
+        function readDataUrl(url) {
+            const match = /^data:([^,]*),(.*)$/s.exec(url);
+            assert.ok(match, 'uses a data URL, got: ' + url.substring(0, 50));
+            if (match[1].endsWith(';base64')) {
+                return new Uint8Array(Buffer.from(match[2], 'base64'));
+            }
+            assert.ok(/^[\x21-\x7e]*$/.test(match[2]), 'percent-encoded data URL only contains ASCII');
+            return new Uint8Array(Buffer.from(
+                match[2].replace(
+                    /%([0-9a-f]{2})/gi,
+                    (_, hex) => String.fromCharCode(parseInt(hex, 16))
                 ),
-                svgBlobs = blobs.filter(blob => blob.type === 'image/svg+xml');
-            assert.strictEqual(svgBlobs.length, 1, 'creates one sanitized SVG blob');
-            return readBlob(svgBlobs[0]);
+                'latin1'
+            ));
+        }
+
+        // runs setAttachment on the given SVG source and returns the bytes of
+        // the sanitized SVG, used for the preview
+        async function getSvgPreviewBytes(svg) {
+            getAttachmentBlobs(
+                'data:image/svg+xml;base64,' + Buffer.from(svg, 'utf8').toString('base64')
+            );
+            const images = document.querySelectorAll('#attachmentPreview img');
+            assert.strictEqual(images.length, 1, 'shows one SVG preview');
+            return readDataUrl(images[0].getAttribute('src'));
         }
 
         const lookalikeVectors = {
@@ -344,7 +361,7 @@ describe('AttachmentViewer', function () {
                     latin1 = Buffer.from(bytes).toString('latin1');
                 assert.ok(
                     !/<\/?script/i.test(latin1),
-                    'sanitized SVG blob must not contain script tags, got: ' + latin1
+                    'sanitized SVG preview must not contain script tags, got: ' + latin1
                 );
             });
         }
@@ -371,6 +388,28 @@ describe('AttachmentViewer', function () {
             {numRuns: 100});
         });
 
+        it('previews SVGs using a data URL, not a same-origin blob URL', function () {
+            const svg = '<svg xmlns="http://www.w3.org/2000/svg"><text>Gotcha</text></svg>',
+                blobs = getAttachmentBlobs(
+                    'data:image/svg+xml;base64,' + Buffer.from(svg, 'utf8').toString('base64')
+                ),
+                images = document.querySelectorAll('#attachmentPreview img');
+            assert.ok(
+                !blobs.some(blob => blob.type === 'image/svg+xml'),
+                'creates no SVG blob'
+            );
+            assert.strictEqual(images.length, 1, 'shows one SVG preview');
+            assert.ok(
+                images[0].getAttribute('src').startsWith('data:image/svg+xml'),
+                'previews the SVG using a data URL'
+            );
+            assert.strictEqual(
+                Buffer.from(readDataUrl(images[0].getAttribute('src'))).toString('utf8'),
+                svg,
+                'previews the sanitized SVG'
+            );
+        });
+
         it('does not preview SVGs that are not valid UTF-8', async function () {
             // 0xC4 followed by 0x3C ("<") is not a valid UTF-8 sequence
             const svg = Buffer.concat([
@@ -384,6 +423,10 @@ describe('AttachmentViewer', function () {
             assert.ok(
                 !blobs.some(blob => blob.type === 'image/svg+xml'),
                 'creates no SVG blob for preview'
+            );
+            assert.strictEqual(
+                document.querySelectorAll('#attachmentPreview img').length, 0,
+                'shows no preview'
             );
             assert.strictEqual(
                 blobs[blobs.length - 1].type, 'application/octet-stream',

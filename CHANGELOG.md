@@ -8,6 +8,9 @@
 * FIXED: Creating a document failed with a JavaScript error when the `discussion`, `password`, e-mail or QR code option is disabled, as the top navigation accessed the omitted elements
 * FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
 * FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
+* FIXED: SVG attachment previews could turn non-ASCII characters into markup after sanitization, enabling script execution when opening the preview in a new tab
+* FIXED: SVG attachment previews use a data URL, so they no longer run in the instance's origin when opened in a new tab
+* FIXED: Password characters above U+00FF got truncated before key derivation, now passwords get UTF-8 encoded and existing documents remain readable
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
