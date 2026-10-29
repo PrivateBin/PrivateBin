@@ -278,6 +278,142 @@ describe('AttachmentViewer', function () {
         )
     });
 
+    describe('SVG preview encoding', function () {
+        this.timeout(30000);
+
+        // same as purifySvgConfig in privatebin.js
+        const purifySvgConfig = {
+            USE_PROFILES: {
+                svg: true,
+                svgFilters: true
+            }
+        };
+
+        // runs setAttachment on the given data URI and returns the created blobs
+        function getAttachmentBlobs(dataUri) {
+            const blobs = [];
+            document.body.innerHTML = bodyTemplate;
+            Object.defineProperty(
+                window.URL,
+                'createObjectURL',
+                {
+                    configurable: true,
+                    value: function (blob) {
+                        blobs.push(blob);
+                        return 'blob:' + blob.type + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+                    }
+                }
+            );
+            PrivateBin.AttachmentViewer.init();
+            PrivateBin.Model.init();
+            global.atob = common.atob;
+            PrivateBin.AttachmentViewer.setAttachment(dataUri, 'attachment');
+            return blobs;
+        }
+
+        // jsdom's Blob lacks arrayBuffer(), so read it using FileReader
+        async function readBlob(blob) {
+            const buffer = await new Promise((resolve, reject) => {
+                const reader = new window.FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsArrayBuffer(blob);
+            });
+            return new Uint8Array(buffer);
+        }
+
+        // runs setAttachment on the given SVG source and returns the bytes of
+        // the sanitized image/svg+xml blob, used for the preview
+        async function getSvgPreviewBytes(svg) {
+            const blobs = getAttachmentBlobs(
+                    'data:image/svg+xml;base64,' + Buffer.from(svg, 'utf8').toString('base64')
+                ),
+                svgBlobs = blobs.filter(blob => blob.type === 'image/svg+xml');
+            assert.strictEqual(svgBlobs.length, 1, 'creates one sanitized SVG blob');
+            return readBlob(svgBlobs[0]);
+        }
+
+        const lookalikeVectors = {
+            'literal ļ/ľ (U+013C/U+013E)': '<svg xmlns="http://www.w3.org/2000/svg">\u013cscript\u013ealert(1)\u013c/script\u013e</svg>',
+            'character references &#x13c;/&#x13e; (U+013C/U+013E)': '<svg xmlns="http://www.w3.org/2000/svg">&#x13c;script&#x13e;alert(1)&#x13c;/script&#x13e;</svg>',
+            'CJK 丼/举 (U+4E3C/U+4E3E)': '<svg xmlns="http://www.w3.org/2000/svg">\u4e3cscript\u4e3ealert(1)\u4e3c/script\u4e3e</svg>'
+        };
+        for (const [name, svg] of Object.entries(lookalikeVectors)) {
+            it('does not turn look-alike characters into markup: ' + name, async function () {
+                const bytes = await getSvgPreviewBytes(svg),
+                    latin1 = Buffer.from(bytes).toString('latin1');
+                assert.ok(
+                    !/<\/?script/i.test(latin1),
+                    'sanitized SVG blob must not contain script tags, got: ' + latin1
+                );
+            });
+        }
+
+        it('UTF-8 encodes the sanitized SVG without loss', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.string({unit: 'binary'}),
+                async function (text) {
+                    // escape markup, so the text ends up as a single text node
+                    const escaped = text
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;'),
+                        svg = '<svg xmlns="http://www.w3.org/2000/svg"><text>' + escaped + '</text></svg>',
+                        // lone surrogates can't be UTF-8 encoded, so normalize the input first
+                        decodedSvg = Buffer.from(svg, 'utf8').toString('utf8'),
+                        expected = DOMPurify.sanitize(decodedSvg, purifySvgConfig),
+                        bytes = await getSvgPreviewBytes(svg),
+                        actual = new TextDecoder('utf-8', {fatal: true}).decode(bytes);
+                    PrivateBin.AttachmentViewer.removeAttachment();
+                    return expected === actual;
+                }
+            ),
+            {numRuns: 100});
+        });
+
+        it('does not preview SVGs that are not valid UTF-8', async function () {
+            // 0xC4 followed by 0x3C ("<") is not a valid UTF-8 sequence
+            const svg = Buffer.concat([
+                    Buffer.from('<svg xmlns="http://www.w3.org/2000/svg">', 'utf8'),
+                    Buffer.from([0xc4, 0x3c]),
+                    Buffer.from('</svg>', 'utf8')
+                ]),
+                blobs = getAttachmentBlobs(
+                    'data:image/svg+xml;base64,' + svg.toString('base64')
+                );
+            assert.ok(
+                !blobs.some(blob => blob.type === 'image/svg+xml'),
+                'creates no SVG blob for preview'
+            );
+            assert.strictEqual(
+                blobs[blobs.length - 1].type, 'application/octet-stream',
+                'offers download only'
+            );
+            assert.deepStrictEqual(
+                await readBlob(blobs[blobs.length - 1]),
+                new Uint8Array(svg),
+                'keeps the original bytes for download'
+            );
+        });
+
+        it('keeps the bytes of attachments for download intact', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.constantFrom('image/png', 'application/pdf', 'application/octet-stream', 'image/svg+xml'),
+                fc.uint8Array(),
+                async function (mimeType, data) {
+                    const blobs = getAttachmentBlobs(
+                            'data:' + mimeType + ';base64,' + Buffer.from(data).toString('base64')
+                        ),
+                        // the first blob is used for the download link
+                        bytes = await readBlob(blobs[0]);
+                    PrivateBin.AttachmentViewer.removeAttachment();
+                    return Buffer.from(bytes).equals(Buffer.from(data));
+                }
+            ),
+            {numRuns: 100});
+        });
+    });
+
     function mockCreateObjectUrl(includeType = true) {
         Object.defineProperty(
             window.URL,

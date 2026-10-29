@@ -122,6 +122,73 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
             ),
             {numRuns: 3});
         });
+
+        it('can en- and decrypt any unicode message and password', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.string({unit: 'binary', minLength: 1}),
+                fc.string({unit: 'binary'}),
+                async function (message, password) {
+                    const clean = globalThis.cleanup();
+                    // ensure zlib is getting loaded
+                    PrivateBin.Controller.initZlib();
+                    Object.defineProperty(window, 'crypto', {
+                        value: new WebCrypto(),
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
+                    });
+                    global.atob = common.atob;
+                    global.btoa = common.btoa;
+                    const key = PrivateBin.CryptTool.getSymmetricKey(),
+                        cipherMessage = await PrivateBin.CryptTool.cipher(
+                            key, password, message, []
+                        ),
+                        plaintext = await PrivateBin.CryptTool.decipher(
+                            key, password, cipherMessage
+                        );
+                    clean();
+                    const result = (message === plaintext);
+                    if (!result) console.log(plaintext, cipherMessage);
+                    return result;
+                }
+            ),
+            {numRuns: 3});
+        });
+
+        it('does not accept passwords that only share the low byte of each character', async function () {
+            const passwordPairs = [
+                ['\u013c', '<'],             // U+013C vs <
+                ['\u4e2d\u6587', '-\u0087'], // U+4E2D U+6587 vs 0x2D 0x87
+                ['\u20ac', '\u00ac']         // U+20AC vs 0xAC
+            ];
+            for (const [password, lowBytePassword] of passwordPairs) {
+                const clean = globalThis.cleanup();
+                // ensure zlib is getting loaded
+                PrivateBin.Controller.initZlib();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    configurable: true,
+                    enumerable: true,
+                    writable: false
+                });
+                global.atob = common.atob;
+                global.btoa = common.btoa;
+                const key = PrivateBin.CryptTool.getSymmetricKey(),
+                    cipherMessage = await PrivateBin.CryptTool.cipher(
+                        key, password, 'secret', []
+                    ),
+                    plaintext = await PrivateBin.CryptTool.decipher(
+                        key, lowBytePassword, cipherMessage
+                    );
+                clean();
+                assert.strictEqual(
+                    plaintext, '',
+                    'password ' + JSON.stringify(lowBytePassword) +
+                    ' must not decrypt a document encrypted with ' +
+                    JSON.stringify(password)
+                );
+            }
+        });
     });
 
     describe('getSymmetricKey', function () {
