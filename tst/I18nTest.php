@@ -26,6 +26,19 @@ class I18nTest extends TestCase
 {
     private $_translations = [];
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        fwrite(
+            STDERR,
+            sprintf(
+                "I18n tests: Intl extension loaded=%s; locale_accept_from_http exists=%s\n",
+                extension_loaded('intl') ? 'yes' : 'no',
+                function_exists('locale_accept_from_http') ? 'yes' : 'no'
+            )
+        );
+    }
+
     public function setUp(): void
     {
         /* Setup Routine */
