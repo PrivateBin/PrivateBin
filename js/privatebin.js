@@ -1293,34 +1293,28 @@ window.PrivateBin = (function () {
                     throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.';
                 }
             }
-            const settings = cryptoSettings(adataString, spec),
-                cipherArray = stringToArraybuffer(
-                    atob(cipherMessage)
-                ),
-                decrypt = async passwordArray => window.crypto.subtle.decrypt(
-                    settings,
-                    await deriveKey(key, passwordArray, spec),
-                    cipherArray
-                );
-            try {
-                plaintext = await decrypt(
-                    new TextEncoder().encode(password)
-                );
-            } catch (err) {
-                // documents created by earlier versions truncated the
-                // characters of non-ASCII passwords to their lowest byte
-                if (!/[\u0080-\uffff]/.test(password)) {
-                    console.error(err);
-                    return '';
-                }
+            const passwordArray = [new TextEncoder().encode(password)];
+            // documents created by earlier versions truncated the characters
+            // of non-ASCII passwords to their lowest byte
+            if (/[\u0080-\uffff]/.test(password)) {
+                passwordArray.push(stringToArraybuffer(password));
+            }
+            let decryptionError;
+            for (const passwordAttempt of passwordArray) {
                 try {
-                    plaintext = await decrypt(
-                        stringToArraybuffer(password)
+                    plaintext = await window.crypto.subtle.decrypt(
+                        cryptoSettings(adataString, spec),
+                        await deriveKey(key, passwordAttempt, spec),
+                        stringToArraybuffer(atob(cipherMessage))
                     );
-                } catch (legacyErr) {
-                    console.error(legacyErr);
-                    return '';
+                    break;
+                } catch (err) {
+                    decryptionError = err;
                 }
+            }
+            if (typeof plaintext === 'undefined') {
+                console.error(decryptionError);
+                return '';
             }
             try {
                 return await decompress(plaintext, spec[7], zlib);
