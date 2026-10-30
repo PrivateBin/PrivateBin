@@ -253,6 +253,9 @@ if ($PASSWORD) :
 									<button class="btn btn-outline-secondary toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
 										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
 									</button>
+									<button class="btn btn-outline-secondary generate-password" type="button" title="<?php echo I18n::_('Generate password'); ?>" aria-label="<?php echo I18n::_('Generate password'); ?>">
+										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg>
+									</button>
 								</div>
 							</div>
 						</li>
