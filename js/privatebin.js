@@ -3826,7 +3826,9 @@ window.PrivateBin = (function () {
             sendButton,
             retryButton,
             pasteExpiration = null,
-            retryButtonCallback;
+            retryButtonCallback,
+            emailLinkListeners = null,
+            emailConfirmListeners = null;
 
         /**
          * set the expiration on bootstrap templates in dropdown
@@ -4209,6 +4211,35 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * removes the event listeners of the e-mail confirmation dialog
+         *
+         * @name   TopNav.removeEmailConfirmListeners
+         * @private
+         * @function
+         */
+        function removeEmailConfirmListeners() {
+            if (emailConfirmListeners) {
+                emailConfirmListeners.abort();
+                emailConfirmListeners = null;
+            }
+        }
+
+        /**
+         * removes the event listeners of the e-mail button and its dialog
+         *
+         * @name   TopNav.removeEmailListeners
+         * @private
+         * @function
+         */
+        function removeEmailListeners() {
+            removeEmailConfirmListeners();
+            if (emailLinkListeners) {
+                emailLinkListeners.abort();
+                emailLinkListeners = null;
+            }
+        }
+
+        /**
          * Send Email with current document (URL).
          *
          * @name   TopNav.sendEmail
@@ -4244,23 +4275,26 @@ window.PrivateBin = (function () {
                             [], localeConfiguration
                         ), isBurnafterreading
                     );
+                    // only send once per opening of the dialog
+                    removeEmailConfirmListeners();
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
                     }
                     triggerEmailSend(emailSubject, emailBody);
                 }
 
+                // replace the listeners of a previous opening of the dialog
+                removeEmailConfirmListeners();
+                emailConfirmListeners = new window.AbortController();
+                const signal = emailConfirmListeners.signal;
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
                     emailconfirmTimezoneUtc.focus();
-                });
-
-                emailconfirmTimezoneCurrent.removeEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneUtc.removeEventListener('click', sendEmailAndHideModal);
+                }, {signal});
+                emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal, {signal});
                 emailconfirmTimezoneUtc.addEventListener('click', () => {
                     localeConfiguration.timeZone = 'UTC';
                     sendEmailAndHideModal();
-                });
+                }, {signal});
                 if (bootstrap5EmailConfirmModal) {
                     bootstrap5EmailConfirmModal.show();
                 }
@@ -4444,10 +4478,12 @@ window.PrivateBin = (function () {
                     optionalBurnAfterReading : TopNav.getBurnAfterReading();
 
                 emailLink.classList.remove('hidden');
-                emailLink.removeEventListener('click', sendEmail);
+                // replace the listeners of a previous document
+                removeEmailListeners();
+                emailLinkListeners = new window.AbortController();
                 emailLink.addEventListener('click', () => {
                     sendEmail(expirationDate, isBurnafterreading);
-                });
+                }, {signal: emailLinkListeners.signal});
             } catch (error) {
                 console.error(error);
                 Alert.showError('Cannot calculate expiration date.');
@@ -4466,7 +4502,7 @@ window.PrivateBin = (function () {
             }
 
             emailLink.classList.add('hidden');
-            emailLink.removeEventListener('click', sendEmail);
+            removeEmailListeners();
         };
 
         /**

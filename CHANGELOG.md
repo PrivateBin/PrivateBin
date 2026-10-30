@@ -10,6 +10,7 @@
 * FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
 * FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
 * FIXED: Comments must now be unique in cipher text within a document, not reuse existing cipher texts (#2100)
+* FIXED: E-mail button sent several e-mails after being shown again or after its confirmation dialog was dismissed, possibly with the expiration of an earlier document
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
