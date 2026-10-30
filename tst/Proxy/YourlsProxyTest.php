@@ -19,11 +19,11 @@ class YourlsProxyTest extends TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        $this->_mock_yourls_service         = $this->_path . DIRECTORY_SEPARATOR . 'yourls.json';
-        $options                            = parse_ini_file(CONF_SAMPLE, true);
-        $options['main']['basepath']        = 'https://example.com/';
-        $options['main']['urlshortener']    = 'https://example.com/shortenviayourls?link=';
-        $options['yourls']['apiurl']        = $this->_mock_yourls_service;
+        $this->_mock_yourls_service = $this->_path . DIRECTORY_SEPARATOR . 'yourls.json';
+        $options = parse_ini_file(CONF_SAMPLE, true);
+        $options['main']['basepath'] = 'https://example.com/';
+        $options['main']['urlshortener'] = 'https://example.com/shortenviayourls?link=';
+        $options['yourls']['apiurl'] = $this->_mock_yourls_service;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $this->_conf = new Configuration;

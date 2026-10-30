@@ -3,7 +3,6 @@ preset: recommended
 risky: false
 
 enabled:
-  - align_equals
   - concat_with_spaces
   - no_empty_comment
   - pre_increment
@@ -26,7 +25,6 @@ disabled:
   - phpdoc_summary
   - post_increment
   - single_line_after_imports
-  - unalign_equals
 
 finder:
   path:

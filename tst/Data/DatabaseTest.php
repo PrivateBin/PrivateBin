@@ -22,7 +22,7 @@ class DatabaseTest extends TestCase
     public function setUp(): void
     {
         /* Setup Routine */
-        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = new Database($this->_options);
     }
 
@@ -63,22 +63,22 @@ class DatabaseTest extends TestCase
         $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
-        $comment1             = Helper::getComment();
-        $comment2             = Helper::getComment();
-        $meta1                = $comment1['meta'];
-        $meta2                = $comment2['meta'];
+        $comment1 = Helper::getComment();
+        $comment2 = Helper::getComment();
+        $meta1 = $comment1['meta'];
+        $meta2 = $comment2['meta'];
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment 1 does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment1) !== false, 'store comment 1');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment 2 exists after storing it');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment 2 does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), $comment2) !== false, 'store comment 2');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment 2 exists after storing it');
-        $comment1['id']       = Helper::getCommentId();
+        $comment1['id'] = Helper::getCommentId();
         $comment1['parentid'] = Helper::getPasteId();
-        $comment1['meta']     = $meta1;
-        $comment2['id']       = Helper::getPasteId();
+        $comment1['meta'] = $meta1;
+        $comment2['id'] = Helper::getPasteId();
         $comment2['parentid'] = Helper::getPasteId();
-        $comment2['meta']     = $meta2;
+        $comment2['meta'] = $meta2;
         $this->assertEquals(
             [
                 $comment1['meta']['created']        => $comment1,
@@ -98,7 +98,7 @@ class DatabaseTest extends TestCase
     {
         $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
-        $original                          = $paste                                = Helper::getPaste(['expire_date' => 1344803344]);
+        $original = $paste = Helper::getPaste(['expire_date' => 1344803344]);
         $paste['meta']['burnafterreading'] = $original['meta']['burnafterreading'] = true;
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
@@ -112,16 +112,16 @@ class DatabaseTest extends TestCase
     public function testCommentsWithSameTimestampRemainInInsertionOrder()
     {
         $pasteid = Helper::getPasteId();
-        $paste   = Helper::getPaste();
+        $paste = Helper::getPaste();
         $this->_model->delete($pasteid);
         $this->assertTrue($this->_model->create($pasteid, $paste));
 
         $expectedIds = [];
         for ($i = 1; $i <= 12; ++$i) {
-            $comment                    = Helper::getComment();
+            $comment = Helper::getComment();
             $comment['meta']['created'] = 1735689600;
-            $commentid                  = sprintf('%016x', $i);
-            $expectedIds[]              = $commentid;
+            $commentid = sprintf('%016x', $i);
+            $expectedIds[] = $commentid;
             $this->assertTrue(
                 $this->_model->createComment($pasteid, $pasteid, $commentid, $comment)
             );
@@ -145,9 +145,9 @@ class DatabaseTest extends TestCase
     {
         $this->_model->delete(Helper::getPasteId());
         $expired = Helper::getPaste(['expire_date' => 1344803344]);
-        $paste   = Helper::getPaste(['expire_date' => time() + 3600]);
-        $keys    = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
-        $ids     = [];
+        $paste = Helper::getPaste(['expire_date' => time() + 3600]);
+        $keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
+        $ids = [];
         foreach ($keys as $key) {
             $ids[$key] = hash('fnv164', $key);
             $this->_model->delete($ids[$key]);
@@ -189,7 +189,7 @@ class DatabaseTest extends TestCase
     {
         $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
-        $data    = Helper::getPaste();
+        $data = Helper::getPaste();
         $comment = Helper::getComment(['icon' => "Invalid UTF-8 sequence: \xB1\x31"]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
@@ -309,7 +309,7 @@ class DatabaseTest extends TestCase
         }
         $this->_options['dsn'] = 'sqlite:' . $path;
         $this->_options['tbl'] = 'foo_';
-        $db                    = new PDO(
+        $db = new PDO(
             $this->_options['dsn'],
             $this->_options['usr'],
             $this->_options['pwd'],
@@ -347,9 +347,9 @@ class DatabaseTest extends TestCase
 
     public function testOciClob()
     {
-        $int    = (int) random_bytes(1);
+        $int = (int) random_bytes(1);
         $string = random_bytes(10);
-        $clob   = fopen('php://memory', 'r+');
+        $clob = fopen('php://memory', 'r+');
         fwrite($clob, $string);
         rewind($clob);
         $this->assertEquals($int, Database::_sanitizeClob($int));

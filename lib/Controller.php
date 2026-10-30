@@ -32,7 +32,7 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '2.0.6';
+    const VERSION = '2.1.0';
 
     /**
      * minimal required PHP version
@@ -92,7 +92,7 @@ class Controller
      * Factory of instance models
      *
      * @access private
-     * @var    model
+     * @var    Model
      */
     private $_model;
 
@@ -100,7 +100,7 @@ class Controller
      * request
      *
      * @access private
-     * @var    request
+     * @var    Request
      */
     private $_request;
 
@@ -124,7 +124,7 @@ class Controller
      */
     public function __construct(?Configuration $config = null)
     {
-        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
+        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION, '<')) {
             error_log(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION));
             return;
         }
@@ -189,7 +189,7 @@ class Controller
      */
     private function _init()
     {
-        $this->_model   = new Model($this->_conf);
+        $this->_model = new Model($this->_conf);
         $this->_request = new Request;
         $this->_urlBase = $this->_request->getRequestUri();
 
@@ -226,7 +226,7 @@ class Controller
     private function _setDefaultTemplate()
     {
         $templates = $this->_conf->getKey('availabletemplates');
-        $template  = $this->_conf->getKey('template');
+        $template = $this->_conf->getKey('template');
         if (!in_array($template, $templates, true)) {
             $templates[] = $template;
         }
@@ -280,31 +280,21 @@ class Controller
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
         TrafficLimiter::setStore($this->_model->getStore());
+        $data = [];
         try {
             TrafficLimiter::canPass();
+            $data = $this->_request->getData($this->_conf->getKey('sizelimit'));
         } catch (TranslatedException $e) {
             $this->_json_error($e->getMessage());
             return;
         }
 
-        $data      = $this->_request->getData();
         $isComment = array_key_exists('pasteid', $data) &&
             !empty($data['pasteid']) &&
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
         if (!FormatV2::isValid($data, $isComment)) {
             $this->_json_error(I18n::_('Invalid data.'));
-            return;
-        }
-        $sizelimit = $this->_conf->getKey('sizelimit');
-        // Ensure content is not too big.
-        if (strlen($data['ct']) > $sizelimit) {
-            $this->_json_error(
-                I18n::_(
-                    'Document is limited to %s of encrypted data.',
-                    Filter::formatHumanReadableSize($sizelimit)
-                )
-            );
             return;
         }
 
@@ -356,7 +346,7 @@ class Controller
                 if (hash_equals($paste->getDeleteToken(), $deletetoken)) {
                     // Document exists and deletion token is valid: Delete the it.
                     $paste->delete();
-                    $this->_status     = 'Document was properly deleted.';
+                    $this->_status = 'Document was properly deleted.';
                     $this->_is_deleted = true;
                 } else {
                     $this->_error = 'Wrong deletion token. Document was not deleted.';
@@ -517,7 +507,7 @@ class Controller
             $type = '';
         }
         $content = '{}';
-        $file    = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
+        $file = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
         if (is_readable($file)) {
             $content = str_replace(
                 '?jsonld=',

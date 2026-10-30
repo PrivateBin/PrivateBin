@@ -87,7 +87,7 @@ class S3Storage extends AbstractData
         if (isset($options['accesskey']) && isset($options['secretkey'])) {
             $this->_options['credentials'] = [];
 
-            $this->_options['credentials']['key']    = $options['accesskey'];
+            $this->_options['credentials']['key'] = $options['accesskey'];
             $this->_options['credentials']['secret'] = $options['secretkey'];
         }
         if (array_key_exists('region', $options)) {
@@ -122,16 +122,16 @@ class S3Storage extends AbstractData
     private function _listAllObjects($prefix)
     {
         $allObjects = [];
-        $options    = [
+        $options = [
             'Bucket' => $this->_bucket,
             'Prefix' => $prefix,
         ];
 
         do {
             $objectsListResponse = $this->_client->listObjects($options);
-            $objects             = $objectsListResponse['Contents'] ?? [];
+            $objects = $objectsListResponse['Contents'] ?? [];
             foreach ($objects as $object) {
-                $allObjects[]      = $object;
+                $allObjects[] = $object;
                 $options['Marker'] = $object['Key'];
             }
         } while ($objectsListResponse['IsTruncated']);
@@ -280,7 +280,7 @@ class S3Storage extends AbstractData
     public function readComments($pasteid)
     {
         $comments = [];
-        $prefix   = $this->_getKey($pasteid) . '/discussion/';
+        $prefix = $this->_getKey($pasteid) . '/discussion/';
         try {
             $entries = $this->_listAllObjects($prefix);
             foreach ($entries as $entry) {
@@ -288,13 +288,13 @@ class S3Storage extends AbstractData
                     'Bucket' => $this->_bucket,
                     'Key'    => $entry['Key'],
                 ]);
-                $data             = $object['Body']->getContents();
-                $body             = JSON::decode($data);
-                $items            = explode('/', $entry['Key']);
-                $body['id']       = $items[3];
+                $data = $object['Body']->getContents();
+                $body = JSON::decode($data);
+                $items = explode('/', $entry['Key']);
+                $body['id'] = $items[3];
                 $body['parentid'] = $items[2];
-                $slot             = $this->getOpenSlot($comments, (int) $object['Metadata']['created']);
-                $comments[$slot]  = $body;
+                $slot = $this->getOpenSlot($comments, (int) $object['Metadata']['created']);
+                $comments[$slot] = $body;
             }
         } catch (S3Exception $e) {
             // no comments found
@@ -420,8 +420,8 @@ class S3Storage extends AbstractData
     protected function _getExpiredPastes($batchsize)
     {
         $expired = [];
-        $now     = time();
-        $prefix  = $this->_prefix;
+        $now = time();
+        $prefix = $this->_prefix;
         if (!empty($prefix)) {
             $prefix .= '/';
         }

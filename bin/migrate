@@ -20,7 +20,7 @@ use PrivateBin\Configuration;
 use PrivateBin\Model;
 
 // third argument in getopt requires PHP >= 7.1
-if (version_compare(PHP_VERSION, '7.1.0') < 0) {
+if (version_compare(PHP_VERSION, '7.1.0', '<')) {
     dieerr('migrate requires php 7.1 or above to work. Sorry.');
 }
 

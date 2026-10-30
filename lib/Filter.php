@@ -60,7 +60,7 @@ class Filter
     public static function formatHumanReadableSize($size)
     {
         $iec = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        $i   = 0;
+        $i = 0;
         while (($size / 1000) >= 1) {
             $size = $size / 1000;
             ++$i;

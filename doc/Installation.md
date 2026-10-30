@@ -19,6 +19,18 @@ for more information.
 
 - [Config Configuration - PrivateBin by @e1mo](https://galaxy.ansible.com/ui/standalone/roles/e1mo/privatebin/) ([Github source code](https://git.sr.ht/~e1mo/ansible-role-privatebin)): Deploy PrivateBin configuration to disk with a customized configuration.
 
+**NOTE:** There are also container images and a Helm chart for Kubernetes:
+
+- [Container images](https://github.com/PrivateBin/docker-nginx-fpm-alpine#image-variants): Pre-installed PrivateBin on Nginx and php-fpm or [FreeUnit](https://github.com/PrivateBin/docker-unit-alpine/#image-variants), both Alpine-based, available on Docker Hub (`privatebin/…`) and GitHub (`ghcr.io/privatebin/…`), with variants for file based, database, Google Cloud and S3 storage.
+
+- [Helm chart](https://github.com/PrivateBin/helm-chart#quick-start): Deploys the container image to Kubernetes:
+
+  ```bash
+  helm repo add privatebin https://privatebin.github.io/helm-chart
+  helm repo update
+  helm install privatebin privatebin/privatebin
+  ```
+
 ### Minimal Requirements
 
 - PHP version 7.4 or above
@@ -129,10 +141,49 @@ you can also adjust an existing `robots.txt` file. More bot detection is
 implemented in JavaScript, but note none of these mechanisms is a 100% fail-safe
 way to prevent non-human visitors on your site.
 
+#### Server-side User-Agent blocking
+
+Client-side checks and `robots.txt` only help after a request reaches PrivateBin
+(or when a crawler chooses to honour `robots.txt`). You can additionally reject
+obvious crawler User-Agents in the web server, before PHP runs. That reduces
+noise in logs and lowers the chance that automated clients fetch paste URLs.
+
 A `.htaccess.disabled` file is provided in the root dir of PrivateBin. It blocks
 some known robots and link-scanning bots. If you use Apache, you can rename the
-file to `.htaccess` to enable this feature. If you use another webserver, you
-have to configure it manually to do the same.
+file to `.htaccess` to enable this feature. The shipped rules return HTTP 403
+when the User-Agent matches patterns such as `bot`, `spider`, `crawl`, embedded
+URLs, WhatsApp, Skype preview, or `facebookexternalhit`, while still allowing
+the Let's Encrypt validation User-Agent.
+
+If you use another web server, configure an equivalent deny list manually.
+For nginx, a `map` based on `$http_user_agent` is a common approach:
+
+```nginx
+map $http_user_agent $privatebin_bad_bot {
+    default                                                 0;
+    ~*Let's Encrypt validation server                        0;
+    ~*(?:bot|spider|crawl|https?://|WhatsApp|SkypeUriPreview|facebookexternalhit) 1;
+}
+
+server {
+    # ... existing PrivateBin server block ...
+
+    if ($privatebin_bad_bot) {
+        return 403;
+    }
+}
+```
+
+Tune the patterns for your environment. Broad matches such as `bot` can block
+legitimate tools or uptime monitors that put those substrings in their
+User-Agent. Prefer keeping health checks on simple HTTPS GETs that do not need
+to execute the client-side JavaScript bot detection.
+
+Operators of the official container images can apply the same idea in the
+image web-server config (for example nginx in
+[docker-nginx-fpm-alpine](https://github.com/PrivateBin/docker-nginx-fpm-alpine)
+or the Unit config in
+[docker-unit-alpine](https://github.com/PrivateBin/docker-unit-alpine)).
 
 ### On using Cloudflare
 
@@ -206,7 +257,7 @@ CREATE INDEX parent ON prefix_comment(pasteid);
 CREATE TABLE prefix_config (
     id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
 );
-INSERT INTO prefix_config VALUES('VERSION', '2.0.6');
+INSERT INTO prefix_config VALUES('VERSION', '2.1.0');
 ```
 
 In **PostgreSQL**, the `data`, `attachment`, `nickname` and `vizhash` columns

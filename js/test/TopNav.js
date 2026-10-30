@@ -10,10 +10,82 @@ function query(selector) {
 }
 
 describe('TopNav', function () {
+    describe('showEmailButton', function () {
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('does nothing when the email button is omitted from the page', function () {
+            document.documentElement.innerHTML =
+                '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                'type="button">New</button></li></ul></div></nav>';
+            PrivateBin.TopNav.init();
+
+            const originalShowError = PrivateBin.Alert.showError;
+            let errorShown = false;
+            PrivateBin.Alert.showError = function () {
+                errorShown = true;
+            };
+
+            try {
+                assert.doesNotThrow(() => PrivateBin.TopNav.showEmailButton());
+                assert.strictEqual(errorShown, false);
+            } finally {
+                PrivateBin.Alert.showError = originalShowError;
+            }
+        });
+    });
+
+    describe('hideBurnAfterReadingButtons', function () {
+        it(
+            'hides buttons when the QR code button is disabled',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><button id="clonebutton"></button></nav>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.hideBurnAfterReadingButtons();
+                });
+                assert.ok(query('#clonebutton').classList.contains('hidden'));
+                cleanup();
+            }
+        );
+    });
+
     describe('showViewButtons & hideViewButtons', function () {
         before(function () {
             cleanup();
         });
+
+        it(
+            'shows and hides navigation elements when the QR code button is disabled',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><button id="newbutton" class="hidden"></button>' +
+                    '<button id="clonebutton" class="hidden"></button>' +
+                    '<button id="rawtextbutton" class="hidden"></button>' +
+                    '<button id="downloadtextbutton" class="hidden"></button></nav>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.showViewButtons();
+                });
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+                assert.ok(!query('#clonebutton').classList.contains('hidden'));
+                assert.ok(!query('#rawtextbutton').classList.contains('hidden'));
+                assert.ok(!query('#downloadtextbutton').classList.contains('hidden'));
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.hideViewButtons();
+                });
+                assert.ok(query('#newbutton').classList.contains('hidden'));
+                assert.ok(query('#clonebutton').classList.contains('hidden'));
+                assert.ok(query('#rawtextbutton').classList.contains('hidden'));
+                assert.ok(query('#downloadtextbutton').classList.contains('hidden'));
+                cleanup();
+            }
+        );
 
         it(
             'displays & hides navigation elements for viewing an existing document',
@@ -125,6 +197,113 @@ describe('TopNav', function () {
                 assert.ok(result);
             }
         );
+
+        it(
+            'tolerates missing optional elements (discussion & password disabled)',
+            function () {
+                // with discussion = false and password = false in the
+                // configuration, the template omits these elements entirely
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                    'type="button" class="hidden">New</button></li><li><a ' +
+                    'id="expiration" href="#" class="hidden">Expiration</a>' +
+                    '</li><li><div id="burnafterreadingoption" class="hidden">' +
+                    'Burn after reading</div></li><li>' +
+                    '<a id="formatter" href="#" class="hidden">Format</a>' +
+                    '</li><li><button id="sendbutton" type="button" ' +
+                    'class="hidden">Create</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                assert.doesNotThrow(() => PrivateBin.TopNav.showCreateButtons());
+                assert.ok(!query('#sendbutton').classList.contains('hidden'));
+                assert.ok(!query('#burnafterreadingoption').classList.contains('hidden'));
+                assert.doesNotThrow(() => PrivateBin.TopNav.hideCreateButtons());
+                assert.ok(query('#sendbutton').classList.contains('hidden'));
+                assert.ok(query('#burnafterreadingoption').classList.contains('hidden'));
+                cleanup();
+            }
+        );
+    });
+
+    describe('send shortcut', function () {
+        let sendCount;
+
+        // builds the create-document navbar and stubs the actual send, so no
+        // server interaction happens
+        function setUpCreateMode() {
+            cleanup();
+            sendCount = 0;
+            document.documentElement.innerHTML =
+                '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                'type="button" class="hidden">New</button></li><li><a ' +
+                'id="expiration" href="#" class="hidden">Expiration</a>' +
+                '</li><li><div id="burnafterreadingoption" class="hidden">' +
+                'Burn after reading</div></li><li><div id="opendiscussion' +
+                'option" class="hidden">Open discussion</div></li><li>' +
+                '<div id="password" class="hidden">Password</div></li>' +
+                '<li id="attach" class="hidden">Attach a file</li><li>' +
+                '<a id="formatter" href="#" class="hidden">Format</a>' +
+                '</li><li><button id="sendbutton" type="button" ' +
+                'class="hidden">Create</button></li></ul></div></nav>';
+            PrivateBin.PasteEncrypter.sendPaste = function () {
+                sendCount++;
+            };
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showCreateButtons();
+        }
+
+        // dispatches a keydown on the document, returns whether the default was prevented
+        function pressKey(options) {
+            const event = new window.KeyboardEvent('keydown', Object.assign(
+                {bubbles: true, cancelable: true}, options
+            ));
+            document.dispatchEvent(event);
+            return event.defaultPrevented;
+        }
+
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('sends the document on Ctrl+S and suppresses the browser save dialog', function () {
+            setUpCreateMode();
+            const prevented = pressKey({key: 's', code: 'KeyS', ctrlKey: true});
+            assert.strictEqual(sendCount, 1);
+            assert.ok(prevented);
+        });
+
+        it('sends the document on Cmd+S (macOS)', function () {
+            setUpCreateMode();
+            const prevented = pressKey({key: 's', code: 'KeyS', metaKey: true});
+            assert.strictEqual(sendCount, 1);
+            assert.ok(prevented);
+        });
+
+        it('sends on the physical S key of non-Latin keyboard layouts', function () {
+            setUpCreateMode();
+            // on a Russian layout the S key produces "ы"
+            pressKey({key: 'ы', code: 'KeyS', ctrlKey: true});
+            assert.strictEqual(sendCount, 1);
+        });
+
+        it('leaves Ctrl+S to the browser when viewing a document', function () {
+            setUpCreateMode();
+            PrivateBin.TopNav.hideCreateButtons();
+            const prevented = pressKey({key: 's', code: 'KeyS', ctrlKey: true});
+            assert.strictEqual(sendCount, 0);
+            assert.ok(!prevented);
+        });
+
+        it('ignores S without Ctrl/Cmd, with AltGr (Ctrl+Alt), with Shift, or other keys', function () {
+            setUpCreateMode();
+            const prevented = [
+                pressKey({key: 's', code: 'KeyS'}),
+                pressKey({key: 's', code: 'KeyS', ctrlKey: true, altKey: true}),
+                pressKey({key: 'S', code: 'KeyS', ctrlKey: true, shiftKey: true}),
+                pressKey({key: 'd', code: 'KeyD', ctrlKey: true})
+            ];
+            assert.strictEqual(sendCount, 0);
+            assert.deepStrictEqual(prevented, [false, false, false, false]);
+        });
     });
 
     describe('showNewPasteButton', function () {
@@ -484,6 +663,21 @@ describe('TopNav', function () {
                 assert.ok(result);
             }
         );
+
+        it(
+            'tolerates a missing discussion option (discussion disabled)',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
+                    'class="buttondisabled"><label><input type="checkbox" ' +
+                    'id="burnafterreading" name="burnafterreading" /> ' +
+                    'Burn after reading</label></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                assert.doesNotThrow(() => PrivateBin.TopNav.resetInput());
+                assert.ok(!query('#burnafterreadingoption').classList.contains('buttondisabled'));
+                cleanup();
+            }
+        );
     });
 
     describe('getExpiration', function () {
@@ -770,6 +964,94 @@ describe('TopNav', function () {
                 assert.ok(query('#rawtextbutton').classList.contains('hidden'));
                 assert.ok(query('#qrcodelink').classList.contains('hidden'));
                 cleanup();
+            }
+        );
+    });
+
+    describe('showRetryButton & hideRetryButton', function () {
+        afterEach(function () {
+            delete global.bootstrap;
+            cleanup();
+        });
+
+        it(
+            'shows and hides the Bootstrap 5 retry button with its list item and runs the callback once',
+            function () {
+                cleanup();
+                global.bootstrap = {};
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul class="navbar-nav">' +
+                    '<li class="nav-item hidden"><button id="retrybutton" ' +
+                    'type="button" class="hidden">Retry</button></li>' +
+                    '<li><button id="newbutton" type="button">New</button>' +
+                    '</li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                let calls = 0;
+                PrivateBin.TopNav.setRetryCallback(function () {
+                    calls++;
+                });
+                const retryItem = query('#retrybutton').parentElement;
+
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(retryItem.classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                assert.ok(!query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+
+                query('#retrybutton').click();
+                assert.strictEqual(calls, 1);
+
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(retryItem.classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(retryItem.classList.contains('hidden'));
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+                assert.strictEqual(calls, 1);
+            }
+        );
+
+        it(
+            'toggles only the retry button on legacy Bootstrap 3 and page templates',
+            function () {
+                cleanup();
+                delete global.bootstrap;
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul class="nav navbar-nav"><li>' +
+                    '<button id="retrybutton" type="button" class="hidden">' +
+                    'Retry</button><button id="newbutton" type="button">' +
+                    'New</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                let calls = 0;
+                PrivateBin.TopNav.setRetryCallback(function () {
+                    calls++;
+                });
+                const retryItem = query('#retrybutton').parentElement;
+
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                assert.ok(!query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+
+                query('#retrybutton').click();
+                assert.strictEqual(calls, 1);
+
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.strictEqual(calls, 1);
             }
         );
     });

@@ -77,11 +77,11 @@ class Paste extends AbstractModel
             $this->delete();
         }
 
-        $data['comments']       = array_values($this->getComments());
-        $data['comment_count']  = count($data['comments']);
+        $data['comments'] = array_values($this->getComments());
+        $data['comment_count'] = count($data['comments']);
         $data['comment_offset'] = 0;
-        $data['@context']       = '?jsonld=paste';
-        $this->_data            = $data;
+        $data['@context'] = '?jsonld=paste';
+        $this->_data = $data;
 
         return $this->_data;
     }

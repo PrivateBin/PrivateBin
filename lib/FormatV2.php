@@ -39,7 +39,7 @@ class FormatV2
             $required_keys[] = 'meta';
         }
 
-        // Make sure no additionnal keys were added.
+        // Make sure no additional keys were added.
         if (count(array_keys($message)) !== count($required_keys)) {
             return false;
         }
@@ -60,6 +60,11 @@ class FormatV2
 
         // Make sure the cipher parameters are a properly sized array.
         if (!is_array($cipherParams) || count($cipherParams) < 8) {
+            return false;
+        }
+
+        // Make sure the adata parameters of pastes are a properly sized array,
+        if (!$isComment && count($message['adata']) !== 4) {
             return false;
         }
 

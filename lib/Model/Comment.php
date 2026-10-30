@@ -56,6 +56,26 @@ class Comment extends AbstractModel
             throw new TranslatedException(self::COLLISION_ERROR, 69);
         }
 
+        // Comment IDs must be unique within the paste, regardless of the
+        // parent, and the parent must be either the paste or an existing comment.
+        $commentid = $this->getId();
+        $parentid = $this->getParentId();
+        $parentExists = $parentid === $pasteid;
+        if ($commentid === $pasteid) {
+            throw new TranslatedException(self::COLLISION_ERROR, 72);
+        }
+        foreach ($this->_store->readComments($pasteid) as $comment) {
+            if ($comment['id'] === $commentid) {
+                throw new TranslatedException(self::COLLISION_ERROR, 69);
+            }
+            if ($comment['id'] === $parentid) {
+                $parentExists = true;
+            }
+        }
+        if (!$parentExists) {
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 71);
+        }
+
         $this->_data['meta']['created'] = time();
 
         // store comment
@@ -94,7 +114,7 @@ class Comment extends AbstractModel
      */
     public function setPaste(Paste &$paste)
     {
-        $this->_paste           = $paste;
+        $this->_paste = $paste;
         $this->_data['pasteid'] = $paste->getId();
     }
 
@@ -150,10 +170,10 @@ class Comment extends AbstractModel
         $icon = $this->_conf->getKey('icon');
         if ($icon !== 'none') {
             $pngdata = '';
-            $hmac    = TrafficLimiter::getHash();
+            $hmac = TrafficLimiter::getHash();
             if ($icon === 'identicon') {
                 $identicon = new Identicon();
-                $pngdata   = $identicon->getImageDataUri($hmac, 16);
+                $pngdata = $identicon->getImageDataUri($hmac, 16);
             } elseif ($icon === 'jdenticon') {
                 $jdenticon = new Jdenticon([
                     'hash'  => $hmac,
@@ -163,9 +183,9 @@ class Comment extends AbstractModel
                         'padding'           => 0,
                     ],
                 ]);
-                $pngdata   = $jdenticon->getImageDataUri('png');
+                $pngdata = $jdenticon->getImageDataUri('png');
             } elseif ($icon === 'vizhash') {
-                $vh      = new Vizhash16x16();
+                $vh = new Vizhash16x16();
                 $pngdata = 'data:image/png;base64,' . base64_encode(
                     $vh->generate($hmac)
                 );

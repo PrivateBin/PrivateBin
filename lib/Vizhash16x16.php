@@ -63,7 +63,7 @@ class Vizhash16x16
      */
     public function __construct()
     {
-        $this->width  = 16;
+        $this->width = 16;
         $this->height = 16;
     }
 
@@ -110,10 +110,10 @@ class Vizhash16x16
 
         for ($i = 0; $i < 7; ++$i) {
             $action = $this->getInt();
-            $color  = imagecolorallocate($image, $r, $g, $b);
-            $r      = $r0      = (int) ($r0 + $this->getInt() / 25) % 256;
-            $g      = $g0      = (int) ($g0 + $this->getInt() / 25) % 256;
-            $b      = $b0      = (int) ($b0 + $this->getInt() / 25) % 256;
+            $color = imagecolorallocate($image, $r, $g, $b);
+            $r = $r0 = (int) ($r0 + $this->getInt() / 25) % 256;
+            $g = $g0 = (int) ($g0 + $this->getInt() / 25) % 256;
+            $b = $b0 = (int) ($b0 + $this->getInt() / 25) % 256;
             $this->drawshape($image, $action, $color);
         }
 
@@ -123,7 +123,9 @@ class Vizhash16x16
         imagepng($image);
         $imagedata = ob_get_contents();
         ob_end_clean();
-        imagedestroy($image);
+        if (version_compare(PHP_VERSION, '8.5', '<') && defined('imagedestroy')) {
+            imagedestroy($image);
+        }
 
         return $imagedata;
     }
@@ -180,10 +182,10 @@ class Vizhash16x16
     private function degrade($img, $direction, $color1, $color2)
     {
         if ($direction === 'h') {
-            $size    = imagesx($img);
+            $size = imagesx($img);
             $sizeinv = imagesy($img);
         } else {
-            $size    = imagesy($img);
+            $size = imagesy($img);
             $sizeinv = imagesx($img);
         }
         $diffs = [
@@ -228,7 +230,7 @@ class Vizhash16x16
                 break;
             default:
                 $start = (int) ($this->getInt() * 360 / 256);
-                $end   = (int) ($start + $this->getInt() * 180 / 256);
+                $end = (int) ($start + $this->getInt() * 180 / 256);
                 imagefilledarc($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $start, $end, $color, IMG_ARC_PIE);
         }
     }

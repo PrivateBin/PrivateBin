@@ -50,12 +50,6 @@ class Configuration
             'template'                 => 'bootstrap5',
             'availabletemplates'       => [
                 'bootstrap5',
-                'bootstrap',
-                'bootstrap-page',
-                'bootstrap-dark',
-                'bootstrap-dark-page',
-                'bootstrap-compact',
-                'bootstrap-compact-page',
             ],
             'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
             'notice'                   => '',
@@ -124,8 +118,8 @@ class Configuration
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
             'js/legacy.js'           => 'sha512-pRofxsrf5UItjiP22Dcjh3FAcBjF/n7h8U9/W5xqJk17U0N2U1oajhXypq/omo9jhwS1iVGOhWrRepoPeFns+w==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-uqpdo+52wd4/uzOgfilGFw1SX3faeOuHWSRvfRwTUj8q7WPUoIArxVmp1DOeZzZUhEI/4NDJkNsQvvrKp8uQ/w==',
-            'js/purify-3.4.12.js'    => 'sha512-Akf6HnAJZm0sWWWI4gp2GYff0NDnHUB02XJE5S7Hdq/Z5xtMjkuFacsDA8ZtViv1gi+onBxMhEMIaGyQeGxBng==',
+            'js/privatebin.js'       => 'sha512-jXV3mKXtezHb3zaJ/Ijhj4EVT9IoB/RQGhrVxFE6ID8zAZIE3otvIL3Nf+L7AR78xNNCTm0jLJSvHeNPVxoJIw==',
+            'js/purify-3.4.17.js'    => 'sha512-udF2zPdEyVCAxIGeBbeSGFK1Fj5c4eHGi6NqOSsr8M75lGs39POzgUNxO3SFxOg4cHfAoZJgR2EaXdmDi6v6AQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.2.js'       => 'sha512-RAhJgxg9siMIA8ky4c10Rc2zUgnK80olHB8Tt1IOYWY4Eh1WmrviQkDn+sgBlb38ZHq3tzufGC41kP360gmosQ==',
             'js/zlib.js'             => 'sha512-QOaEwssHqHRRcWJ2Un3Kl2Zhyprzl7T8zmsKN2FppFxW3VR+8UChYOx2iuL0HbXK42fuBWJm5PNQJxufulrt/w==',
@@ -139,8 +133,8 @@ class Configuration
      */
     public function __construct()
     {
-        $basePaths  = [];
-        $config     = [];
+        $basePaths = [];
+        $config = [];
         $configPath = getenv('CONFIG_PATH');
         if ($configPath !== false && !empty($configPath)) {
             $basePaths[] = $configPath;

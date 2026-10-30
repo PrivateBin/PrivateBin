@@ -234,5 +234,6 @@
     "Theme": "佈景主題",
     "Copy": "複製",
     "Cmd": "Cmd",
-    "Ctrl": "Ctrl"
+    "Ctrl": "Ctrl",
+    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s"
 }

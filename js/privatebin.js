@@ -56,7 +56,7 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-        ALLOWED_ATTR: ['href', 'id', 'target', 'rel', 'class', 'style'],
+        FORBID_ATTR: ['id', 'class', 'style'],
         USE_PROFILES: {
             html: true
         }
@@ -72,9 +72,8 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfigStrictSubset = {
         ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
-        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
-        ALLOWED_ATTR: ['href', 'id', 'target', 'rel'],
-        ADD_ATTR: ['target', 'rel']
+        ALLOWED_TAGS: ['a'],
+        ALLOWED_ATTR: ['href']
     };
 
     /**
@@ -87,6 +86,20 @@ window.PrivateBin = (function () {
             svg: true,
             svgFilters: true
         }
+    };
+
+    /**
+     * DOMpurify settings for translated messages, which are allowed to include limited HTML.
+     *
+     * NOTE: The key {@link purifyHtmlConfig.USE_PROFILES} **must not** be included,
+     * as otherwise `USE_PROFILES` takes precedence over {@link purifyHtmlConfigStrictSubset.ALLOWED_TAGS}.
+     *
+     * @private
+     */
+    const purifyTranslationConfig = {
+        ALLOWED_URI_REGEXP: /^(?:https?:)/i, // the only URL expected here is the generated document, so only http & https
+        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
+        ALLOWED_ATTR: ['href', 'id'] // one of the messages contains an id attribute
     };
 
     /**
@@ -665,7 +678,7 @@ window.PrivateBin = (function () {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'ko', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
 
         /**
          * built in language
@@ -805,7 +818,7 @@ window.PrivateBin = (function () {
 
             if (containsHtml) {
                 // only allow tags/attributes we actually use in translations
-                output = DOMPurify.sanitize(output, purifyHtmlConfigStrictSubset);
+                output = DOMPurify.sanitize(output, purifyTranslationConfig);
             }
 
             // if element is given, insert translation
@@ -862,10 +875,11 @@ window.PrivateBin = (function () {
                 case 'id':
                 case 'ja':
                 case 'jbo':
+                case 'ko':
                 case 'th':
                     return 0;
                 case 'lt':
-                    return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+                    return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20)) ? 1 : 2);
                 case 'pl':
                     return n === 1 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'ro':
@@ -1573,11 +1587,11 @@ window.PrivateBin = (function () {
          * @name   UiHelper.historyChange
          * @private
          * @function
-         * @param  {Event} event
+         * @param  {PopStateEvent} event
          */
         function historyChange(event) {
             let currentLocation = Helper.baseUri();
-            if (event.originalEvent.state === null && // no state object passed
+            if (event.state === null && // no state object passed
                 event.target.location.href === currentLocation && // target location is home page
                 window.location.href === currentLocation // and we are not already on the home page
             ) {
@@ -1598,22 +1612,6 @@ window.PrivateBin = (function () {
             window.location.href = Helper.baseUri();
         };
 
-
-        /**
-         * trigger a history (pop) state change
-         *
-         * used to test the UiHelper.historyChange private function
-         *
-         * @name   UiHelper.mockHistoryChange
-         * @function
-         * @param  {string} state   (optional) state to mock
-         */
-        me.mockHistoryChange = function (state) {
-            if (typeof state === 'undefined') {
-                state = null;
-            }
-            historyChange({ originalEvent: new PopStateEvent('popstate', { state: state }), target: window });
-        };
 
         /**
          * initialize
@@ -2595,11 +2593,13 @@ window.PrivateBin = (function () {
 
             if (format === 'markdown') {
                 const converter = new showdown.Converter({
+                    disallowRawHTML: true,
+                    excludeTrailingPunctuationFromURLs: true,
+                    safeMode: true,
+                    simplifiedAutoLink: true,
                     strikethrough: true,
                     tables: true,
-                    tablesHeaderId: true,
-                    simplifiedAutoLink: true,
-                    excludeTrailingPunctuationFromURLs: true
+                    tablesHeaderId: true
                 });
                 // let showdown convert the HTML and sanitize HTML *afterwards*!
                 if (plainText) {
@@ -4046,6 +4046,31 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * sends the document on [Ctrl]+[S] or, on macOS, [Cmd]+[S]
+         *
+         * Only acts while the send button is shown, so the browser's own
+         * "save page" still works when viewing an existing document.
+         *
+         * @name   TopNav.sendOnShortcut
+         * @private
+         * @function
+         * @param  {KeyboardEvent} event
+         */
+        function sendOnShortcut(event) {
+            // the physical S key, so non-Latin keyboard layouts work, too
+            const isSaveKey = event.code === 'KeyS';
+            // Alt is excluded because AltGr is reported as Ctrl+Alt and some
+            // layouts type letters with AltGr+S, Shift to leave "Save page as"
+            // ([Ctrl]+[Shift]+[S]) to the browser
+            const hasCorrectModifiers = (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey;
+            const isButtonAvailable = sendButton && !sendButton.classList.contains('hidden') && !sendButton.disabled;
+            if (isSaveKey && hasCorrectModifiers && isButtonAvailable) {
+                event.preventDefault();
+                sendButton.click();
+            }
+        }
+
+        /**
          * retrys some callback registered before
          *
          * @name   TopNav.clickRetryButton
@@ -4240,7 +4265,9 @@ window.PrivateBin = (function () {
             cloneButton.classList.remove('hidden');
             rawTextButton.classList.remove('hidden');
             downloadTextButton.classList.remove('hidden');
-            qrCodeLink.classList.remove('hidden');
+            if (qrCodeLink) {
+                qrCodeLink.classList.remove('hidden');
+            }
 
             viewButtonsDisplayed = true;
         };
@@ -4260,7 +4287,9 @@ window.PrivateBin = (function () {
             newButton.classList.add('hidden');
             rawTextButton.classList.add('hidden');
             downloadTextButton.classList.add('hidden');
-            qrCodeLink.classList.add('hidden');
+            if (qrCodeLink) {
+                qrCodeLink.classList.add('hidden');
+            }
             me.hideEmailButton();
 
             viewButtonsDisplayed = false;
@@ -4295,8 +4324,12 @@ window.PrivateBin = (function () {
             expiration.classList.remove('hidden');
             formatter.classList.remove('hidden');
             newButton.classList.remove('hidden');
-            openDiscussionOption.classList.remove('hidden');
-            password.classList.remove('hidden');
+            if (openDiscussionOption) {
+                openDiscussionOption.classList.remove('hidden');
+            }
+            if (password) {
+                password.classList.remove('hidden');
+            }
             sendButton.classList.remove('hidden');
 
             createButtonsDisplayed = true;
@@ -4318,8 +4351,12 @@ window.PrivateBin = (function () {
             expiration.classList.add('hidden');
             formatter.classList.add('hidden');
             burnAfterReadingOption.classList.add('hidden');
-            openDiscussionOption.classList.add('hidden');
-            password.classList.add('hidden');
+            if (openDiscussionOption) {
+                openDiscussionOption.classList.add('hidden');
+            }
+            if (password) {
+                password.classList.add('hidden');
+            }
             if (attach) {
                 attach.classList.add('hidden');
             }
@@ -4345,6 +4382,11 @@ window.PrivateBin = (function () {
          */
         me.showRetryButton = function () {
             retryButton.classList.remove('hidden');
+            // The Bootstrap 5 template gives Retry its own list item. That item
+            // still takes a flex gap while only the button is hidden.
+            if (Helper.isBootstrap5()) {
+                retryButton.parentElement.classList.remove('hidden');
+            }
         };
 
         /**
@@ -4355,6 +4397,9 @@ window.PrivateBin = (function () {
          */
         me.hideRetryButton = function () {
             retryButton.classList.add('hidden');
+            if (Helper.isBootstrap5()) {
+                retryButton.parentElement.classList.add('hidden');
+            }
         };
 
         /**
@@ -4366,6 +4411,10 @@ window.PrivateBin = (function () {
          * @param {bool|undefined} optionalBurnAfterReading
          */
         me.showEmailButton = function (optionalRemainingTimeInSeconds, optionalBurnAfterReading) {
+            if (!emailLink) {
+                return;
+            }
+
             try {
                 // we cache expiration date in closure to avoid inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
@@ -4438,7 +4487,9 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideQrCodeButton = function () {
-            qrCodeLink.classList.add('hidden');
+            if (qrCodeLink) {
+                qrCodeLink.classList.add('hidden');
+            }
         };
 
         /**
@@ -4525,7 +4576,7 @@ window.PrivateBin = (function () {
             if (openDiscussion) {
                 openDiscussion.checked = openDiscussionDefault;
             }
-            if (openDiscussionDefault || !burnAfterReadingDefault) {
+            if (openDiscussionOption && (openDiscussionDefault || !burnAfterReadingDefault)) {
                 openDiscussionOption.classList.remove('buttondisabled');
             }
             if (burnAfterReadingDefault || !openDiscussionDefault) {
@@ -4733,6 +4784,7 @@ window.PrivateBin = (function () {
             }
             if (sendButton) {
                 sendButton.addEventListener('click', PasteEncrypter.sendPaste);
+                document.addEventListener('keydown', sendOnShortcut);
             }
             if (cloneButton) {
                 cloneButton.addEventListener('click', Controller.clonePaste);

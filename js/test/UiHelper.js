@@ -3,14 +3,27 @@ const common = require('../common');
 const fc = require('fast-check');
 
 describe('UiHelper', function () {
-    // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
-    // for now we use a mock function to trigger the event
     describe('historyChange', function () {
         this.timeout(30000);
         beforeEach(function () {
             PrivateBin.Helper.reset();
             cleanup();
         });
+
+
+        /** @param {object?} state */
+        function dispatchPopState(state = null) {
+            let eventError = null;
+            const captureError = event => {
+                eventError = event.error;
+                event.preventDefault();
+            };
+            window.addEventListener('error', captureError);
+            PrivateBin.UiHelper.init();
+            window.dispatchEvent(new window.PopStateEvent('popstate', {state: state}));
+            window.removeEventListener('error', captureError);
+            assert.strictEqual(eventError, null);
+        }
 
         it('redirects to home, when the state is null', () => {
             fc.assert(fc.property(
@@ -19,7 +32,7 @@ describe('UiHelper', function () {
                     const expected = common.urlToString(url),
                         clean = globalThis.cleanup('', {url: expected});
 
-                    PrivateBin.UiHelper.mockHistoryChange();
+                    dispatchPopState();
                     PrivateBin.Helper.reset();
                     var result = window.location.href;
                     clean();
@@ -37,7 +50,7 @@ describe('UiHelper', function () {
                     const expected = common.urlToString(url),
                         clean = globalThis.cleanup('', {url: expected});
 
-                    PrivateBin.UiHelper.mockHistoryChange([
+                    dispatchPopState([
                         {type: 'newpaste'}, '', expected
                     ]);
                     PrivateBin.Helper.reset();
@@ -77,4 +90,3 @@ describe('UiHelper', function () {
         */
     });
 });
-

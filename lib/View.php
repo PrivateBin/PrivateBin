@@ -49,7 +49,7 @@ class View
      */
     public function draw($template)
     {
-        $dir  = PATH . 'tpl' . DIRECTORY_SEPARATOR;
+        $dir = PATH . 'tpl' . DIRECTORY_SEPARATOR;
         $file = substr($template, 0, 10) === 'bootstrap-' ? 'bootstrap' : $template;
         $path = $dir . $file . '.php';
         if (!is_file($path)) {

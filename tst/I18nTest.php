@@ -44,7 +44,7 @@ class I18nTest extends TestCase
     public function testTranslationFallback()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
-        $messageId                       = 'It does not matter if the message ID exists';
+        $messageId = 'It does not matter if the message ID exists';
         I18n::loadTranslations();
         $this->assertEquals($messageId, I18n::_($messageId), 'fallback to en');
         I18n::getLanguageLabels();
@@ -80,6 +80,14 @@ class I18nTest extends TestCase
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
     }
 
+    public function testEqualQualityPreservesBrowserOrder()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr;q=0.8,de;q=0.8';
+        I18n::loadTranslations();
+
+        $this->assertEquals('fr', I18n::getLanguage());
+    }
+
     public function testBulgarianMonthExpirationTranslation()
     {
         $_COOKIE['lang'] = 'bg';
@@ -93,6 +101,20 @@ class I18nTest extends TestCase
             'Този документ изтича след 2 месеца.',
             I18n::_('This document will expire in %d months.', 2)
         );
+    }
+
+    public function testBrowserLanguageLtDetection()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'lt;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        I18n::loadTranslations();
+        $this->assertEquals('lt', I18n::getLanguage(), 'browser language lt');
+        $this->assertEquals('1 sekundę', I18n::_('%d seconds', 1), '1 second in Lithuanian');
+        $this->assertEquals('2 sekundės', I18n::_('%d seconds', 2), '2 seconds in Lithuanian');
+        $this->assertEquals('10 sekundžių', I18n::_('%d seconds', 10), '10 seconds in Lithuanian');
+        $this->assertEquals('22 sekundės', I18n::_('%d seconds', 22), '22 seconds in Lithuanian');
+        $this->assertEquals('110 sekundžių', I18n::_('%d seconds', 110), '110 seconds in Lithuanian');
+        $this->assertEquals('111 sekundžių', I18n::_('%d seconds', 111), '111 seconds in Lithuanian');
+        $this->assertEquals('120 sekundžių', I18n::_('%d seconds', 120), '120 seconds in Lithuanian');
     }
 
     public function testBrowserLanguageNoDetection()
@@ -177,14 +199,14 @@ class I18nTest extends TestCase
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'sl;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
         $this->assertEquals('sl', I18n::getLanguage(), 'browser language sl');
-        $this->assertEquals('0 ura',  I18n::_('%d hours', 0), '0 hours in Slovene');
-        $this->assertEquals('1 uri',  I18n::_('%d hours', 1), '1 hour in Slovene');
-        $this->assertEquals('2 ure', I18n::_('%d hours', 2), '2 hours in Slovene');
-        $this->assertEquals('3 ur',  I18n::_('%d hours', 3), '3 hours in Slovene');
-        $this->assertEquals('11 ura',  I18n::_('%d hours', 11), '11 hours in Slovene');
-        $this->assertEquals('101 uri',  I18n::_('%d hours', 101), '101 hours in Slovene');
-        $this->assertEquals('102 ure', I18n::_('%d hours', 102), '102 hours in Slovene');
-        $this->assertEquals('104 ur',  I18n::_('%d hours', 104), '104 hours in Slovene');
+        $this->assertEquals('0 ur',  I18n::_('%d hours', 0), '0 hours in Slovene');
+        $this->assertEquals('1 ura',  I18n::_('%d hours', 1), '1 hour in Slovene');
+        $this->assertEquals('2 uri', I18n::_('%d hours', 2), '2 hours in Slovene');
+        $this->assertEquals('3 ure',  I18n::_('%d hours', 3), '3 hours in Slovene');
+        $this->assertEquals('11 ur',  I18n::_('%d hours', 11), '11 hours in Slovene');
+        $this->assertEquals('101 ura',  I18n::_('%d hours', 101), '101 hours in Slovene');
+        $this->assertEquals('102 uri', I18n::_('%d hours', 102), '102 hours in Slovene');
+        $this->assertEquals('104 ure',  I18n::_('%d hours', 104), '104 hours in Slovene');
     }
 
     public function testBrowserLanguageCsDetection()
@@ -196,6 +218,12 @@ class I18nTest extends TestCase
         $this->assertEquals('2 hodiny', I18n::_('%d hours', 2), '2 hours in Czech');
         $this->assertEquals('5 minut',  I18n::_('%d minutes', 5), '5 minutes in Czech');
         $this->assertEquals('14 minut',  I18n::_('%d minutes', 14), '14 minutes in Czech');
+    }
+
+    public function testInvalidBrowserLanguageQualityIsIgnored()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de;q=2,en;q=0.8';
+        $this->assertSame(['0.8' => ['en']], I18n::getBrowserLanguages());
     }
 
     public function testBrowserLanguageAnyDetection()
@@ -216,7 +244,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
         I18n::loadTranslations();
-        $input  = '&<>"\'/`=';
+        $input = '&<>"\'/`=';
         $result = htmlspecialchars($input, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
         $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
         $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
@@ -299,7 +327,7 @@ class I18nTest extends TestCase
     public function testMessageIdsExistInAllLanguages()
     {
         $messageIds = [];
-        $languages  = [];
+        $languages = [];
         foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
             $fileNameLength = strlen($file->getFilename());
             if ($fileNameLength === 7) {       // xx.json
@@ -311,9 +339,9 @@ class I18nTest extends TestCase
             } else {
                 continue;
             }
-            $languageJson         = file_get_contents($file->getPathname());
-            $languageMessageIds   = array_keys(Json::decode($languageJson));
-            $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
+            $languageJson = file_get_contents($file->getPathname());
+            $languageMessageIds = array_keys(Json::decode($languageJson));
+            $messageIds = array_unique(array_merge($messageIds, $languageMessageIds));
             $languages[$language] = $languageMessageIds;
         }
         foreach ($messageIds as $messageId) {

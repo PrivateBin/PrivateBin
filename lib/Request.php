@@ -13,6 +13,7 @@ namespace PrivateBin;
 
 use JsonException;
 use PrivateBin\Model\Paste;
+use PrivateBin\Exception\TranslatedException;
 
 /**
  * Request
@@ -41,6 +42,14 @@ class Request
      * @const string
      */
     const MIME_XHTML = 'application/xhtml+xml';
+
+    /**
+     * Input stream length for size checks
+     *
+     * @access private
+     * @var int
+     */
+    private $_bodyLength = 0;
 
     /**
      * Input stream to use for PUT parameter parsing
@@ -111,7 +120,8 @@ class Request
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
                 try {
-                    $data          = file_get_contents(self::$_inputStream);
+                    $data = file_get_contents(self::$_inputStream);
+                    $this->_bodyLength = strlen($data);
                     $this->_params = Json::decode($data);
                     // a valid JSON scalar (number, bool or string) decodes
                     // without error, but is not a usable set of parameters
@@ -144,15 +154,31 @@ class Request
         }
 
         // prepare operation, depending on current parameters
-        if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
-            if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
+        if (
+            array_key_exists('pasteid', $this->_params) &&
+            is_string($this->_params['pasteid']) &&
+            !empty($this->_params['pasteid'])
+        ) {
+            if (
+                array_key_exists('deletetoken', $this->_params) &&
+                is_string($this->_params['deletetoken']) &&
+                !empty($this->_params['deletetoken'])
+            ) {
                 $this->_operation = 'delete';
             } elseif ($this->_operation !== 'create') {
                 $this->_operation = 'read';
             }
-        } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
+        } elseif (
+            array_key_exists('jsonld', $this->_params) &&
+            is_string($this->_params['jsonld']) &&
+            !empty($this->_params['jsonld'])
+        ) {
             $this->_operation = 'jsonld';
-        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+        } elseif (
+            array_key_exists('link', $this->_params) &&
+            is_string($this->_params['link']) &&
+            !empty($this->_params['link'])
+        ) {
             if (str_contains($this->getRequestUri(), '/shortenviayourls') || array_key_exists('shortenviayourls', $this->_params)) {
                 $this->_operation = 'yourlsproxy';
             }
@@ -180,15 +206,24 @@ class Request
      * Get data of paste or comment
      *
      * @access public
+     * @param  int $sizelimit
+     * @throws JsonException
+     * @throws TranslatedException
      * @return array
      */
-    public function getData()
+    public function getData(int $sizelimit)
     {
+        if ($this->_bodyLength > $sizelimit) {
+            throw new TranslatedException([
+                'Document is limited to %s of encrypted data.',
+                Filter::formatHumanReadableSize($sizelimit)
+            ]);
+        }
         $data = [
             'adata' => $this->getParam('adata'),
         ];
         $required_keys = ['v', 'ct'];
-        $meta          = $this->getParam('meta');
+        $meta = $this->getParam('meta');
         if (empty($meta)) {
             $required_keys[] = 'pasteid';
             $required_keys[] = 'parentid';
@@ -235,7 +270,8 @@ class Request
     public function getRequestUri()
     {
         $uri = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
-        return empty($uri) ? '/' : parse_url($uri, PHP_URL_PATH);
+        $path = empty($uri) ? '' : parse_url($uri, PHP_URL_PATH);
+        return is_string($path) && $path !== '' ? $path : '/';
     }
 
     /**
