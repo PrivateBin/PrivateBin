@@ -387,18 +387,6 @@ describe('Helper', function () {
     });
 
 
-    describe('isBootstrap5', function () {
-        it('Bootstrap 5 has been detected', function () {
-            global.bootstrap = {};
-            return PrivateBin.Helper.isBootstrap5() === true;
-        });
-
-        it('Bootstrap 5 has not been detected', function () {
-            delete global.bootstrap;
-            return PrivateBin.Helper.isBootstrap5() === false;
-        });
-    });
-
     describe('setIcon', function () {
         afterEach(function () {
             cleanup();

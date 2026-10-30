@@ -7,6 +7,14 @@ global.jsdom = require('jsdom-global');
 // initial DOM environment created by jsdom-global
 let currentCleanup = global.jsdom();
 
+// Loads bootstrap into the current jsdom environment. It registers its
+// data API event handlers on the document when loaded, so it needs to be
+// reloaded for every new window, like privatebin.js.
+function loadBootstrap() {
+    delete require.cache[require.resolve('./bootstrap-5.3.8')];
+    global.bootstrap = window.bootstrap = require('./bootstrap-5.3.8');
+}
+
 // Recreates the jsdom environment and reloads privatebin.js into it.
 // The reload is necessary because modules close over DOM element references
 // in their init() methods, and pending async callbacks (e.g. setTimeout in
@@ -16,6 +24,7 @@ global.cleanup = function (...args) {
         currentCleanup();
     }
     currentCleanup = global.jsdom(...args);
+    loadBootstrap();
     delete require.cache[require.resolve('./privatebin')];
     delete require.cache[require.resolve('./legacy')];
     require('./privatebin');
@@ -34,6 +43,7 @@ global.showdown = require('./showdown-2.1.0');
 global.DOMPurify = require('./purify-3.4.17');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
+loadBootstrap();
 require('./privatebin');
 global.PrivateBin = window.PrivateBin;
 

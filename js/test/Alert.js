@@ -41,8 +41,8 @@ describe('Alert', function () {
                     message = message.join('');
                     const expected = '<div id="status" role="alert" ' +
                         'class="d-flex align-items-center gap-2 alert alert-info">' +
-                        '<div>' + icon('info-circle') + ' </div> <span>' +
-                        message + '</span></div>';
+                        '<div>' + icon('info-circle') + ' <span>' +
+                        message + '</span></div></div>';
                     document.body.innerHTML =
                         '<div id="status" role="alert" class="d-flex ' +
                         'align-items-center gap-2 alert alert-info hidden">' +
@@ -64,8 +64,8 @@ describe('Alert', function () {
                     message = message.join('');
                     const expected = '<div id="status" role="alert" ' +
                         'class="d-flex align-items-center gap-2 alert alert-info">' +
-                        '<div>' + icon(customIcon || 'info-circle') + ' </div> <span>' +
-                        message + '</span></div>';
+                        '<div>' + icon(customIcon || 'info-circle') + ' <span>' +
+                        message + '</span></div></div>';
                     document.body.innerHTML =
                         '<div id="status" role="alert" class="d-flex ' +
                         'align-items-center gap-2 alert alert-info hidden">' +
@@ -74,6 +74,29 @@ describe('Alert', function () {
                     PrivateBin.Alert.showStatus(message, customIcon);
                     const result = document.body.innerHTML;
                     return expected === result;
+                }
+            ));
+        });
+
+        it('replaces a status message rendered by the server, keeping its buttons (bootstrap)', () => {
+            fc.assert(fc.property(
+                fc.array(common.fcAlnumString(), {minLength: 1}),
+                fc.array(common.fcAlnumString(), {minLength: 1}),
+                function (serverMessage, message) {
+                    serverMessage = 'server ' + serverMessage.join('');
+                    message = message.join('');
+                    const button = '<button type="button" id="new-from-alert">Start over</button>';
+                    document.body.innerHTML =
+                        '<div id="status" role="alert" class="d-flex ' +
+                        'align-items-center gap-2 alert alert-success"><div>' +
+                        icon('info-circle') + ' ' + serverMessage + ' </div>' +
+                        button + '</div>';
+                    PrivateBin.Alert.init();
+                    PrivateBin.Alert.showStatus(message);
+                    const status = document.getElementById('status');
+                    return status.innerHTML === '<div>' + icon('info-circle') +
+                        ' <span>' + message + '</span></div>' + button &&
+                        status.textContent.indexOf(serverMessage) === -1;
                 }
             ));
         });

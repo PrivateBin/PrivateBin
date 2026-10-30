@@ -409,10 +409,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -435,6 +435,52 @@ describe('TopNav', function () {
         );
     });
 
+    describe('highlightFileupload', function () {
+        afterEach(function () {
+            cleanup();
+        });
+
+        it(
+            'opens the attachment dropdown and highlights the file selection',
+            function () {
+                cleanup();
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul><li id="attach" class="nav-item ' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
+                    '<div><input type="file" id="file" name="file" /></div>' +
+                    '</li></ul></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                const errors = [];
+                const consoleError = console.error;
+                console.error = function (...args) {
+                    errors.push(args.join(' '));
+                };
+                try {
+                    PrivateBin.TopNav.highlightFileupload();
+                    assert.strictEqual(query('.dropdown-toggle').getAttribute('aria-expanded'), 'true');
+                    assert.ok(query('.dropdown-menu').classList.contains('show'), 'dropdown is open');
+                    assert.ok(query('#filewrap').classList.contains('highlight'), 'file selection is highlighted');
+
+                    // a second upload, while the dropdown is still open
+                    PrivateBin.TopNav.highlightFileupload();
+                    assert.ok(query('.dropdown-menu').classList.contains('show'), 'dropdown stays open');
+
+                    // a third upload, after the user closed the dropdown
+                    query('.dropdown-toggle').click();
+                    assert.strictEqual(query('.dropdown-toggle').getAttribute('aria-expanded'), 'false');
+                    PrivateBin.TopNav.highlightFileupload();
+                    assert.ok(query('.dropdown-menu').classList.contains('show'), 'dropdown is open again');
+                } finally {
+                    console.error = consoleError;
+                }
+                assert.deepStrictEqual(errors, []);
+            }
+        );
+    });
+
     describe('showCustomAttachment', function () {
         before(function () {
             cleanup();
@@ -446,10 +492,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -507,6 +553,7 @@ describe('TopNav', function () {
                 });
                 PrivateBin.TopNav.collapseBar();
                 assert.strictEqual(clicks, 1, 'toggler is clicked once');
+                assert.ok(!query('#navbar').classList.contains('show'), 'navigation is collapsing');
             }
         );
 
@@ -521,6 +568,7 @@ describe('TopNav', function () {
                 });
                 PrivateBin.TopNav.collapseBar();
                 assert.strictEqual(clicks, 0, 'toggler is not clicked');
+                assert.ok(!query('#navbar').classList.contains('collapsing'), 'navigation is not toggled');
             }
         );
 
@@ -826,10 +874,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -981,10 +1029,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -1048,15 +1096,13 @@ describe('TopNav', function () {
 
     describe('showRetryButton & hideRetryButton', function () {
         afterEach(function () {
-            delete global.bootstrap;
             cleanup();
         });
 
         it(
-            'shows and hides the Bootstrap 5 retry button with its list item and runs the callback once',
+            'shows and hides the retry button with its list item and runs the callback once',
             function () {
                 cleanup();
-                global.bootstrap = {};
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul class="navbar-nav">' +
                     '<li class="nav-item hidden"><button id="retrybutton" ' +
@@ -1089,46 +1135,6 @@ describe('TopNav', function () {
                 assert.ok(query('#retrybutton').classList.contains('hidden'));
                 assert.ok(retryItem.classList.contains('hidden'));
                 assert.ok(!query('#newbutton').classList.contains('hidden'));
-                assert.strictEqual(calls, 1);
-            }
-        );
-
-        it(
-            'toggles only the retry button on legacy Bootstrap 3 and page templates',
-            function () {
-                cleanup();
-                delete global.bootstrap;
-                document.documentElement.innerHTML =
-                    '<nav><div id="navbar"><ul class="nav navbar-nav"><li>' +
-                    '<button id="retrybutton" type="button" class="hidden">' +
-                    'Retry</button><button id="newbutton" type="button">' +
-                    'New</button></li></ul></div></nav>';
-                PrivateBin.TopNav.init();
-                let calls = 0;
-                PrivateBin.TopNav.setRetryCallback(function () {
-                    calls++;
-                });
-                const retryItem = query('#retrybutton').parentElement;
-
-                assert.ok(query('#retrybutton').classList.contains('hidden'));
-                assert.ok(!retryItem.classList.contains('hidden'));
-
-                PrivateBin.TopNav.showRetryButton();
-                assert.ok(!query('#retrybutton').classList.contains('hidden'));
-                assert.ok(!retryItem.classList.contains('hidden'));
-                assert.ok(!query('#newbutton').classList.contains('hidden'));
-
-                query('#retrybutton').click();
-                assert.strictEqual(calls, 1);
-
-                PrivateBin.TopNav.hideRetryButton();
-                assert.ok(query('#retrybutton').classList.contains('hidden'));
-                assert.ok(!retryItem.classList.contains('hidden'));
-                assert.ok(!query('#newbutton').classList.contains('hidden'));
-
-                PrivateBin.TopNav.showRetryButton();
-                PrivateBin.TopNav.hideRetryButton();
-                assert.ok(query('#retrybutton').classList.contains('hidden'));
                 assert.strictEqual(calls, 1);
             }
         );

@@ -639,16 +639,6 @@ window.PrivateBin = (function () {
         };
 
         /**
-         * check if bootstrap5 object detected
-         *
-         * @name Helper.isBootstrap5
-         * @returns {Boolean}
-         */
-        me.isBootstrap5 = function () {
-            return typeof bootstrap !== 'undefined';
-        };
-
-        /**
          * set the icon of an element, by pointing its icon sprite reference
          * to the given bootstrap icon
          *
@@ -1633,6 +1623,46 @@ window.PrivateBin = (function () {
             window.location.href = Helper.baseUri();
         };
 
+        /**
+         * show a modal dialog
+         *
+         * This and the following functions are the only places that use the
+         * UI framework (bootstrap) directly.
+         *
+         * @name   UiHelper.showModal
+         * @function
+         * @param  {HTMLElement} element - the modal
+         * @param  {object} [options] - only applied when first showing it
+         */
+        me.showModal = function (element, options) {
+            bootstrap.Modal.getOrCreateInstance(element, options).show();
+        };
+
+        /**
+         * hide a modal dialog, if it was shown
+         *
+         * @name   UiHelper.hideModal
+         * @function
+         * @param  {HTMLElement} element - the modal
+         */
+        me.hideModal = function (element) {
+            const modal = bootstrap.Modal.getInstance(element);
+            if (modal) {
+                modal.hide();
+            }
+        };
+
+        /**
+         * open a dropdown menu
+         *
+         * @name   UiHelper.showDropdown
+         * @function
+         * @param  {HTMLElement} toggle - the element toggling the dropdown
+         */
+        me.showDropdown = function (toggle) {
+            bootstrap.Dropdown.getOrCreateInstance(toggle).show();
+        };
+
 
         /**
          * initialize
@@ -1719,14 +1749,17 @@ window.PrivateBin = (function () {
             let translationTarget = element;
 
             // handle icon, if template uses one
-            const iconElement = element.querySelector(':first-child');
+            const iconElement = element.querySelector('svg');
             if (iconElement) {
                 // if there is an icon, we need to provide an inner element
-                // to translate the message into, instead of the parent
+                // to translate the message into, instead of the parent,
+                // replacing any previous message next to the icon, but
+                // keeping other elements of the alert, i.e. buttons
+                const container = iconElement.parentElement;
                 translationTarget = document.createElement('span');
-                element.innerHTML = ' ';
-                element.prepend(iconElement);
-                element.appendChild(translationTarget);
+                container.innerHTML = ' ';
+                container.prepend(iconElement);
+                container.appendChild(translationTarget);
 
                 if (typeof icon === 'string' && icon.length > 0) {
                     Helper.setIcon(iconElement, icon);
@@ -2150,7 +2183,6 @@ window.PrivateBin = (function () {
 
         let passwordDecrypt,
             passwordModal,
-            bootstrap5PasswordModal = null,
             password = '';
 
         /**
@@ -2167,15 +2199,7 @@ window.PrivateBin = (function () {
             // get input
             password = passwordDecrypt.value;
 
-            // hide modal
-            if (bootstrap5PasswordModal) {
-                bootstrap5PasswordModal.hide();
-            } else {
-                if (passwordModal) {
-                    passwordModal.classList.remove('show');
-                    passwordModal.style.display = 'none';
-                }
-            }
+            UiHelper.hideModal(passwordModal);
 
             PasteDecrypter.run();
         }
@@ -2201,12 +2225,7 @@ window.PrivateBin = (function () {
                 loadconfirmOpenNow.focus();
             });
 
-            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
-                (new bootstrap.Modal(loadconfirmmodal)).show();
-            } else {
-                // minimal fallback: make element visible
-                loadconfirmmodal.classList.add('show');
-            }
+            UiHelper.showModal(loadconfirmmodal);
         };
 
         /**
@@ -2216,11 +2235,12 @@ window.PrivateBin = (function () {
          * @function
          */
         me.requestPassword = function () {
-            // show new bootstrap method (if available)
             if (passwordModal !== null) {
-                if (bootstrap5PasswordModal) {
-                    bootstrap5PasswordModal.show();
-                }
+                // the password is required, so the modal can't be closed
+                UiHelper.showModal(passwordModal, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
                 return;
             }
 
@@ -2274,19 +2294,7 @@ window.PrivateBin = (function () {
                     passwordForm.addEventListener('submit', submitPasswordModal);
                 }
 
-                const disableClosingConfig = {
-                    backdrop: 'static',
-                    keyboard: false,
-                    show: false
-                };
-                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
-                    bootstrap5PasswordModal = new bootstrap.Modal(passwordModal, disableClosingConfig);
-                } else {
-                    // fallback: keep modal hidden until explicitly shown
-                    passwordModal.style.display = 'none';
-                }
-
-                // ensure focus when modal shown (works for bootstrap5)
+                // ensure focus when modal shown
                 passwordModal.addEventListener('shown.bs.modal', () => {
                     passwordDecrypt.focus();
                 });
@@ -4158,8 +4166,6 @@ window.PrivateBin = (function () {
                 const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
                 const emailconfirmTimezoneUtc = emailconfirmmodal.querySelector('#emailconfirm-timezone-utc');
                 let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
-                const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip && bootstrap.Tooltip.VERSION ?
-                    new bootstrap.Modal(emailconfirmmodal) : null;
 
                 function sendEmailAndHideModal() {
                     const emailBody = templateEmailBody(
@@ -4168,9 +4174,7 @@ window.PrivateBin = (function () {
                             [], localeConfiguration
                         ), isBurnafterreading
                     );
-                    if (bootstrap5EmailConfirmModal) {
-                        bootstrap5EmailConfirmModal.hide();
-                    }
+                    UiHelper.hideModal(emailconfirmmodal);
                     triggerEmailSend(emailSubject, emailBody);
                 }
 
@@ -4185,9 +4189,7 @@ window.PrivateBin = (function () {
                     localeConfiguration.timeZone = 'UTC';
                     sendEmailAndHideModal();
                 });
-                if (bootstrap5EmailConfirmModal) {
-                    bootstrap5EmailConfirmModal.show();
-                }
+                UiHelper.showModal(emailconfirmmodal);
             } else {
                 triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
             }
@@ -4325,11 +4327,9 @@ window.PrivateBin = (function () {
          */
         me.showRetryButton = function () {
             retryButton.classList.remove('hidden');
-            // The Bootstrap 5 template gives Retry its own list item. That item
-            // still takes a flex gap while only the button is hidden.
-            if (Helper.isBootstrap5()) {
-                retryButton.parentElement.classList.remove('hidden');
-            }
+            // The template gives Retry its own list item. That item still
+            // takes a flex gap while only the button is hidden.
+            retryButton.parentElement.classList.remove('hidden');
         };
 
         /**
@@ -4340,9 +4340,7 @@ window.PrivateBin = (function () {
          */
         me.hideRetryButton = function () {
             retryButton.classList.add('hidden');
-            if (Helper.isBootstrap5()) {
-                retryButton.parentElement.classList.add('hidden');
-            }
+            retryButton.parentElement.classList.add('hidden');
         };
 
         /**
@@ -4631,11 +4629,7 @@ window.PrivateBin = (function () {
             // visually indicate file uploaded
             const attachDropdownToggle = attach && attach.querySelector('.dropdown-toggle');
             if (attachDropdownToggle && attachDropdownToggle.getAttribute('aria-expanded') === 'false') {
-                if (Helper.isBootstrap5()) {
-                    new bootstrap.Dropdown(attachDropdownToggle).toggle();
-                } else {
-                    attachDropdownToggle.click();
-                }
+                UiHelper.showDropdown(attachDropdownToggle);
             }
             fileWrap.classList.add('highlight');
             setTimeout(function () {
