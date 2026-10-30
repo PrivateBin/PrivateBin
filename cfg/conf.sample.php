@@ -23,6 +23,11 @@ opendiscussion = false
 ; the comments by creation time, but you can choose not to display them.
 ; discussiondatedisplay = false
 
+; require new comments to match the IDs of their document and parent
+; comment, defaults to false. Comments sent by clients that don't, are rejected.
+; This prevents copies of comments from getting moved elsewhere in the discussion.
+; discussionrequireauthenticatedids = true
+
 ; enable or disable the password feature, defaults to true
 password = true
 

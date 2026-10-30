@@ -12,8 +12,8 @@
 namespace PrivateBin;
 
 use JsonException;
-use PrivateBin\Model\Paste;
 use PrivateBin\Exception\TranslatedException;
+use PrivateBin\Model\Paste;
 
 /**
  * Request
@@ -216,7 +216,7 @@ class Request
         if ($this->_bodyLength > $sizelimit) {
             throw new TranslatedException([
                 'Document is limited to %s of encrypted data.',
-                Filter::formatHumanReadableSize($sizelimit)
+                Filter::formatHumanReadableSize($sizelimit),
             ]);
         }
         $data = [
