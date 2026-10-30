@@ -3,8 +3,8 @@ checks:
     javascript: true
 filter:
     paths:
-        - "css/privatebin.css"
-        - "css/bootstrap/privatebin.css"
+        - "css/common.css"
+        - "css/bootstrap5/privatebin.css"
         - "js/privatebin.js"
         - "lib/*.php"
         - "index.php"

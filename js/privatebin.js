@@ -639,13 +639,24 @@ window.PrivateBin = (function () {
         };
 
         /**
-         * check if bootstrap5 object detected
+         * set the icon of an element, by pointing its icon sprite reference
+         * to the given bootstrap icon
          *
-         * @name Helper.isBootstrap5
-         * @returns {Boolean}
+         * @name   Helper.setIcon
+         * @function
+         * @param  {HTMLElement} element - the icon, or an element containing it
+         * @param  {string} icon - name of the bootstrap icon
+         * @return {boolean} true, if an icon was found and set
          */
-        me.isBootstrap5 = function () {
-            return typeof bootstrap !== 'undefined';
+        me.setIcon = function (element, icon) {
+            const use = element.tagName.toLowerCase() === 'use' ?
+                element : element.querySelector('use');
+            if (!use) {
+                return false;
+            }
+            const href = use.getAttribute('href') || '';
+            use.setAttribute('href', href.split('#')[0] + '#' + icon);
+            return true;
         };
 
         return me;
@@ -1612,6 +1623,46 @@ window.PrivateBin = (function () {
             window.location.href = Helper.baseUri();
         };
 
+        /**
+         * show a modal dialog
+         *
+         * This and the following functions are the only places that use the
+         * UI framework (bootstrap) directly.
+         *
+         * @name   UiHelper.showModal
+         * @function
+         * @param  {HTMLElement} element - the modal
+         * @param  {object} [options] - only applied when first showing it
+         */
+        me.showModal = function (element, options) {
+            bootstrap.Modal.getOrCreateInstance(element, options).show();
+        };
+
+        /**
+         * hide a modal dialog, if it was shown
+         *
+         * @name   UiHelper.hideModal
+         * @function
+         * @param  {HTMLElement} element - the modal
+         */
+        me.hideModal = function (element) {
+            const modal = bootstrap.Modal.getInstance(element);
+            if (modal) {
+                modal.hide();
+            }
+        };
+
+        /**
+         * open a dropdown menu
+         *
+         * @name   UiHelper.showDropdown
+         * @function
+         * @param  {HTMLElement} toggle - the element toggling the dropdown
+         */
+        me.showDropdown = function (toggle) {
+            bootstrap.Dropdown.getOrCreateInstance(toggle).show();
+        };
+
 
         /**
          * initialize
@@ -1642,7 +1693,6 @@ window.PrivateBin = (function () {
             loadingIndicator,
             statusMessage,
             remainingTime,
-            currentIcon,
             customHandler;
 
         const alertType = [
@@ -1699,27 +1749,20 @@ window.PrivateBin = (function () {
             let translationTarget = element;
 
             // handle icon, if template uses one
-            const glyphIcon = element.querySelector(':first-child');
-            if (glyphIcon) {
+            const iconElement = element.querySelector('svg');
+            if (iconElement) {
                 // if there is an icon, we need to provide an inner element
-                // to translate the message into, instead of the parent
+                // to translate the message into, instead of the parent,
+                // replacing any previous message next to the icon, but
+                // keeping other elements of the alert, i.e. buttons
+                const container = iconElement.parentElement;
                 translationTarget = document.createElement('span');
-                element.innerHTML = ' ';
-                element.prepend(glyphIcon);
-                element.appendChild(translationTarget);
+                container.innerHTML = ' ';
+                container.prepend(iconElement);
+                container.appendChild(translationTarget);
 
-                if (icon !== null && // icon was passed
-                    icon !== currentIcon[id] // and it differs from current icon
-                ) {
-                    // remove (previous) icon
-                    glyphIcon.classList.remove(currentIcon[id]);
-
-                    // any other thing as a string (e.g. 'null') (only) removes the icon
-                    if (typeof icon === 'string') {
-                        // set new icon
-                        currentIcon[id] = 'glyphicon-' + icon;
-                        glyphIcon.classList.add(currentIcon[id]);
-                    }
+                if (typeof icon === 'string' && icon.length > 0) {
+                    Helper.setIcon(iconElement, icon);
                 }
             }
 
@@ -1738,8 +1781,9 @@ window.PrivateBin = (function () {
          * @name   Alert.showStatus
          * @function
          * @param  {string|array} message     string, use an array for %s/%d options
-         * @param  {string|null}  icon        optional, the icon to show,
-         *                                    default: leave previous icon
+         * @param  {string|null}  icon        optional, name of the bootstrap
+         *                                    icon to show, default: leave
+         *                                    previous icon
          */
         me.showStatus = function (message, icon) {
             handleNotification(1, statusMessage, message, icon);
@@ -1753,15 +1797,11 @@ window.PrivateBin = (function () {
          * @name   Alert.showWarning
          * @function
          * @param  {string|array} message     string, use an array for %s/%d options
-         * @param  {string|null}  icon        optional, the icon to show, default:
-         *                                    leave previous icon
+         * @param  {string|null}  icon        optional, name of the bootstrap
+         *                                    icon to show, default: leave
+         *                                    previous icon
          */
         me.showWarning = function (message, icon) {
-            const glyphIcon = errorMessage.querySelector(':first-child');
-            if (glyphIcon) {
-                glyphIcon.classList.remove(currentIcon[3]);
-                glyphIcon.classList.add(currentIcon[2]);
-            }
             handleNotification(2, errorMessage, message, icon);
         };
 
@@ -1773,8 +1813,9 @@ window.PrivateBin = (function () {
          * @name   Alert.showError
          * @function
          * @param  {string|array} message     string, use an array for %s/%d options
-         * @param  {string|null}  icon        optional, the icon to show, default:
-         *                                    leave previous icon
+         * @param  {string|null}  icon        optional, name of the bootstrap
+         *                                    icon to show, default: leave
+         *                                    previous icon
          */
         me.showError = function (message, icon) {
             handleNotification(3, errorMessage, message, icon);
@@ -1801,7 +1842,7 @@ window.PrivateBin = (function () {
          * @name   Alert.showLoading
          * @function
          * @param  {string|array|null} message      optional, use an array for %s/%d options, default: 'Loading…'
-         * @param  {string|null}       icon         optional, the icon to show, default: leave previous icon
+         * @param  {string|null}       icon         optional, name of the bootstrap icon to show, default: leave previous icon
          */
         me.showLoading = function (message, icon) {
             // default message text
@@ -1883,13 +1924,6 @@ window.PrivateBin = (function () {
             loadingIndicator = document.getElementById('loadingindicator');
             statusMessage = document.getElementById('status');
             remainingTime = document.getElementById('remainingtime');
-
-            currentIcon = [
-                'glyphicon-time', // loading icon
-                'glyphicon-info-sign', // status icon
-                'glyphicon-warning-sign', // warning icon
-                'glyphicon-alert' // error icon
-            ];
         };
 
         return me;
@@ -1993,7 +2027,7 @@ window.PrivateBin = (function () {
             if (deleteLink) {
                 deleteLink.href = deleteUrl;
             }
-            I18n._(document.querySelector('#deletelink span:not(.glyphicon)'), 'Delete data');
+            I18n._(document.querySelector('#deletelink span'), 'Delete data');
 
             // enable shortener button
             if (shortenButton) {
@@ -2149,7 +2183,6 @@ window.PrivateBin = (function () {
 
         let passwordDecrypt,
             passwordModal,
-            bootstrap5PasswordModal = null,
             password = '';
 
         /**
@@ -2166,15 +2199,7 @@ window.PrivateBin = (function () {
             // get input
             password = passwordDecrypt.value;
 
-            // hide modal
-            if (bootstrap5PasswordModal) {
-                bootstrap5PasswordModal.hide();
-            } else {
-                if (passwordModal) {
-                    passwordModal.classList.remove('show');
-                    passwordModal.style.display = 'none';
-                }
-            }
+            UiHelper.hideModal(passwordModal);
 
             PasteDecrypter.run();
         }
@@ -2200,12 +2225,7 @@ window.PrivateBin = (function () {
                 loadconfirmOpenNow.focus();
             });
 
-            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
-                (new bootstrap.Modal(loadconfirmmodal)).show();
-            } else {
-                // minimal fallback: make element visible
-                loadconfirmmodal.classList.add('show');
-            }
+            UiHelper.showModal(loadconfirmmodal);
         };
 
         /**
@@ -2215,11 +2235,12 @@ window.PrivateBin = (function () {
          * @function
          */
         me.requestPassword = function () {
-            // show new bootstrap method (if available)
             if (passwordModal !== null) {
-                if (bootstrap5PasswordModal) {
-                    bootstrap5PasswordModal.show();
-                }
+                // the password is required, so the modal can't be closed
+                UiHelper.showModal(passwordModal, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
                 return;
             }
 
@@ -2273,19 +2294,7 @@ window.PrivateBin = (function () {
                     passwordForm.addEventListener('submit', submitPasswordModal);
                 }
 
-                const disableClosingConfig = {
-                    backdrop: 'static',
-                    keyboard: false,
-                    show: false
-                };
-                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
-                    bootstrap5PasswordModal = new bootstrap.Modal(passwordModal, disableClosingConfig);
-                } else {
-                    // fallback: keep modal hidden until explicitly shown
-                    passwordModal.style.display = 'none';
-                }
-
-                // ensure focus when modal shown (works for bootstrap5)
+                // ensure focus when modal shown
                 passwordModal.addEventListener('shown.bs.modal', () => {
                     passwordDecrypt.focus();
                 });
@@ -3524,23 +3533,10 @@ window.PrivateBin = (function () {
                 return false;
             }
 
-            if (alertType === 'danger') {
-                replyStatus.classList.remove('alert-info');
-                replyStatus.classList.add('alert-danger');
-                const replyIcon = replyStatus.querySelector(':first-child');
-                if (replyIcon) {
-                    replyIcon.classList.remove('glyphicon-alert');
-                    replyIcon.classList.add('glyphicon-info-sign');
-                }
-            } else {
-                replyStatus.classList.remove('alert-danger');
-                replyStatus.classList.add('alert-info');
-                const replyIcon = replyStatus.querySelector(':first-child');
-                if (replyIcon) {
-                    replyIcon.classList.remove('glyphicon-info-sign');
-                    replyIcon.classList.add('glyphicon-alert');
-                }
-            }
+            const isDanger = alertType === 'danger';
+            replyStatus.classList.toggle('alert-danger', isDanger);
+            replyStatus.classList.toggle('alert-info', !isDanger);
+            Helper.setIcon(replyStatus, isDanger ? 'exclamation-triangle' : 'info-circle');
 
             return replyStatus;
         };
@@ -3810,51 +3806,6 @@ window.PrivateBin = (function () {
             retryButtonCallback;
 
         /**
-         * set the expiration on bootstrap templates in dropdown
-         *
-         * @name   TopNav.updateExpiration
-         * @private
-         * @function
-         * @param  {Event} event
-         */
-        function updateExpiration(event) {
-            // get selected option
-            const target = event.target;
-
-            // update dropdown display and save new expiration time
-            const display = document.getElementById('pasteExpirationDisplay');
-            if (display) {
-                display.textContent = target.textContent;
-            }
-            pasteExpiration = target.getAttribute('data-expiration');
-
-            event.preventDefault();
-        }
-
-        /**
-         * set the format on bootstrap templates in dropdown from user interaction
-         *
-         * @name   TopNav.updateFormat
-         * @private
-         * @function
-         * @param  {Event} event
-         */
-        function updateFormat(event) {
-            // get selected option
-            const target = event.target;
-
-            // update dropdown display and save new format
-            const newFormat = target.getAttribute('data-format');
-            const display = document.getElementById('pasteFormatterDisplay');
-            if (display) {
-                display.textContent = target.textContent;
-            }
-            PasteViewer.setFormat(newFormat);
-
-            event.preventDefault();
-        }
-
-        /**
          * when "burn after reading" is checked, disable discussion
          *
          * @name   TopNav.changeBurnAfterReading
@@ -3945,7 +3896,7 @@ window.PrivateBin = (function () {
          */
         function rawText() {
             TopNav.hideAllButtons();
-            Alert.showLoading('Showing raw text…', 'time');
+            Alert.showLoading('Showing raw text…', 'clock');
             let paste = PasteViewer.getText();
 
             // push a new state to allow back navigation with browser back button
@@ -4215,8 +4166,6 @@ window.PrivateBin = (function () {
                 const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
                 const emailconfirmTimezoneUtc = emailconfirmmodal.querySelector('#emailconfirm-timezone-utc');
                 let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
-                const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip && bootstrap.Tooltip.VERSION ?
-                    new bootstrap.Modal(emailconfirmmodal) : null;
 
                 function sendEmailAndHideModal() {
                     const emailBody = templateEmailBody(
@@ -4225,9 +4174,7 @@ window.PrivateBin = (function () {
                             [], localeConfiguration
                         ), isBurnafterreading
                     );
-                    if (bootstrap5EmailConfirmModal) {
-                        bootstrap5EmailConfirmModal.hide();
-                    }
+                    UiHelper.hideModal(emailconfirmmodal);
                     triggerEmailSend(emailSubject, emailBody);
                 }
 
@@ -4242,9 +4189,7 @@ window.PrivateBin = (function () {
                     localeConfiguration.timeZone = 'UTC';
                     sendEmailAndHideModal();
                 });
-                if (bootstrap5EmailConfirmModal) {
-                    bootstrap5EmailConfirmModal.show();
-                }
+                UiHelper.showModal(emailconfirmmodal);
             } else {
                 triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
             }
@@ -4382,11 +4327,9 @@ window.PrivateBin = (function () {
          */
         me.showRetryButton = function () {
             retryButton.classList.remove('hidden');
-            // The Bootstrap 5 template gives Retry its own list item. That item
-            // still takes a flex gap while only the button is hidden.
-            if (Helper.isBootstrap5()) {
-                retryButton.parentElement.classList.remove('hidden');
-            }
+            // The template gives Retry its own list item. That item still
+            // takes a flex gap while only the button is hidden.
+            retryButton.parentElement.classList.remove('hidden');
         };
 
         /**
@@ -4397,9 +4340,7 @@ window.PrivateBin = (function () {
          */
         me.hideRetryButton = function () {
             retryButton.classList.add('hidden');
-            if (Helper.isBootstrap5()) {
-                retryButton.parentElement.classList.add('hidden');
-            }
+            retryButton.parentElement.classList.add('hidden');
         };
 
         /**
@@ -4553,8 +4494,8 @@ window.PrivateBin = (function () {
          */
         me.collapseBar = function () {
             const navbar = document.getElementById('navbar');
-            if (navbar && navbar.getAttribute('aria-expanded') === 'true') {
-                const toggle = document.querySelector('.navbar-toggle');
+            if (navbar && navbar.classList.contains('show')) {
+                const toggle = document.querySelector('.navbar-toggler');
                 if (toggle) {
                     toggle.click();
                 }
@@ -4584,17 +4525,6 @@ window.PrivateBin = (function () {
             }
 
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
-            const pasteExpirationSelect = document.getElementById('pasteExpiration');
-            if (pasteExpirationSelect) {
-                pasteExpirationSelect.querySelectorAll('option').forEach((option) => {
-                    if (option.value === pasteExpiration) {
-                        const display = document.getElementById('pasteExpirationDisplay');
-                        if (display) {
-                            display.textContent = option.textContent;
-                        }
-                    }
-                });
-            }
         };
 
         /**
@@ -4699,11 +4629,7 @@ window.PrivateBin = (function () {
             // visually indicate file uploaded
             const attachDropdownToggle = attach && attach.querySelector('.dropdown-toggle');
             if (attachDropdownToggle && attachDropdownToggle.getAttribute('aria-expanded') === 'false') {
-                if (Helper.isBootstrap5()) {
-                    new bootstrap.Dropdown(attachDropdownToggle).toggle();
-                } else {
-                    attachDropdownToggle.click();
-                }
+                UiHelper.showDropdown(attachDropdownToggle);
             }
             fileWrap.classList.add('highlight');
             setTimeout(function () {
@@ -4712,22 +4638,16 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * set the format on bootstrap templates in dropdown programmatically
+         * set the format in the dropdown programmatically
          *
          * @name    TopNav.setFormat
          * @function
+         * @param   {string} format
          */
         me.setFormat = function (format) {
-            if (Helper.isBootstrap5()) {
-                const select = formatter.querySelector('select');
-                if (select) {
-                    select.value = format;
-                }
-            } else {
-                const formatLink = formatter.parentElement.querySelector(`a[data-format="${format}"]`);
-                if (formatLink) {
-                    formatLink.click();
-                }
+            const select = document.getElementById('pasteFormatter');
+            if (select) {
+                select.value = format;
             }
         }
 
@@ -4805,45 +4725,17 @@ window.PrivateBin = (function () {
                 qrCodeLink.addEventListener('click', displayQrCode);
             }
 
-            if (Helper.isBootstrap5()) {
-                const pasteExpirationSelect = document.getElementById('pasteExpiration');
-                if (pasteExpirationSelect) {
-                    pasteExpirationSelect.addEventListener('change', function () {
-                        pasteExpiration = Model.getExpirationDefault();
-                    });
-                }
-                const pasteFormatterSelect = document.getElementById('pasteFormatter');
-                if (pasteFormatterSelect) {
-                    pasteFormatterSelect.addEventListener('change', function () {
-                        PasteViewer.setFormat(Model.getFormatDefault());
-                    });
-                }
-            } else {
-                // bootstrap template drop downs
-                if (expiration) {
-                    expiration.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
-                        link.addEventListener('click', updateExpiration);
-                    });
-                }
-                if (formatter) {
-                    formatter.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
-                        link.addEventListener('click', updateFormat);
-                    });
-                }
-
-                // page drop downs
-                const pasteExpirationSelect = document.getElementById('pasteExpiration');
-                if (pasteExpirationSelect) {
-                    pasteExpirationSelect.addEventListener('change', function () {
-                        pasteExpiration = Model.getExpirationDefault();
-                    });
-                }
-                const pasteFormatterSelect = document.getElementById('pasteFormatter');
-                if (pasteFormatterSelect) {
-                    pasteFormatterSelect.addEventListener('change', function () {
-                        PasteViewer.setFormat(Model.getFormatDefault());
-                    });
-                }
+            const pasteExpirationSelect = document.getElementById('pasteExpiration');
+            if (pasteExpirationSelect) {
+                pasteExpirationSelect.addEventListener('change', function () {
+                    pasteExpiration = Model.getExpirationDefault();
+                });
+            }
+            const pasteFormatterSelect = document.getElementById('pasteFormatter');
+            if (pasteFormatterSelect) {
+                pasteFormatterSelect.addEventListener('change', function () {
+                    PasteViewer.setFormat(Model.getFormatDefault());
+                });
             }
         }
 
@@ -5834,27 +5726,7 @@ window.PrivateBin = (function () {
             element.setAttribute('title', tooltip);
             element.setAttribute('aria-label', tooltip);
 
-            // handle bootstrap 5 icons: eye & eye-slash
-            const buttonSvg = element.querySelector('use');
-            if (buttonSvg) {
-                const iconHref = buttonSvg.getAttribute('href');
-                if (iconHref) {
-                    buttonSvg.setAttribute('href', isHidden ? `${iconHref}-slash` : iconHref.substring(0, iconHref.length - 6));
-                }
-                return;
-            }
-
-            // handle bootstrap 3 icons: eye-open & eye-close
-            const buttonSpan = element.querySelector('span');
-            if (buttonSpan) {
-                if (isHidden) {
-                    buttonSpan.classList.add('glyphicon-eye-close');
-                    buttonSpan.classList.remove('glyphicon-eye-open');
-                } else {
-                    buttonSpan.classList.add('glyphicon-eye-open');
-                    buttonSpan.classList.remove('glyphicon-eye-close');
-                }
-            }
+            Helper.setIcon(element, isHidden ? 'eye-slash' : 'eye');
         }
 
         /**
@@ -5864,11 +5736,9 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            const revealButton = document.querySelector('.toggle-password');
-            if (!revealButton) {
-                return;
-            }
-            revealButton.addEventListener('click', handleRevealButtonClick);
+            document.querySelectorAll('.toggle-password').forEach(function (revealButton) {
+                revealButton.addEventListener('click', handleRevealButtonClick);
+            });
         };
 
         return me;
@@ -5907,7 +5777,7 @@ window.PrivateBin = (function () {
             // Important: This *must not* run Alert.hideMessages() as previous
             // errors from viewing a document should be shown.
             TopNav.hideAllButtons();
-            Alert.showLoading('Preparing new document…', 'time');
+            Alert.showLoading('Preparing new document…', 'clock');
 
             PasteStatus.hideMessages();
             PasteViewer.hide();

@@ -133,6 +133,19 @@ class ViewTest extends TestCase
         $test->draw('123456789 does not exist!');
     }
 
+    public function testRemovedBootstrap3Templates()
+    {
+        foreach (['bootstrap', 'bootstrap-dark', 'bootstrap-compact', 'bootstrap-page'] as $template) {
+            $test = new View;
+            try {
+                $test->draw($template);
+                $this->fail('removed template ' . $template . ' should not render');
+            } catch (Exception $e) {
+                $this->assertEquals(80, $e->getCode(), 'removed template ' . $template . ' is reported as missing');
+            }
+        }
+    }
+
     public function testInvalidTemplate()
     {
         $test = new View;

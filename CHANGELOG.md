@@ -1,5 +1,12 @@
 # PrivateBin version history
 
+## 2.1.2 (not yet released)
+* CHANGED: Removed the Bootstrap 3 leftovers: its stylesheets, glyphicon fonts, unused icons and the mapping of `bootstrap-*` template names to the removed `bootstrap` template, which now fail with a "Template not found" error instead of rendering a page with missing JavaScript dependencies. Set `template = "bootstrap5"` in `cfg/conf.php`, or upgrade custom templates to Bootstrap 5.
+* CHANGED: The JavaScript requires Bootstrap 5, which it now only uses via `UiHelper`, instead of checking for it in various places
+* FIXED: Navigation menu on small screens didn't collapse after sending or cloning a document
+* FIXED: Loading, status and comment reply messages didn't update their icons, i.e. when sending or decrypting a document or when posting a comment failed
+* FIXED: Opening the e-mail confirmation dialog again or highlighting the opened attachment menu created duplicate Bootstrap components, logging errors in the browser console
+
 ## 2.1.1 (not yet released)
 * ADDED: Translation for Korean (#2071)
 * CHANGED: Database backend now logs errors when reading comments, like it already did for comment existence checks
@@ -9,6 +16,7 @@
 * FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
 * FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
 * FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
+* FIXED: Password peek button next to the password input when creating a document had no effect
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section

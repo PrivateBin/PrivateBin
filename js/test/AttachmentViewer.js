@@ -4,8 +4,8 @@ const bodyTemplate = '<div id="attachmentPreview" class="col-md-12 text-center h
     '<div id="attachment" class="hidden"></div>' +
     '<div id="templates">' +
         '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
-            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
-            '<a class="alert-link">Download attachment</a>' +
+            '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download"></use></svg>' +
+            '<a class="alert-link">Download attachment<span></span></a>' +
         '</div>' +
     '</div>';
 const fc = require('fast-check');
@@ -254,8 +254,8 @@ describe('AttachmentViewer', function () {
                     '<div id="attachment" class="hidden"></div>' +
                     '<div id="templates">' +
                         '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
-                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
-                            '<a class="alert-link">Download attachment</a>' +
+                            '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download"></use></svg>' +
+                            '<a class="alert-link">Download attachment<span></span></a>' +
                         '</div>' +
                     '</div>'
                 );

@@ -50,13 +50,12 @@ class View
     public function draw($template)
     {
         $dir = PATH . 'tpl' . DIRECTORY_SEPARATOR;
-        $file = substr($template, 0, 10) === 'bootstrap-' ? 'bootstrap' : $template;
-        $path = $dir . $file . '.php';
+        $path = $dir . $template . '.php';
         if (!is_file($path)) {
             throw new Exception('Template ' . $template . ' not found in file ' . $path . '!', 80);
         }
         if (!in_array($path, glob($dir . '*.php', GLOB_NOSORT | GLOB_ERR), true)) {
-            throw new Exception('Template ' . $file . '.php not found in ' . $dir . '!', 81);
+            throw new Exception('Template ' . $template . '.php not found in ' . $dir . '!', 81);
         }
         extract($this->_variables);
         include $path;

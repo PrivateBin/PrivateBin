@@ -31,14 +31,13 @@ describe('Prompt', function () {
                         <nav class="navbar navbar-inverse navbar-static-top">
                             <div id="navbar" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav"><li><button id="newbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                            <span class="glyphicon glyphicon-file" aria-hidden="true">
-                                </span> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
-                            <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone</button>
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark"></use></svg> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone</button>
                             <button id="rawtextbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                            <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text</button>
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> Raw text</button>
                             <button id="downloadtextbutton" type="button" class="hidden btn btn-default navbar-btn"></button>
                             <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn"/>
-                            <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code"></use></svg> QR code</button></li></ul></div>
                         </nav>
                         <div id="errormessage"></div>
                         <div id="loadingindicator"></div>
@@ -82,6 +81,66 @@ describe('Prompt', function () {
                     return result === password;
                 }
             ));
+        });
+    });
+
+    describe('modal dialogs', function () {
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('shows the password dialog until a password was submitted', function () {
+            const clean = globalThis.cleanup('', {url: 'ftp://example.com/?0000000000000000'});
+            document.body.innerHTML =
+                '<div id="passwordmodal" tabindex="-1" class="modal" role="dialog" aria-hidden="true">' +
+                '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-body">' +
+                '<form id="passwordform" role="form"><input id="passworddecrypt" type="password" />' +
+                '<button type="submit">Decrypt</button></form></div></div></div></div>';
+            PrivateBin.Alert.init();
+            PrivateBin.TopNav.init();
+            PrivateBin.Prompt.init();
+            const modal = document.getElementById('passwordmodal');
+
+            PrivateBin.Prompt.requestPassword();
+            assert.ok(modal.classList.contains('show'), 'password dialog is shown');
+            modal.dispatchEvent(new window.KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+            assert.ok(modal.classList.contains('show'), 'password dialog can not be closed with Escape');
+
+            const originalFetch = globalThis.fetch;
+            globalThis.fetch = function () {
+                return Promise.resolve({
+                    ok: true,
+                    status: 200,
+                    statusText: 'OK',
+                    json: function () {
+                        return Promise.resolve({});
+                    }
+                });
+            };
+            try {
+                document.getElementById('passworddecrypt').value = 'secret';
+                document.getElementById('passwordform').dispatchEvent(
+                    new window.Event('submit', {bubbles: true, cancelable: true})
+                );
+                assert.ok(!modal.classList.contains('show'), 'password dialog is hidden after submitting');
+                assert.strictEqual(PrivateBin.Prompt.getPassword(), 'secret');
+            } finally {
+                globalThis.fetch = originalFetch;
+                clean();
+            }
+        });
+
+        it('asks for confirmation before loading a document', function () {
+            document.body.innerHTML =
+                '<div id="loadconfirmmodal" tabindex="-1" class="modal" role="dialog" aria-hidden="true">' +
+                '<div class="modal-dialog" role="document"><div class="modal-content">' +
+                '<div class="modal-header"><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>' +
+                '<div class="modal-body"><button id="loadconfirm-open-now" type="button" data-bs-dismiss="modal">' +
+                'Yes, see it</button></div></div></div></div>';
+            const modal = document.getElementById('loadconfirmmodal');
+            PrivateBin.Prompt.requestLoadConfirmation();
+            assert.ok(modal.classList.contains('show'), 'confirmation dialog is shown');
+            assert.strictEqual(document.activeElement, document.getElementById('loadconfirm-open-now'));
         });
     });
 });

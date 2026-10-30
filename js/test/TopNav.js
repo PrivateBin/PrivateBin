@@ -95,14 +95,13 @@ describe('TopNav', function () {
                     `<nav class="navbar navbar-inverse navbar-static-top">
                     <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav"><li><button id="newbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                    <span class="glyphicon glyphicon-file" aria-hidden="true">
-                        </span> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
-                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone</button>
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark"></use></svg> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone</button>
                     <button id="rawtextbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                    <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text</button>
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> Raw text</button>
                     <button id="downloadtextbutton" type="button" class="hidden btn btn-default navbar-btn"></button>
                     <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn"/>
-                    <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code"></use></svg> QR code</button></li></ul></div>
                     </nav>`;
                 PrivateBin.TopNav.init();
                 results.push(
@@ -348,8 +347,7 @@ describe('TopNav', function () {
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="clonebutton" ' +
                     'type="button" class="btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-duplicate" aria-hidden=' +
-                    '"true"></span> Clone</button></li></ul></div></nav>';
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !query('#clonebutton').classList.contains('hidden')
@@ -380,8 +378,7 @@ describe('TopNav', function () {
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button ' +
                     'id="rawtextbutton" type="button" class="btn ' +
-                    'btn-warning navbar-btn"><span class="glyphicon ' +
-                    'glyphicon-text-background" aria-hidden="true"></span> ' +
+                    'btn-warning navbar-btn"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> ' +
                     'Raw text</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
@@ -412,10 +409,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -438,6 +435,52 @@ describe('TopNav', function () {
         );
     });
 
+    describe('highlightFileupload', function () {
+        afterEach(function () {
+            cleanup();
+        });
+
+        it(
+            'opens the attachment dropdown and highlights the file selection',
+            function () {
+                cleanup();
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul><li id="attach" class="nav-item ' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
+                    '<div><input type="file" id="file" name="file" /></div>' +
+                    '</li></ul></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                const errors = [];
+                const consoleError = console.error;
+                console.error = function (...args) {
+                    errors.push(args.join(' '));
+                };
+                try {
+                    PrivateBin.TopNav.highlightFileupload();
+                    assert.strictEqual(query('.dropdown-toggle').getAttribute('aria-expanded'), 'true');
+                    assert.ok(query('.dropdown-menu').classList.contains('show'), 'dropdown is open');
+                    assert.ok(query('#filewrap').classList.contains('highlight'), 'file selection is highlighted');
+
+                    // a second upload, while the dropdown is still open
+                    PrivateBin.TopNav.highlightFileupload();
+                    assert.ok(query('.dropdown-menu').classList.contains('show'), 'dropdown stays open');
+
+                    // a third upload, after the user closed the dropdown
+                    query('.dropdown-toggle').click();
+                    assert.strictEqual(query('.dropdown-toggle').getAttribute('aria-expanded'), 'false');
+                    PrivateBin.TopNav.highlightFileupload();
+                    assert.ok(query('.dropdown-menu').classList.contains('show'), 'dropdown is open again');
+                } finally {
+                    console.error = consoleError;
+                }
+                assert.deepStrictEqual(errors, []);
+            }
+        );
+    });
+
     describe('showCustomAttachment', function () {
         before(function () {
             cleanup();
@@ -449,10 +492,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -480,50 +523,60 @@ describe('TopNav', function () {
             cleanup();
         });
 
+        /**
+         * navigation bar markup of the bootstrap5 template, with the
+         * collapsible navigation either expanded or collapsed
+         *
+         * @param {boolean} isExpanded
+         * @returns {string}
+         */
+        function navbar(isExpanded) {
+            return '<nav class="navbar navbar-expand-lg"><div class="container-fluid">' +
+                '<button class="navbar-toggler' + (isExpanded ? '' : ' collapsed') +
+                '" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" ' +
+                'aria-controls="navbar" aria-expanded="' + isExpanded + '" ' +
+                'aria-label="Toggle navigation"><span class="navbar-toggler-icon">' +
+                '</span></button><div id="navbar" class="collapse navbar-collapse' +
+                (isExpanded ? ' show' : '') + '"><ul class="navbar-nav"><li>' +
+                '<button id="newbutton" type="button" class="hidden">New</button>' +
+                '</li></ul></div></div></nav>';
+        }
+
         it(
-            'collapses the navigation when displayed on a small screen',
+            'collapses the expanded navigation when displayed on a small screen',
             function () {
-                let results = [];
-                document.documentElement.innerHTML =
-                    '<nav><div class="navbar-header"><button type="button" ' +
-                    'class="navbar-toggle collapsed" data-toggle="collapse" ' +
-                    'data-target="#navbar" aria-expanded="false" aria-controls' +
-                    '="navbar">Toggle navigation</button><a class="reloadlink ' +
-                    'navbar-brand" href=""><img alt="PrivateBin" ' +
-                    'src="img/icon.svg" width="38" /></a></div><div ' +
-                    'id="navbar"><ul><li><button id="newbutton" type=' +
-                    '"button" class="hidden">New</button></li></ul></div></nav>';
+                document.documentElement.innerHTML = navbar(true);
                 PrivateBin.TopNav.init();
-                results.push(
-                    query('.navbar-toggle').classList.contains('collapsed') &&
-                    query('#navbar').getAttribute('aria-expanded') !== 'true'
-                );
+                let clicks = 0;
+                query('.navbar-toggler').addEventListener('click', function () {
+                    ++clicks;
+                });
                 PrivateBin.TopNav.collapseBar();
-                results.push(
-                    query('.navbar-toggle').classList.contains('collapsed') &&
-                    query('#navbar').getAttribute('aria-expanded') !== 'true'
-                );
-                /*
-                with the upgrade for bootstrap-3.3.7.js to bootstrap-3.4.1.js
-                the mobile interface detection changed to check if the
-                ontouchstart event exists, which broke this section of the test
-                const toggleBtn = document.querySelector('.navbar-toggle');
-                toggleBtn.dispatchEvent(new MouseEvent('click'));
-                results.push(
-                    !toggleBtn.classList.contains('collapsed') &&
-                    document.getElementById('navbar').getAttribute('aria-expanded') == 'true'
-                );
+                assert.strictEqual(clicks, 1, 'toggler is clicked once');
+                assert.ok(!query('#navbar').classList.contains('show'), 'navigation is collapsing');
+            }
+        );
+
+        it(
+            'leaves the collapsed navigation alone',
+            function () {
+                document.documentElement.innerHTML = navbar(false);
+                PrivateBin.TopNav.init();
+                let clicks = 0;
+                query('.navbar-toggler').addEventListener('click', function () {
+                    ++clicks;
+                });
                 PrivateBin.TopNav.collapseBar();
-                results.push(
-                    document.querySelector('.navbar-toggle').classList.contains('collapsed') &&
-                    document.getElementById('navbar').getAttribute('aria-expanded') == 'false'
-                );
-                */
-                const result = results.every(element => element);
-                if (!result) {
-                    console.log(results);
-                }
-                assert.ok(result);
+                assert.strictEqual(clicks, 0, 'toggler is not clicked');
+                assert.ok(!query('#navbar').classList.contains('collapsing'), 'navigation is not toggled');
+            }
+        );
+
+        it(
+            'ignores pages without a navigation',
+            function () {
+                document.documentElement.innerHTML = '<body></body>';
+                PrivateBin.TopNav.collapseBar();
             }
         );
     });
@@ -697,6 +750,80 @@ describe('TopNav', function () {
                 cleanup();
             }
         );
+
+        it(
+            'returns the expiration date the user selected',
+            function () {
+                document.documentElement.innerHTML =
+                    '<select id="pasteExpiration" name="pasteExpiration">' +
+                    '<option value="1day">1 day</option>' +
+                    '<option value="never">Never</option></select>';
+                PrivateBin.TopNav.init();
+                const select = query('#pasteExpiration');
+                select.value = 'never';
+                select.dispatchEvent(new window.Event('change'));
+                assert.strictEqual(PrivateBin.TopNav.getExpiration(), 'never');
+                cleanup();
+            }
+        );
+    });
+
+    describe('setFormat', function () {
+        before(function () {
+            cleanup();
+        });
+
+        const formatter =
+            '<li id="formatter" class="nav-item d-flex">' +
+            '<select id="pasteFormatter" name="pasteFormatter" class="form-select">' +
+            '<option value="plaintext" selected="selected">Plain Text</option>' +
+            '<option value="syntaxhighlighting">Source Code</option>' +
+            '<option value="markdown">Markdown</option></select></li>';
+
+        it(
+            'selects the given format',
+            function () {
+                fc.assert(fc.property(
+                    fc.constantFrom('plaintext', 'syntaxhighlighting', 'markdown'),
+                    function (format) {
+                        document.documentElement.innerHTML = formatter;
+                        PrivateBin.TopNav.init();
+                        PrivateBin.TopNav.setFormat(format);
+                        assert.strictEqual(query('#pasteFormatter').value, format);
+                    }
+                ));
+                cleanup();
+            }
+        );
+
+        it(
+            'tolerates a missing formatter (formatter selection disabled)',
+            function () {
+                document.documentElement.innerHTML = '<nav><div id="navbar"></div></nav>';
+                PrivateBin.TopNav.init();
+                assert.doesNotThrow(() => PrivateBin.TopNav.setFormat('markdown'));
+                cleanup();
+            }
+        );
+
+        it(
+            'passes the format the user selected to the viewer',
+            function () {
+                fc.assert(fc.property(
+                    fc.constantFrom('plaintext', 'syntaxhighlighting', 'markdown'),
+                    function (format) {
+                        // replacing the markup is enough, init binds to the new elements
+                        document.documentElement.innerHTML = formatter;
+                        PrivateBin.TopNav.init();
+                        const select = query('#pasteFormatter');
+                        select.value = format;
+                        select.dispatchEvent(new window.Event('change'));
+                        assert.strictEqual(PrivateBin.PasteViewer.getFormat(), format);
+                    }
+                ));
+                cleanup();
+            }
+        );
     });
 
     describe('getFileList', function () {
@@ -747,10 +874,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -902,10 +1029,10 @@ describe('TopNav', function () {
                 let results = [];
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
-                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
-                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
-                    'aria-expanded="false">Attach a file <span class="caret">' +
-                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    'dropdown"><a href="#" class="nav-link dropdown-toggle" ' +
+                    'data-bs-toggle="dropdown" role="button" ' +
+                    'aria-expanded="false">Attach a file</a>' +
+                    '<ul class="dropdown-menu px-2"><li id="filewrap">' +
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
@@ -943,19 +1070,18 @@ describe('TopNav', function () {
                     '<div id="navbar" class="navbar-collapse collapse"><ul ' +
                     'class="nav navbar-nav"><li><button id="newbutton" ' +
                     'type="button" class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-file" aria-hidden="true">' +
-                    '</span> New</button><button id="clonebutton" type="button"' +
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark"></use></svg>' +
+                    ' New</button><button id="clonebutton" type="button"' +
                     ' class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-duplicate" ' +
-                    'aria-hidden="true"></span> Clone</button><button ' +
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg>' +
+                    ' Clone</button><button ' +
                     'id="rawtextbutton" type="button" class="hidden btn ' +
-                    'btn-warning navbar-btn"><span class="glyphicon ' +
-                    'glyphicon-text-background" aria-hidden="true"></span> ' +
+                    'btn-warning navbar-btn"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> ' +
                     'Raw text</button><button id="qrcodelink" type="button" ' +
                     'data-toggle="modal" data-target="#qrcodemodal" ' +
-                    'class="hidden btn btn-warning navbar-btn"><span ' +
-                    'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
-                    '</span> QR code</button></li></ul></div></nav>';
+                    'class="hidden btn btn-warning navbar-btn">' +
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code"></use></svg>' +
+                    ' QR code</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 PrivateBin.TopNav.hideAllButtons();
 
@@ -970,15 +1096,13 @@ describe('TopNav', function () {
 
     describe('showRetryButton & hideRetryButton', function () {
         afterEach(function () {
-            delete global.bootstrap;
             cleanup();
         });
 
         it(
-            'shows and hides the Bootstrap 5 retry button with its list item and runs the callback once',
+            'shows and hides the retry button with its list item and runs the callback once',
             function () {
                 cleanup();
-                global.bootstrap = {};
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul class="navbar-nav">' +
                     '<li class="nav-item hidden"><button id="retrybutton" ' +
@@ -1011,46 +1135,6 @@ describe('TopNav', function () {
                 assert.ok(query('#retrybutton').classList.contains('hidden'));
                 assert.ok(retryItem.classList.contains('hidden'));
                 assert.ok(!query('#newbutton').classList.contains('hidden'));
-                assert.strictEqual(calls, 1);
-            }
-        );
-
-        it(
-            'toggles only the retry button on legacy Bootstrap 3 and page templates',
-            function () {
-                cleanup();
-                delete global.bootstrap;
-                document.documentElement.innerHTML =
-                    '<nav><div id="navbar"><ul class="nav navbar-nav"><li>' +
-                    '<button id="retrybutton" type="button" class="hidden">' +
-                    'Retry</button><button id="newbutton" type="button">' +
-                    'New</button></li></ul></div></nav>';
-                PrivateBin.TopNav.init();
-                let calls = 0;
-                PrivateBin.TopNav.setRetryCallback(function () {
-                    calls++;
-                });
-                const retryItem = query('#retrybutton').parentElement;
-
-                assert.ok(query('#retrybutton').classList.contains('hidden'));
-                assert.ok(!retryItem.classList.contains('hidden'));
-
-                PrivateBin.TopNav.showRetryButton();
-                assert.ok(!query('#retrybutton').classList.contains('hidden'));
-                assert.ok(!retryItem.classList.contains('hidden'));
-                assert.ok(!query('#newbutton').classList.contains('hidden'));
-
-                query('#retrybutton').click();
-                assert.strictEqual(calls, 1);
-
-                PrivateBin.TopNav.hideRetryButton();
-                assert.ok(query('#retrybutton').classList.contains('hidden'));
-                assert.ok(!retryItem.classList.contains('hidden'));
-                assert.ok(!query('#newbutton').classList.contains('hidden'));
-
-                PrivateBin.TopNav.showRetryButton();
-                PrivateBin.TopNav.hideRetryButton();
-                assert.ok(query('#retrybutton').classList.contains('hidden'));
                 assert.strictEqual(calls, 1);
             }
         );

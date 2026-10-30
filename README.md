@@ -81,9 +81,9 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 * File upload support, image, media and PDF preview (disabled by default, size
   limit adjustable)
 
-* Templates: By default there are bootstrap5, bootstrap CSS and darkstrap
-  to choose from and it is easy to adapt these to your own websites layout or
-  create your own.
+* Templates: By default there is the bootstrap5 template with a light and dark
+  mode, and it is easy to adapt it to your own websites layout or create your
+  own.
 
 * Translation system and automatic browser language detection (if enabled in
   browser)

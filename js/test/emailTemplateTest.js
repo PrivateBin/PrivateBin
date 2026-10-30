@@ -8,7 +8,7 @@ function buildEmailDomNoShortUrl() {
         '<nav><div id="navbar"><ul>' +
           '<li>' +
             '<button id="clonebutton" type="button" class="btn btn-warning navbar-btn">' +
-              '<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone' +
+              '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone' +
             '</button>' +
           '</li>' +
           '<li>' +
@@ -17,9 +17,11 @@ function buildEmailDomNoShortUrl() {
         '</ul></div></nav>' +
         '<input id="burnafterreadingoption" type="checkbox">' +
         // include dummy email confirm modal for sendEmail
-        '<div id="emailconfirmmodal" class="hidden">' +
-            '<div id="emailconfirm-timezone-current"></div>' +
-            '<div id="emailconfirm-timezone-utc"></div>' +
+        '<div id="emailconfirmmodal" tabindex="-1" class="modal" role="dialog" aria-hidden="true">' +
+            '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-body row">' +
+                '<button id="emailconfirm-timezone-current" type="button">Use Current Timezone</button>' +
+                '<button id="emailconfirm-timezone-utc" type="button">Convert To UTC</button>' +
+            '</div></div></div>' +
         '</div>'
 }
 
@@ -31,7 +33,7 @@ function buildEmailDomWithShortUrl() {
         '<nav><div id="navbar"><ul>' +
           '<li>' +
             '<button id="clonebutton" type="button" class="btn btn-warning navbar-btn">' +
-              '<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone' +
+              '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone' +
             '</button>' +
           '</li>' +
           '<li>' +
@@ -44,9 +46,11 @@ function buildEmailDomWithShortUrl() {
           '<span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>' +
         '</div>' +
         // add a minimal email confirmation modal so sendEmail does not crash
-        '<div id="emailconfirmmodal" class="hidden">' +
-            '<div id="emailconfirm-timezone-current"></div>' +
-            '<div id="emailconfirm-timezone-utc"></div>' +
+        '<div id="emailconfirmmodal" tabindex="-1" class="modal" role="dialog" aria-hidden="true">' +
+            '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-body row">' +
+                '<button id="emailconfirm-timezone-current" type="button">Use Current Timezone</button>' +
+                '<button id="emailconfirm-timezone-utc" type="button">Convert To UTC</button>' +
+            '</div></div></div>' +
         '</div>'
 }
 
@@ -250,5 +254,42 @@ describe('Email - mail subject', function () {
         } finally {
             restore();
         }
+    });
+});
+
+describe('Email - expiration confirmation modal', function () {
+    beforeEach(function () {
+        cleanup(); // provided by common
+    });
+
+    it('Shows the modal and hides it again once a timezone was chosen', function () {
+        buildEmailDomNoShortUrl();
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(3600);
+        const modal = document.getElementById('emailconfirmmodal');
+
+        const { getUrl, restore } = makeWindowOpenMock();
+        const errors = [];
+        const consoleError = console.error;
+        console.error = function (...args) {
+            errors.push(args.join(' '));
+        };
+        try {
+            for (const timezone of ['current', 'utc']) {
+                document.getElementById('emaillink').click();
+                assert.ok(modal.classList.contains('show'), 'modal is shown before choosing ' + timezone);
+                assert.strictEqual(getUrl(), null, 'no email is sent before choosing ' + timezone);
+
+                document.getElementById('emailconfirm-timezone-' + timezone).click();
+                assert.ok(!modal.classList.contains('show'), 'modal is hidden after choosing ' + timezone);
+                assert.match(getUrl(), /^mailto:\?/, 'email is sent after choosing ' + timezone);
+                // reset the URL recorded by the mock
+                window.open(null);
+            }
+        } finally {
+            console.error = consoleError;
+            restore();
+        }
+        assert.deepStrictEqual(errors, [], 'reusing the modal logs no errors');
     });
 });

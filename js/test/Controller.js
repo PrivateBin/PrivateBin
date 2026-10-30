@@ -64,7 +64,6 @@ describe('Controller', function () {
                     <select id="pasteExpiration">
                         <option value="1week" selected="selected">1 week</option>
                     </select>
-                    <span id="pasteExpirationDisplay"></span>
                 `;
 
                 PrivateBin.Alert.init();

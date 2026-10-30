@@ -89,4 +89,74 @@ describe('UiHelper', function () {
         });
         */
     });
+
+    describe('showModal & hideModal', function () {
+        beforeEach(function () {
+            cleanup();
+            document.body.innerHTML =
+                '<div id="testmodal" tabindex="-1" class="modal" role="dialog" aria-hidden="true">' +
+                '<div class="modal-dialog" role="document"><div class="modal-content">' +
+                '<div class="modal-body"><button type="button" data-bs-dismiss="modal">Close</button>' +
+                '</div></div></div></div>';
+        });
+
+        /**
+         * runs the given action, while collecting messages logged as errors
+         *
+         * @param {function} action
+         * @returns {string[]} logged errors
+         */
+        function collectErrors(action) {
+            const errors = [];
+            const consoleError = console.error;
+            console.error = function (...args) {
+                errors.push(args.join(' '));
+            };
+            try {
+                action();
+            } finally {
+                console.error = consoleError;
+            }
+            return errors;
+        }
+
+        it('shows and hides a modal repeatedly', function () {
+            const modal = document.getElementById('testmodal');
+            const errors = collectErrors(function () {
+                for (let i = 0; i < 3; ++i) {
+                    PrivateBin.UiHelper.showModal(modal);
+                    assert.ok(modal.classList.contains('show'), 'modal is shown');
+                    assert.strictEqual(modal.getAttribute('aria-modal'), 'true');
+                    PrivateBin.UiHelper.hideModal(modal);
+                    assert.ok(!modal.classList.contains('show'), 'modal is hidden');
+                    assert.strictEqual(modal.style.display, 'none');
+                }
+            });
+            assert.deepStrictEqual(errors, []);
+        });
+
+        it('ignores hiding a modal that was never shown', function () {
+            const modal = document.getElementById('testmodal');
+            assert.doesNotThrow(() => PrivateBin.UiHelper.hideModal(modal));
+            assert.ok(!modal.classList.contains('show'));
+        });
+
+        it('keeps the options of the first showing of a modal', function () {
+            const modal = document.getElementById('testmodal');
+            PrivateBin.UiHelper.showModal(modal, {backdrop: 'static', keyboard: false});
+            modal.dispatchEvent(new window.KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+            assert.ok(modal.classList.contains('show'), 'modal can not be closed with Escape');
+            PrivateBin.UiHelper.hideModal(modal);
+            PrivateBin.UiHelper.showModal(modal);
+            modal.dispatchEvent(new window.KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+            assert.ok(modal.classList.contains('show'), 'modal still can not be closed with Escape');
+        });
+
+        it('lets a modal without options be closed with Escape', function () {
+            const modal = document.getElementById('testmodal');
+            PrivateBin.UiHelper.showModal(modal);
+            modal.dispatchEvent(new window.KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+            assert.ok(!modal.classList.contains('show'), 'modal was closed with Escape');
+        });
+    });
 });
