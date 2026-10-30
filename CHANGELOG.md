@@ -9,6 +9,7 @@
 * FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
 * FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
 * FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
+* FIXED: Password peek button next to the password input when creating a document had no effect
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
