@@ -100,7 +100,7 @@ describe('PasswordPeek', function () {
                 );
             }),
             function ([count, clicks]) {
-                globalThis.cleanup();
+                // replacing the markup is enough, init binds to the new elements
                 const ids = [];
                 for (let i = 0; i < count; ++i) {
                     ids.push('password' + i);

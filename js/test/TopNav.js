@@ -812,7 +812,7 @@ describe('TopNav', function () {
                 fc.assert(fc.property(
                     fc.constantFrom('plaintext', 'syntaxhighlighting', 'markdown'),
                     function (format) {
-                        cleanup();
+                        // replacing the markup is enough, init binds to the new elements
                         document.documentElement.innerHTML = formatter;
                         PrivateBin.TopNav.init();
                         const select = query('#pasteFormatter');
