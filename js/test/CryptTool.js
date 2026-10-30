@@ -245,6 +245,35 @@ describe('CryptTool', function () {
             assert.strictEqual(message, plaintext);
         });
 
+        it('authenticates the document and parent IDs of comments', async function () {
+            const clean = globalThis.cleanup();
+            Object.defineProperty(window, 'crypto', {
+                value: new WebCrypto(),
+                configurable: true,
+                enumerable: true,
+                writable: false
+            });
+            // ensure zlib is getting loaded
+            PrivateBin.Controller.initZlib();
+            global.atob = common.atob;
+            global.btoa = common.btoa;
+            const cipherMessage = await PrivateBin.CryptTool.cipher(
+                    'foo', 'bar', 'baz', ['5b65a01b43987bc2', '33a5671d11b29d01']
+                ),
+                plaintext = await PrivateBin.CryptTool.decipher(
+                    'foo', 'bar', cipherMessage
+                );
+            cipherMessage[1][9] = '1111111111111111';
+            const tampered = await PrivateBin.CryptTool.decipher(
+                'foo', 'bar', cipherMessage
+            );
+            clean();
+            assert.strictEqual(cipherMessage[1].length, 10);
+            assert.strictEqual(cipherMessage[1][8], '5b65a01b43987bc2');
+            assert.strictEqual(plaintext, 'baz');
+            assert.strictEqual(tampered, '');
+        });
+
         it('can en- and decrypt a particular message (#260)', async function () {
             await fc.assert(fc.asyncProperty(
                 fc.string(),

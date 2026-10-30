@@ -221,6 +221,36 @@ class ModelTest extends TestCase
         $comment->store();
     }
 
+    public function testCommentRequireIds()
+    {
+        $options = parse_ini_file(CONF, true);
+        $options['main']['discussionrequireauthenticatedids'] = 'true';
+        Helper::createIniFile(CONF, $options);
+        $model = new Model(new Configuration);
+
+        $pasteData = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
+        $model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+
+        $commentData['adata'][] = $commentData['pasteid'];
+        $commentData['adata'][] = $commentData['parentid'];
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
+        $comment->store();
+        $this->assertTrue($comment->exists(), 'comment with authenticated IDs can be stored');
+
+        $commentData = Helper::getCommentPost();
+        $commentData['ct'] = base64_encode('other ciphertext');
+        $comment = $paste->getComment(Helper::getPasteId());
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(77);
+        $comment->setData($commentData);
+    }
+
     public function testCommentDuplicate()
     {
         $pasteData = Helper::getPastePost();
