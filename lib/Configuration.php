@@ -50,7 +50,7 @@ class Configuration
             'template'                 => 'bootstrap5',
             'availabletemplates'       => [
                 'bootstrap5',
- 		'splitview',
+                'splitview',
                 'bootstrap',
                 'bootstrap-page',
                 'bootstrap-dark',
