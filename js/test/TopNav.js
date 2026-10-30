@@ -95,14 +95,13 @@ describe('TopNav', function () {
                     `<nav class="navbar navbar-inverse navbar-static-top">
                     <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav"><li><button id="newbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                    <span class="glyphicon glyphicon-file" aria-hidden="true">
-                        </span> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
-                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone</button>
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark"></use></svg> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone</button>
                     <button id="rawtextbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                    <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text</button>
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> Raw text</button>
                     <button id="downloadtextbutton" type="button" class="hidden btn btn-default navbar-btn"></button>
                     <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn"/>
-                    <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
+                    <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code"></use></svg> QR code</button></li></ul></div>
                     </nav>`;
                 PrivateBin.TopNav.init();
                 results.push(
@@ -348,8 +347,7 @@ describe('TopNav', function () {
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="clonebutton" ' +
                     'type="button" class="btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-duplicate" aria-hidden=' +
-                    '"true"></span> Clone</button></li></ul></div></nav>';
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !query('#clonebutton').classList.contains('hidden')
@@ -380,8 +378,7 @@ describe('TopNav', function () {
                 document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button ' +
                     'id="rawtextbutton" type="button" class="btn ' +
-                    'btn-warning navbar-btn"><span class="glyphicon ' +
-                    'glyphicon-text-background" aria-hidden="true"></span> ' +
+                    'btn-warning navbar-btn"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> ' +
                     'Raw text</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
@@ -480,50 +477,58 @@ describe('TopNav', function () {
             cleanup();
         });
 
+        /**
+         * navigation bar markup of the bootstrap5 template, with the
+         * collapsible navigation either expanded or collapsed
+         *
+         * @param {boolean} isExpanded
+         * @returns {string}
+         */
+        function navbar(isExpanded) {
+            return '<nav class="navbar navbar-expand-lg"><div class="container-fluid">' +
+                '<button class="navbar-toggler' + (isExpanded ? '' : ' collapsed') +
+                '" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" ' +
+                'aria-controls="navbar" aria-expanded="' + isExpanded + '" ' +
+                'aria-label="Toggle navigation"><span class="navbar-toggler-icon">' +
+                '</span></button><div id="navbar" class="collapse navbar-collapse' +
+                (isExpanded ? ' show' : '') + '"><ul class="navbar-nav"><li>' +
+                '<button id="newbutton" type="button" class="hidden">New</button>' +
+                '</li></ul></div></div></nav>';
+        }
+
         it(
-            'collapses the navigation when displayed on a small screen',
+            'collapses the expanded navigation when displayed on a small screen',
             function () {
-                let results = [];
-                document.documentElement.innerHTML =
-                    '<nav><div class="navbar-header"><button type="button" ' +
-                    'class="navbar-toggle collapsed" data-toggle="collapse" ' +
-                    'data-target="#navbar" aria-expanded="false" aria-controls' +
-                    '="navbar">Toggle navigation</button><a class="reloadlink ' +
-                    'navbar-brand" href=""><img alt="PrivateBin" ' +
-                    'src="img/icon.svg" width="38" /></a></div><div ' +
-                    'id="navbar"><ul><li><button id="newbutton" type=' +
-                    '"button" class="hidden">New</button></li></ul></div></nav>';
+                document.documentElement.innerHTML = navbar(true);
                 PrivateBin.TopNav.init();
-                results.push(
-                    query('.navbar-toggle').classList.contains('collapsed') &&
-                    query('#navbar').getAttribute('aria-expanded') !== 'true'
-                );
+                let clicks = 0;
+                query('.navbar-toggler').addEventListener('click', function () {
+                    ++clicks;
+                });
                 PrivateBin.TopNav.collapseBar();
-                results.push(
-                    query('.navbar-toggle').classList.contains('collapsed') &&
-                    query('#navbar').getAttribute('aria-expanded') !== 'true'
-                );
-                /*
-                with the upgrade for bootstrap-3.3.7.js to bootstrap-3.4.1.js
-                the mobile interface detection changed to check if the
-                ontouchstart event exists, which broke this section of the test
-                const toggleBtn = document.querySelector('.navbar-toggle');
-                toggleBtn.dispatchEvent(new MouseEvent('click'));
-                results.push(
-                    !toggleBtn.classList.contains('collapsed') &&
-                    document.getElementById('navbar').getAttribute('aria-expanded') == 'true'
-                );
+                assert.strictEqual(clicks, 1, 'toggler is clicked once');
+            }
+        );
+
+        it(
+            'leaves the collapsed navigation alone',
+            function () {
+                document.documentElement.innerHTML = navbar(false);
+                PrivateBin.TopNav.init();
+                let clicks = 0;
+                query('.navbar-toggler').addEventListener('click', function () {
+                    ++clicks;
+                });
                 PrivateBin.TopNav.collapseBar();
-                results.push(
-                    document.querySelector('.navbar-toggle').classList.contains('collapsed') &&
-                    document.getElementById('navbar').getAttribute('aria-expanded') == 'false'
-                );
-                */
-                const result = results.every(element => element);
-                if (!result) {
-                    console.log(results);
-                }
-                assert.ok(result);
+                assert.strictEqual(clicks, 0, 'toggler is not clicked');
+            }
+        );
+
+        it(
+            'ignores pages without a navigation',
+            function () {
+                document.documentElement.innerHTML = '<body></body>';
+                PrivateBin.TopNav.collapseBar();
             }
         );
     });
@@ -694,6 +699,80 @@ describe('TopNav', function () {
                     '<option value="never">Never</option></select>';
                 PrivateBin.TopNav.init();
                 assert.strictEqual(PrivateBin.TopNav.getExpiration(), '1day');
+                cleanup();
+            }
+        );
+
+        it(
+            'returns the expiration date the user selected',
+            function () {
+                document.documentElement.innerHTML =
+                    '<select id="pasteExpiration" name="pasteExpiration">' +
+                    '<option value="1day">1 day</option>' +
+                    '<option value="never">Never</option></select>';
+                PrivateBin.TopNav.init();
+                const select = query('#pasteExpiration');
+                select.value = 'never';
+                select.dispatchEvent(new window.Event('change'));
+                assert.strictEqual(PrivateBin.TopNav.getExpiration(), 'never');
+                cleanup();
+            }
+        );
+    });
+
+    describe('setFormat', function () {
+        before(function () {
+            cleanup();
+        });
+
+        const formatter =
+            '<li id="formatter" class="nav-item d-flex">' +
+            '<select id="pasteFormatter" name="pasteFormatter" class="form-select">' +
+            '<option value="plaintext" selected="selected">Plain Text</option>' +
+            '<option value="syntaxhighlighting">Source Code</option>' +
+            '<option value="markdown">Markdown</option></select></li>';
+
+        it(
+            'selects the given format',
+            function () {
+                fc.assert(fc.property(
+                    fc.constantFrom('plaintext', 'syntaxhighlighting', 'markdown'),
+                    function (format) {
+                        document.documentElement.innerHTML = formatter;
+                        PrivateBin.TopNav.init();
+                        PrivateBin.TopNav.setFormat(format);
+                        assert.strictEqual(query('#pasteFormatter').value, format);
+                    }
+                ));
+                cleanup();
+            }
+        );
+
+        it(
+            'tolerates a missing formatter (formatter selection disabled)',
+            function () {
+                document.documentElement.innerHTML = '<nav><div id="navbar"></div></nav>';
+                PrivateBin.TopNav.init();
+                assert.doesNotThrow(() => PrivateBin.TopNav.setFormat('markdown'));
+                cleanup();
+            }
+        );
+
+        it(
+            'passes the format the user selected to the viewer',
+            function () {
+                fc.assert(fc.property(
+                    fc.constantFrom('plaintext', 'syntaxhighlighting', 'markdown'),
+                    function (format) {
+                        cleanup();
+                        document.documentElement.innerHTML = formatter;
+                        PrivateBin.TopNav.init();
+                        const select = query('#pasteFormatter');
+                        select.value = format;
+                        select.dispatchEvent(new window.Event('change'));
+                        assert.strictEqual(PrivateBin.PasteViewer.getFormat(), format);
+                    }
+                ));
                 cleanup();
             }
         );
@@ -943,19 +1022,18 @@ describe('TopNav', function () {
                     '<div id="navbar" class="navbar-collapse collapse"><ul ' +
                     'class="nav navbar-nav"><li><button id="newbutton" ' +
                     'type="button" class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-file" aria-hidden="true">' +
-                    '</span> New</button><button id="clonebutton" type="button"' +
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark"></use></svg>' +
+                    ' New</button><button id="clonebutton" type="button"' +
                     ' class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-duplicate" ' +
-                    'aria-hidden="true"></span> Clone</button><button ' +
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg>' +
+                    ' Clone</button><button ' +
                     'id="rawtextbutton" type="button" class="hidden btn ' +
-                    'btn-warning navbar-btn"><span class="glyphicon ' +
-                    'glyphicon-text-background" aria-hidden="true"></span> ' +
+                    'btn-warning navbar-btn"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> ' +
                     'Raw text</button><button id="qrcodelink" type="button" ' +
                     'data-toggle="modal" data-target="#qrcodemodal" ' +
-                    'class="hidden btn btn-warning navbar-btn"><span ' +
-                    'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
-                    '</span> QR code</button></li></ul></div></nav>';
+                    'class="hidden btn btn-warning navbar-btn">' +
+                    '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code"></use></svg>' +
+                    ' QR code</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 PrivateBin.TopNav.hideAllButtons();
 

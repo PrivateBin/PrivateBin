@@ -8,7 +8,7 @@ function buildEmailDomNoShortUrl() {
         '<nav><div id="navbar"><ul>' +
           '<li>' +
             '<button id="clonebutton" type="button" class="btn btn-warning navbar-btn">' +
-              '<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone' +
+              '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone' +
             '</button>' +
           '</li>' +
           '<li>' +
@@ -31,7 +31,7 @@ function buildEmailDomWithShortUrl() {
         '<nav><div id="navbar"><ul>' +
           '<li>' +
             '<button id="clonebutton" type="button" class="btn btn-warning navbar-btn">' +
-              '<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone' +
+              '<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone' +
             '</button>' +
           '</li>' +
           '<li>' +

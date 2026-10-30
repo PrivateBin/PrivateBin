@@ -173,13 +173,6 @@ new ConfigurationTestGenerator(array(
                         '$content',
                         'outputs "bootstrap5" stylesheet correctly',
                     ),
-                ), array(
-                    'type' => 'DoesNotMatchRegularExpression',
-                    'args' => array(
-                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
-                        '$content',
-                        'removes "bootstrap" stylesheet correctly',
-                    ),
                 ),
             ),
             'affects' => $vd,

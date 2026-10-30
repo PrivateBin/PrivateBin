@@ -398,4 +398,42 @@ describe('Helper', function () {
             return PrivateBin.Helper.isBootstrap5() === false;
         });
     });
+
+    describe('setIcon', function () {
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('points the icon reference of an element to the given icon', function () {
+            fc.assert(fc.property(
+                fc.constantFrom('img/bootstrap-icons.svg', '/sub/dir/img/bootstrap-icons.svg', ''),
+                common.fcAlnumString(),
+                fc.stringMatching(/^[a-z][a-z0-9-]*$/),
+                function (sprite, oldIcon, newIcon) {
+                    document.body.innerHTML = '<button><svg aria-hidden="true">' +
+                        '<use href="' + sprite + '#' + oldIcon + '"></use></svg></button>';
+                    const button = document.querySelector('button');
+                    assert.strictEqual(PrivateBin.Helper.setIcon(button, newIcon), true);
+                    assert.strictEqual(
+                        document.querySelector('use').getAttribute('href'),
+                        sprite + '#' + newIcon
+                    );
+                }
+            ));
+        });
+
+        it('accepts the icon reference itself', function () {
+            document.body.innerHTML = '<svg><use href="img/bootstrap-icons.svg#eye"></use></svg>';
+            const use = document.querySelector('use');
+            assert.strictEqual(PrivateBin.Helper.setIcon(use, 'eye-slash'), true);
+            assert.strictEqual(use.getAttribute('href'), 'img/bootstrap-icons.svg#eye-slash');
+        });
+
+        it('ignores elements without an icon', function () {
+            document.body.innerHTML = '<button>no icon</button>';
+            const button = document.querySelector('button');
+            assert.strictEqual(PrivateBin.Helper.setIcon(button, 'eye'), false);
+            assert.strictEqual(button.outerHTML, '<button>no icon</button>');
+        });
+    });
 });

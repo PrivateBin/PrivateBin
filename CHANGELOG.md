@@ -1,5 +1,10 @@
 # PrivateBin version history
 
+## 2.1.2 (not yet released)
+* CHANGED: Removed the Bootstrap 3 leftovers: its stylesheets, glyphicon fonts, unused icons and the mapping of `bootstrap-*` template names to the removed `bootstrap` template, which now fail with a "Template not found" error instead of rendering a page with missing JavaScript dependencies. Set `template = "bootstrap5"` in `cfg/conf.php`, or upgrade custom templates to Bootstrap 5.
+* FIXED: Navigation menu on small screens didn't collapse after sending or cloning a document
+* FIXED: Loading, status and comment reply messages didn't update their icons, i.e. when sending or decrypting a document or when posting a comment failed
+
 ## 2.1.1 (not yet released)
 * ADDED: Translation for Korean (#2071)
 * CHANGED: Database backend now logs errors when reading comments, like it already did for comment existence checks

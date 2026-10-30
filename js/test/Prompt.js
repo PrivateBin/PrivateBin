@@ -31,14 +31,13 @@ describe('Prompt', function () {
                         <nav class="navbar navbar-inverse navbar-static-top">
                             <div id="navbar" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav"><li><button id="newbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                            <span class="glyphicon glyphicon-file" aria-hidden="true">
-                                </span> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
-                            <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone</button>
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark"></use></svg> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy"></use></svg> Clone</button>
                             <button id="rawtextbutton" type="button" class="hidden btn btn-warning navbar-btn">
-                            <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text</button>
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt"></use></svg> Raw text</button>
                             <button id="downloadtextbutton" type="button" class="hidden btn btn-default navbar-btn"></button>
                             <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn"/>
-                            <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
+                            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code"></use></svg> QR code</button></li></ul></div>
                         </nav>
                         <div id="errormessage"></div>
                         <div id="loadingindicator"></div>

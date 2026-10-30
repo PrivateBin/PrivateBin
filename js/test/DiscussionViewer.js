@@ -56,7 +56,7 @@ describe('DiscussionViewer', function () {
 		<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>
 		<br />
 		<div id="replystatus" role="alert" class="statusmessage hidden alert">
-			<span class="glyphicon" aria-hidden="true"></span>
+			<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle"></use></svg>
 		</div>
 		<button id="replybutton" class="btn btn-default btn-sm">Post comment</button>
 	</div>
@@ -122,6 +122,10 @@ describe('DiscussionViewer', function () {
                                 !notificationResult.classList.contains('alert-danger') &&
                                 notificationResult.classList.contains('alert-info')
                             )
+                        );
+                        results.push(
+                            notificationResult.querySelector('use').getAttribute('href') ===
+                            'img/bootstrap-icons.svg#' + (alertType === 'danger' ? 'exclamation-triangle' : 'info-circle')
                         );
                     }
                     clean();

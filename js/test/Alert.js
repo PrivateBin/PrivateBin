@@ -1,6 +1,18 @@
 'use strict';
 const common = require('../common');
 const fc = require('fast-check');
+const path = require('path');
+
+/**
+ * icon markup of the bootstrap5 template
+ *
+ * @param {string} name - bootstrap icon name
+ * @returns {string}
+ */
+function icon(name) {
+    return '<svg width="16" height="16" fill="currentColor" aria-hidden="true">' +
+        '<use href="img/bootstrap-icons.svg#' + name + '"></use></svg>';
+}
 
 describe('Alert', function () {
     describe('showStatus', function () {
@@ -28,13 +40,13 @@ describe('Alert', function () {
                 function (message) {
                     message = message.join('');
                     const expected = '<div id="status" role="alert" ' +
-                        'class="statusmessage alert alert-info"><span ' +
-                        'class="glyphicon glyphicon-info-sign" ' +
-                        'aria-hidden="true"></span> <span>' + message + '</span></div>';
+                        'class="d-flex align-items-center gap-2 alert alert-info">' +
+                        '<div>' + icon('info-circle') + ' </div> <span>' +
+                        message + '</span></div>';
                     document.body.innerHTML =
-                        '<div id="status" role="alert" class="statusmessage ' +
-                        'alert alert-info hidden"><span class="glyphicon ' +
-                        'glyphicon-info-sign" aria-hidden="true"></span> </div>';
+                        '<div id="status" role="alert" class="d-flex ' +
+                        'align-items-center gap-2 alert alert-info hidden">' +
+                        '<div>' + icon('info-circle') + ' </div></div>';
                     PrivateBin.Alert.init();
                     PrivateBin.Alert.showStatus(message);
                     const result = document.body.innerHTML;
@@ -47,19 +59,19 @@ describe('Alert', function () {
             fc.assert(fc.property(
                 fc.array(common.fcAlnumString()),
                 fc.array(common.fcAlnumString()),
-                function (icon, message) {
-                    icon = icon.join('');
+                function (customIcon, message) {
+                    customIcon = customIcon.join('');
                     message = message.join('');
                     const expected = '<div id="status" role="alert" ' +
-                        'class="statusmessage alert alert-info"><span ' +
-                        'class="glyphicon glyphicon-' + icon +
-                        '" aria-hidden="true"></span> <span>' + message + '</span></div>';
+                        'class="d-flex align-items-center gap-2 alert alert-info">' +
+                        '<div>' + icon(customIcon || 'info-circle') + ' </div> <span>' +
+                        message + '</span></div>';
                     document.body.innerHTML =
-                        '<div id="status" role="alert" class="statusmessage ' +
-                        'alert alert-info hidden"><span class="glyphicon ' +
-                        'glyphicon-info-sign" aria-hidden="true"></span> </div>';
+                        '<div id="status" role="alert" class="d-flex ' +
+                        'align-items-center gap-2 alert alert-info hidden">' +
+                        '<div>' + icon('info-circle') + ' </div></div>';
                     PrivateBin.Alert.init();
-                    PrivateBin.Alert.showStatus(message, icon);
+                    PrivateBin.Alert.showStatus(message, customIcon);
                     const result = document.body.innerHTML;
                     return expected === result;
                 }
@@ -89,17 +101,14 @@ describe('Alert', function () {
         it('shows a warning message (bootstrap)', () => {
             fc.assert(fc.property(
                 fc.array(common.fcAlnumString()),
-                fc.array(common.fcAlnumString()),
                 function (message) {
                     message = message.join('');
                     const expected = '<div id="errormessage" role="alert" ' +
-                        'class="statusmessage alert alert-danger"><span ' +
-                        'class="glyphicon glyphicon-warning-sign" ' +
-                        'aria-hidden="true"></span> <span>' + message + '</span></div>';
+                        'class="alert alert-danger">' + icon('exclamation-triangle') +
+                        ' <span>' + message + '</span></div>';
                     document.body.innerHTML =
-                        '<div id="errormessage" role="alert" class="statusmessage ' +
-                        'alert alert-danger hidden"><span class="glyphicon ' +
-                        'glyphicon-alert" aria-hidden="true"></span> </div>';
+                        '<div id="errormessage" role="alert" class="hidden ' +
+                        'alert alert-danger">' + icon('exclamation-triangle') + ' </div>';
                     PrivateBin.Alert.init();
                     PrivateBin.Alert.showWarning(message);
                     const result = document.body.innerHTML;
@@ -112,19 +121,18 @@ describe('Alert', function () {
             fc.assert(fc.property(
                 fc.array(common.fcAlnumString()),
                 fc.array(common.fcAlnumString()),
-                function (icon, message) {
-                    icon = icon.join('');
+                function (customIcon, message) {
+                    customIcon = customIcon.join('');
                     message = message.join('');
                     const expected = '<div id="errormessage" role="alert" ' +
-                        'class="statusmessage alert alert-danger"><span ' +
-                        'class="glyphicon glyphicon-' + icon +
-                        '" aria-hidden="true"></span> <span>' + message + '</span></div>';
+                        'class="alert alert-danger">' +
+                        icon(customIcon || 'exclamation-triangle') +
+                        ' <span>' + message + '</span></div>';
                     document.body.innerHTML =
-                        '<div id="errormessage" role="alert" class="statusmessage ' +
-                        'alert alert-danger hidden"><span class="glyphicon ' +
-                        'glyphicon-alert" aria-hidden="true"></span> </div>';
+                        '<div id="errormessage" role="alert" class="hidden ' +
+                        'alert alert-danger">' + icon('exclamation-triangle') + ' </div>';
                     PrivateBin.Alert.init();
-                    PrivateBin.Alert.showWarning(message, icon);
+                    PrivateBin.Alert.showWarning(message, customIcon);
                     const result = document.body.innerHTML;
                     return expected === result;
                 }
@@ -154,17 +162,14 @@ describe('Alert', function () {
         it('shows an error message (bootstrap)', () => {
             fc.assert(fc.property(
                 fc.array(common.fcAlnumString()),
-                fc.array(common.fcAlnumString()),
-                function (icon, message) {
+                function (message) {
                     message = message.join('');
                     const expected = '<div id="errormessage" role="alert" ' +
-                        'class="statusmessage alert alert-danger"><span ' +
-                        'class="glyphicon glyphicon-alert" ' +
-                        'aria-hidden="true"></span> <span>' + message + '</span></div>';
+                        'class="alert alert-danger">' + icon('exclamation-triangle') +
+                        ' <span>' + message + '</span></div>';
                     document.body.innerHTML =
-                        '<div id="errormessage" role="alert" class="statusmessage ' +
-                        'alert alert-danger hidden"><span class="glyphicon ' +
-                        'glyphicon-alert" aria-hidden="true"></span> </div>';
+                        '<div id="errormessage" role="alert" class="hidden ' +
+                        'alert alert-danger">' + icon('exclamation-triangle') + ' </div>';
                     PrivateBin.Alert.init();
                     PrivateBin.Alert.showError(message);
                     const result = document.body.innerHTML;
@@ -177,19 +182,18 @@ describe('Alert', function () {
             fc.assert(fc.property(
                 fc.array(common.fcAlnumString()),
                 fc.array(common.fcAlnumString()),
-                function (icon, message) {
-                    icon = icon.join('');
+                function (customIcon, message) {
+                    customIcon = customIcon.join('');
                     message = message.join('');
                     const expected = '<div id="errormessage" role="alert" ' +
-                        'class="statusmessage alert alert-danger"><span ' +
-                        'class="glyphicon glyphicon-' + icon +
-                        '" aria-hidden="true"></span> <span>' + message + '</span></div>';
+                        'class="alert alert-danger">' +
+                        icon(customIcon || 'exclamation-triangle') +
+                        ' <span>' + message + '</span></div>';
                     document.body.innerHTML =
-                        '<div id="errormessage" role="alert" class="statusmessage ' +
-                        'alert alert-danger hidden"><span class="glyphicon ' +
-                        'glyphicon-alert" aria-hidden="true"></span> </div>';
+                        '<div id="errormessage" role="alert" class="hidden ' +
+                        'alert alert-danger">' + icon('exclamation-triangle') + ' </div>';
                     PrivateBin.Alert.init();
-                    PrivateBin.Alert.showError(message, icon);
+                    PrivateBin.Alert.showError(message, customIcon);
                     const result = document.body.innerHTML;
                     return expected === result;
                 }
@@ -226,13 +230,11 @@ describe('Alert', function () {
                     message = message.join('');
                     string = string.join('');
                     const expected = '<div id="remainingtime" role="alert" ' +
-                        'class="alert alert-info"><span ' +
-                        'class="glyphicon glyphicon-fire" aria-hidden="true">' +
-                        '</span> <span>' + string + message + number + '</span></div>';
+                        'class="alert alert-info">' + icon('fire') +
+                        ' <span>' + string + message + number + '</span></div>';
                     document.body.innerHTML =
                         '<div id="remainingtime" role="alert" class="hidden ' +
-                        'alert alert-info"><span class="glyphicon ' +
-                        'glyphicon-fire" aria-hidden="true"></span> </div>';
+                        'alert alert-info">' + icon('fire') + ' </div>';
                     PrivateBin.Alert.init();
                     PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
                     const result = document.body.innerHTML;
@@ -269,26 +271,46 @@ describe('Alert', function () {
             fc.assert(fc.property(
                 fc.array(common.fcAlnumString()),
                 fc.array(common.fcAlnumString()),
-                function (message, icon) {
+                function (message, customIcon) {
                     message = message.join('');
-                    icon = icon.join('');
+                    customIcon = customIcon.join('');
                     const defaultMessage = 'Loading…';
                     if (message.length === 0) {
                         message = defaultMessage;
                     }
-                    const expected = '<ul class="nav navbar-nav"><li ' +
-                        'id="loadingindicator" class="navbar-text"><span ' +
-                        'class="glyphicon glyphicon-' + icon +
-                        '" aria-hidden="true"></span> <span>' + message + '</span></li></ul>';
+                    const expected = '<ul class="navbar-nav"><li ' +
+                        'id="loadingindicator" class="navbar-text me-auto">' +
+                        icon(customIcon || 'clock') + ' <span>' + message +
+                        '</span></li></ul>';
                     document.body.innerHTML =
-                        '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
-                        'class="navbar-text hidden"><span class="glyphicon ' +
-                        'glyphicon-time" aria-hidden="true"></span> ' +
-                        defaultMessage + '</li></ul>';
+                        '<ul class="navbar-nav"><li id="loadingindicator" ' +
+                        'class="navbar-text hidden me-auto">' + icon('clock') +
+                        ' ' + defaultMessage + '</li></ul>';
                     PrivateBin.Alert.init();
-                    PrivateBin.Alert.showLoading(message, icon);
+                    PrivateBin.Alert.showLoading(message, customIcon);
                     const result = document.body.innerHTML;
                     return expected === result;
+                }
+            ));
+        });
+
+        it('keeps the previous icon, if none is given (bootstrap)', () => {
+            fc.assert(fc.property(
+                fc.constantFrom('clock', 'cloud-download', 'cloud-upload'),
+                fc.constantFrom(undefined, null, ''),
+                function (customIcon, noIcon) {
+                    document.body.innerHTML =
+                        '<ul class="navbar-nav"><li id="loadingindicator" ' +
+                        'class="navbar-text hidden me-auto">' + icon('clock') +
+                        ' Loading…</li></ul>';
+                    PrivateBin.Alert.init();
+                    PrivateBin.Alert.showLoading('first', customIcon);
+                    PrivateBin.Alert.hideLoading();
+                    PrivateBin.Alert.showLoading('second', noIcon);
+                    const use = document.querySelector('#loadingindicator use');
+                    return use.getAttribute('href') === 'img/bootstrap-icons.svg#' + customIcon &&
+                        document.querySelectorAll('#loadingindicator svg').length === 1 &&
+                        document.querySelector('#loadingindicator span').textContent === 'second';
                 }
             ));
         });
@@ -299,10 +321,9 @@ describe('Alert', function () {
             'hides the loading message',
             function() {
                 document.body.innerHTML =
-                    '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
-                    'class="navbar-text"><span class="glyphicon ' +
-                    'glyphicon-time" aria-hidden="true"></span> ' +
-                    'Loading…</li></ul>';
+                    '<ul class="navbar-nav"><li id="loadingindicator" ' +
+                    'class="navbar-text me-auto">' + icon('clock') +
+                    ' Loading…</li></ul>';
                 document.body.classList.add('loading');
                 PrivateBin.Alert.init();
                 PrivateBin.Alert.hideLoading();
@@ -317,12 +338,11 @@ describe('Alert', function () {
             'hides all messages',
             function() {
                 document.body.innerHTML =
-                    '<div id="status" role="alert" class="statusmessage ' +
-                    'alert alert-info"><span class="glyphicon ' +
-                    'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
-                    '<div id="errormessage" role="alert" class="statusmessage ' +
-                    'alert alert-danger"><span class="glyphicon ' +
-                    'glyphicon-alert" aria-hidden="true"></span> </div>';
+                    '<div id="status" role="alert" class="d-flex ' +
+                    'align-items-center gap-2 alert alert-info"><div>' +
+                    icon('info-circle') + ' </div></div>' +
+                    '<div id="errormessage" role="alert" class="alert ' +
+                    'alert-danger">' + icon('exclamation-triangle') + ' </div>';
                 PrivateBin.Alert.init();
                 PrivateBin.Alert.hideMessages();
                 assert.ok(document.getElementById('status').classList.contains('hidden'));
@@ -350,19 +370,16 @@ describe('Alert', function () {
                         message = defaultMessage;
                     }
                     document.body.innerHTML =
-                        '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
-                        'class="navbar-text hidden"><span class="glyphicon ' +
-                        'glyphicon-time" aria-hidden="true"></span> ' +
-                        defaultMessage + '</li></ul>' +
+                        '<ul class="navbar-nav"><li id="loadingindicator" ' +
+                        'class="navbar-text hidden me-auto">' + icon('clock') +
+                        ' ' + defaultMessage + '</li></ul>' +
                         '<div id="remainingtime" role="alert" class="hidden ' +
-                        'alert alert-info"><span class="glyphicon ' +
-                        'glyphicon-fire" aria-hidden="true"></span> </div>' +
-                        '<div id="status" role="alert" class="statusmessage ' +
-                        'alert alert-info"><span class="glyphicon ' +
-                        'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
-                        '<div id="errormessage" role="alert" class="statusmessage ' +
-                        'alert alert-danger"><span class="glyphicon ' +
-                        'glyphicon-alert" aria-hidden="true"></span> </div>';
+                        'alert alert-info">' + icon('fire') + ' </div>' +
+                        '<div id="status" role="alert" class="d-flex ' +
+                        'align-items-center gap-2 alert alert-info"><div>' +
+                        icon('info-circle') + ' </div></div>' +
+                        '<div id="errormessage" role="alert" class="alert ' +
+                        'alert-danger">' + icon('exclamation-triangle') + ' </div>';
                     PrivateBin.Alert.init();
                     PrivateBin.Alert.setCustomHandler(function(id, element) {
                         handlerCalled = true;
@@ -373,6 +390,25 @@ describe('Alert', function () {
                     return handlerCalled;
                 }
             ));
+        });
+    });
+
+    describe('icons', function () {
+        it('only uses icons that exist in the icon sprite', function () {
+            const source = fs.readFileSync(path.join(__dirname, '..', 'privatebin.js'), 'utf8');
+            const sprite = fs.readFileSync(path.join(__dirname, '..', '..', 'img', 'bootstrap-icons.svg'), 'utf8');
+            const calls = source.match(/(Alert\.show(Status|Warning|Error|Loading)|Helper\.setIcon)\([^;]*\);/g);
+            assert.ok(calls.length > 0, 'found icon setting calls');
+            let names = [];
+            calls.forEach(function (call) {
+                // skip the first argument, the message or element
+                const icons = call.substring(call.indexOf(',')).match(/'[a-z][a-z0-9-]*'/g) || [];
+                names = names.concat(icons.map(name => name.slice(1, -1)));
+            });
+            assert.ok(names.length > 0, 'found icon names');
+            names.forEach(function (name) {
+                assert.ok(sprite.includes('id="' + name + '"'), 'icon ' + name + ' exists in sprite');
+            });
         });
     });
 });
