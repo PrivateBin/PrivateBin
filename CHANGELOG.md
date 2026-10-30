@@ -10,6 +10,9 @@
 * FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
 * FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
 * FIXED: Comments must now be unique in cipher text within a document, not reuse existing cipher texts (#2100)
+* FIXED: SVG attachment previews could turn non-ASCII characters into markup after sanitization, enabling script execution when opening the preview in a new tab
+* FIXED: SVG attachment previews use a data URL, so they no longer run in the instance's origin when opened in a new tab
+* FIXED: Password characters above U+00FF got truncated before key derivation, now passwords get UTF-8 encoded and existing documents remain readable
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
