@@ -8,6 +8,7 @@
 * FIXED: Creating a document failed with a JavaScript error when the `discussion`, `password`, e-mail or QR code option is disabled, as the top navigation accessed the omitted elements
 * FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
 * FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
+* FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
 * FIXED: Comments must now be unique in cipher text within a document, not reuse existing cipher texts (#2100)
 
 ## 2.1.0 (2026-10-18)
