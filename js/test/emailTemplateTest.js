@@ -252,3 +252,77 @@ describe('Email - mail subject', function () {
         }
     });
 });
+
+describe('Email - plain-text translations', function () {
+    beforeEach(function () {
+        cleanup();
+        PrivateBin.I18n.reset('fr', {
+            'Notice:': 'Avis & "important" :',
+            'This link will expire after %s.':
+                'Ce lien expirera après %s.',
+            'This link can only be accessed once, do not use back or refresh button in your browser.':
+                'Vous ne pouvez accéder à ce lien qu\'une seule fois & ne cliquez pas sur "retour" <ici>.',
+            'Link:': 'Lien :',
+            'Encrypted note on %s': 'Note chiffrée sur %s'
+        });
+    });
+
+    afterEach(function () {
+        PrivateBin.I18n.reset();
+    });
+
+    it('Uses plain text for translated email body and subject', function () {
+        buildEmailDomNoShortUrl();
+        document.title = 'L\'instance & "PrivateBin" <local>';
+
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(0, true);
+
+        const { getUrl, restore } = makeWindowOpenMock();
+
+        try {
+            document.getElementById('emaillink').click();
+
+            const subject = extractMailtoSubject(getUrl());
+            const body = extractMailtoBody(getUrl());
+
+            assert.strictEqual(
+                subject,
+                'Note chiffrée sur L\'instance & "PrivateBin" <local>'
+            );
+
+            assert.match(body, /Avis & "important"/);
+            assert.match(
+                body,
+                /qu'une seule fois & ne cliquez pas sur "retour" <ici>/
+            );
+            assert.doesNotMatch(body, /&#39;|&amp;|&quot;|&lt;|&gt;/);
+        } finally {
+            restore();
+        }
+    });
+
+    it('Preserves expiration text and literal URL entities', function () {
+        buildEmailDomWithShortUrl();
+
+        const pasteUrl = 'https://short.example/x?literal=&copy;&id=%26';
+        document.getElementById('pasteurl').setAttribute('href', pasteUrl);
+
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(3600, false);
+
+        const { getUrl, restore } = makeWindowOpenMock();
+
+        try {
+            document.getElementById('emaillink').click();
+            document.getElementById('emailconfirm-timezone-current').click();
+
+            const body = extractMailtoBody(getUrl());
+
+            assert.match(body, /Ce lien expirera après /);
+            assert.ok(body.includes(pasteUrl));
+        } finally {
+            restore();
+        }
+    });
+});
