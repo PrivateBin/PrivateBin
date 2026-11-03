@@ -4227,11 +4227,11 @@ window.PrivateBin = (function () {
         /**
          * removes the event listeners of the e-mail button and its dialog
          *
-         * @name   TopNav.removeEmailListeners
+         * @name   TopNav.removeAllEmailListeners
          * @private
          * @function
          */
-        function removeEmailListeners() {
+        function removeAllEmailListeners() {
             removeEmailConfirmListeners();
             if (emailLinkListeners) {
                 emailLinkListeners.abort();
