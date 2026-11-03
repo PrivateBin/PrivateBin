@@ -4213,11 +4213,11 @@ window.PrivateBin = (function () {
         /**
          * removes the event listeners of the e-mail confirmation dialog
          *
-         * @name   TopNav.removeEmailConfirmListeners
+         * @name   TopNav.removeEmailConfirmButtonListeners
          * @private
          * @function
          */
-        function removeEmailConfirmListeners() {
+        function removeEmailConfirmButtonListeners() {
             if (emailConfirmListeners) {
                 emailConfirmListeners.abort();
                 emailConfirmListeners = null;
