@@ -260,7 +260,7 @@ describe('Email - mail subject', function () {
 
 describe('Email - click handlers', function () {
     beforeEach(function () {
-        cleanup(); // provided by common
+        cleanup();
     });
 
     it('Sends a single e-mail after the confirmation dialog was dismissed', function () {
