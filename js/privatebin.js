@@ -4147,6 +4147,31 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * Decode HTML entities in the assembled translated email text.
+         * The paste URL is appended afterward to preserve it unchanged.
+         *
+         * @param {string} text HTML-escaped email text
+         * @return {string} plain text
+         */
+        function decodeEmailHtmlEntities(text) {
+            const entities = {
+                '&amp;': '&',
+                '&lt;': '<',
+                '&gt;': '>',
+                '&quot;': '"',
+                '&#39;': '\'',
+                '&#x2F;': '/',
+                '&#x60;': '`',
+                '&#x3D;': '='
+            };
+
+            return text.replace(
+                /&(?:amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g,
+                entity => entities[entity]
+            );
+        }
+
+        /**
          * Template Email body.
          *
          * @name   TopNav.templateEmailBody
@@ -4187,6 +4212,10 @@ window.PrivateBin = (function () {
             }
             emailBody += I18n._('Link:');
             emailBody += EOL;
+
+            // Decode the complete translated text before appending the URL.
+            emailBody = decodeEmailHtmlEntities(emailBody);
+
             const pasteUrlElement = document.getElementById('pasteurl');
             emailBody += (pasteUrlElement && pasteUrlElement.getAttribute('href')) || window.location.href; // href is tried first as it might have been shortened
             return emailBody;
@@ -4227,7 +4256,9 @@ window.PrivateBin = (function () {
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
             // reused as-is by both the confirmation-modal and direct-send paths below
-            const emailSubject = I18n._('Encrypted note on %s', document.title);
+            const emailSubject = decodeEmailHtmlEntities(
+                I18n._('Encrypted note on %s', document.title)
+            );
 
             const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
