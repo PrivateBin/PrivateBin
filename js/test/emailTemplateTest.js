@@ -302,6 +302,27 @@ describe('Email - plain-text translations', function () {
         }
     });
 
+    it('Preserves literal entity-like text in the email subject', function () {
+        buildEmailDomNoShortUrl();
+        document.title = 'Literal &amp; &copy; &#39; /a=b';
+
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(0);
+
+        const { getUrl, restore } = makeWindowOpenMock();
+
+        try {
+            document.getElementById('emaillink').click();
+
+            assert.strictEqual(
+                extractMailtoSubject(getUrl()),
+                'Note chiffrée sur Literal &amp; &copy; &#39; /a=b'
+            );
+        } finally {
+            restore();
+        }
+    });
+
     it('Preserves expiration text and literal URL entities', function () {
         buildEmailDomWithShortUrl();
 

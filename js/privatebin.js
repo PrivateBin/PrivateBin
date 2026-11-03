@@ -4147,16 +4147,28 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * Get translated plain text for email subjects and bodies.
-         * HTML escaping remains enabled for other UI contexts.
+         * Decode HTML entities in the assembled translated email text.
+         * The paste URL is appended afterward to preserve it unchanged.
          *
-         * @param {...*} args translation key and parameters
+         * @param {string} text HTML-escaped email text
          * @return {string} plain text
          */
-        function translateEmailText(...args) {
-            const element = document.createElement('span');
-            I18n._(element, ...args);
-            return element.textContent;
+        function decodeEmailHtmlEntities(text) {
+            const entities = {
+                '&amp;': '&',
+                '&lt;': '<',
+                '&gt;': '>',
+                '&quot;': '"',
+                '&#39;': '\'',
+                '&#x2F;': '/',
+                '&#x60;': '`',
+                '&#x3D;': '='
+            };
+
+            return text.replace(
+                /&(?:amp|lt|gt|quot|#39|#x2F|#x60|#x3D);/g,
+                entity => entities[entity]
+            );
         }
 
         /**
@@ -4172,7 +4184,7 @@ window.PrivateBin = (function () {
             const BULLET = '  - ';
             let emailBody = '';
             if (expirationDateString !== null || isBurnafterreading) {
-                emailBody += translateEmailText('Notice:');
+                emailBody += I18n._('Notice:');
                 emailBody += EOL;
 
                 if (expirationDateString !== null) {
@@ -4180,7 +4192,7 @@ window.PrivateBin = (function () {
                     emailBody += BULLET;
                     // avoid DOMPurify mess with forward slash in expirationDateString
                     emailBody += Helper.sprintf(
-                        translateEmailText(
+                        I18n._(
                             'This link will expire after %s.',
                             '%s'
                         ),
@@ -4190,7 +4202,7 @@ window.PrivateBin = (function () {
                 if (isBurnafterreading) {
                     emailBody += EOL;
                     emailBody += BULLET;
-                    emailBody += translateEmailText(
+                    emailBody += I18n._(
                         'This link can only be accessed once, do not use back or refresh button in your browser.'
                     );
                 }
@@ -4198,8 +4210,12 @@ window.PrivateBin = (function () {
                 emailBody += EOL;
                 emailBody += EOL;
             }
-            emailBody += translateEmailText('Link:');
+            emailBody += I18n._('Link:');
             emailBody += EOL;
+
+            // Decode the complete translated text before appending the URL.
+            emailBody = decodeEmailHtmlEntities(emailBody);
+
             const pasteUrlElement = document.getElementById('pasteurl');
             emailBody += (pasteUrlElement && pasteUrlElement.getAttribute('href')) || window.location.href; // href is tried first as it might have been shortened
             return emailBody;
@@ -4240,7 +4256,9 @@ window.PrivateBin = (function () {
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
             // reused as-is by both the confirmation-modal and direct-send paths below
-            const emailSubject = translateEmailText('Encrypted note on %s', document.title);
+            const emailSubject = decodeEmailHtmlEntities(
+                I18n._('Encrypted note on %s', document.title)
+            );
 
             const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
