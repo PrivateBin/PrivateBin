@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 2.1.1 (not yet released)
+## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)
 * ADDED: Comments authenticate the IDs of their document and parent comment if present. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled to validate these fields (#2101)
 * CHANGED: Check `sizelimit` over full request, before attempting decoding
