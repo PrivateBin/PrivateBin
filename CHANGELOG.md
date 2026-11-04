@@ -11,6 +11,7 @@
 * FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
 * FIXED: Comments must now be unique in cipher text within a document, not reuse existing cipher texts (#2100)
 * FIXED: Password peek button next to the password input when creating a document had no effect
+* FIXED: E-mail button sent several e-mails after being shown again or after its confirmation dialog was dismissed
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section

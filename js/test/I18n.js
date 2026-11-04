@@ -13,7 +13,7 @@ describe('I18n', function () {
             fc.assert(fc.property(
                 fc.string(),
                 function (messageId) {
-                    messageId   = messageId.replace(/%(s|d)/g, '%%');
+                    messageId   = common.removePlaceholders(messageId);
                     const plurals = [messageId, messageId + 's'],
                           fake    = [messageId],
                           result  = PrivateBin.I18n.translate(messageId);
@@ -56,9 +56,9 @@ describe('I18n', function () {
                 fc.array(fc.string(), {minLength: 1}),
                 fc.string(),
                 function (prefix, params, postfix) {
-                    prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                    params[0] = params[0].replace(/%(s|d)/g, '%%');
-                    postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                    prefix    =    common.removePlaceholders(prefix).replace(/<a/g, '');
+                    params[0] = common.removePlaceholders(params[0]);
+                    postfix   =   common.removePlaceholders(postfix).replace(/<a/g, '');
                     const translation = PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
                     params.unshift(prefix + '%s' + postfix);
                     const result = PrivateBin.I18n.translate.apply(this, params);
@@ -75,9 +75,9 @@ describe('I18n', function () {
                 fc.array(fc.string(), {minLength: 1}),
                 fc.string(),
                 function (prefix, params, postfix) {
-                    prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                    params[0] = params[0].replace(/%(s|d)/g, '%%');
-                    postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                    prefix    =    common.removePlaceholders(prefix);
+                    params[0] = common.removePlaceholders(params[0]);
+                    postfix   =   common.removePlaceholders(postfix);
                     const translation = DOMPurify.sanitize(
                         prefix + '<a href="' + params[0] + '"></a>' + postfix, {
                             ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
@@ -100,9 +100,9 @@ describe('I18n', function () {
                 fc.array(fc.string(), {minLength: 1}),
                 fc.string(),
                 function (prefix, params, postfix) {
-                    prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                    params[0] = params[0].replace(/%(s|d)/g, '%%');
-                    postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                    prefix    =    common.removePlaceholders(prefix).replace(/<a/g, '');
+                    params[0] = common.removePlaceholders(params[0]);
+                    postfix   =   common.removePlaceholders(postfix).replace(/<a/g, '');
                     const tempDiv = document.createElement('textarea');
                     tempDiv.textContent = (prefix + params[0] + postfix);
                     const translation = tempDiv.textContent;
@@ -133,9 +133,9 @@ describe('I18n', function () {
                 fc.array(fc.string(), {minLength: 1}),
                 fc.string(),
                 function (prefix, params, postfix) {
-                    prefix    =    prefix.replace(/%(s|d)/g, '%%').trim();
-                    params[0] = params[0].replace(/%(s|d)/g, '%%').trim();
-                    postfix   =   postfix.replace(/%(s|d)/g, '%%').trim();
+                    prefix    =    common.removePlaceholders(prefix).trim();
+                    params[0] = common.removePlaceholders(params[0]).trim();
+                    postfix   =   common.removePlaceholders(postfix).trim();
                     const translation = DOMPurify.sanitize(
                         prefix + '<a href="' + params[0] + '"></a>' + postfix, {
                             ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,

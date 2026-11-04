@@ -45,8 +45,8 @@ describe('AttachmentViewer', function () {
                     if (filename === '\u0000') {
                         filename = '';
                     }
-                    prefix  = prefix.replace(/%(s|d)/g, '%%');
-                    postfix = postfix.replace(/%(s|d)/g, '%%').replace(/<|>/g, '');
+                    prefix  = common.removePlaceholders(prefix);
+                    postfix = common.removePlaceholders(postfix).replace(/<|>/g, '');
                     document.body.innerHTML = bodyTemplate;
                     mockCreateObjectUrl(false);
                     PrivateBin.AttachmentViewer.init();
