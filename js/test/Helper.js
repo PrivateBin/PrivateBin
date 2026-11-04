@@ -200,9 +200,9 @@ describe('Helper', function () {
                 fc.array(fc.string(), {minLength: 1}),
                 fc.string(),
                 function (prefix, params, postfix) {
-                    prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                    params[0] = params[0].replace(/%(s|d)/g, '%%');
-                    postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                    prefix    =    common.removePlaceholders(prefix);
+                    params[0] = common.removePlaceholders(params[0]);
+                    postfix   =   common.removePlaceholders(postfix);
                     var result = prefix + params[0] + postfix;
                     params.unshift(prefix + '%s' + postfix);
                     return result === PrivateBin.Helper.sprintf.apply(this, params);
@@ -215,8 +215,8 @@ describe('Helper', function () {
                 fc.array(fc.nat(), {minLength: 1}),
                 fc.string(),
                 function (prefix, params, postfix) {
-                    prefix  =  prefix.replace(/%(s|d)/g, '%%');
-                    postfix = postfix.replace(/%(s|d)/g, '%%');
+                    prefix  =  common.removePlaceholders(prefix);
+                    postfix = common.removePlaceholders(postfix);
                     var result = prefix + params[0] + postfix;
                     params.unshift(prefix + '%d' + postfix);
                     return result === PrivateBin.Helper.sprintf.apply(this, params);
@@ -229,8 +229,8 @@ describe('Helper', function () {
                 fc.array(fc.falsy(), {minLength: 1}),
                 fc.string(),
                 function (prefix, params, postfix) {
-                    prefix  =  prefix.replace(/%(s|d)/g, '%%');
-                    postfix = postfix.replace(/%(s|d)/g, '%%');
+                    prefix  =  common.removePlaceholders(prefix);
+                    postfix = common.removePlaceholders(postfix);
                     var result = prefix + '0' + postfix;
                     params.unshift(prefix + '%d' + postfix);
                     return result === PrivateBin.Helper.sprintf.apply(this, params);
@@ -245,9 +245,9 @@ describe('Helper', function () {
                 fc.string(),
                 fc.string(),
                 function (prefix, uint, middle, string, postfix) {
-                    prefix  =  prefix.replace(/%(s|d)/g, '');
-                    middle  =  middle.replace(/%(s|d)/g, '');
-                    postfix = postfix.replace(/%(s|d)/g, '');
+                    prefix  =  common.removePlaceholders(prefix);
+                    middle  =  common.removePlaceholders(middle);
+                    postfix = common.removePlaceholders(postfix);
                     var params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
                         result = prefix + uint + middle + string + postfix;
                     return result === PrivateBin.Helper.sprintf.apply(this, params);
@@ -262,9 +262,9 @@ describe('Helper', function () {
                 fc.string(),
                 fc.string(),
                 function (prefix, uint, middle, string, postfix) {
-                    prefix  =  prefix.replace(/%(s|d)/g, '');
-                    middle  =  middle.replace(/%(s|d)/g, '');
-                    postfix = postfix.replace(/%(s|d)/g, '');
+                    prefix  =  common.removePlaceholders(prefix);
+                    middle  =  common.removePlaceholders(middle);
+                    postfix = common.removePlaceholders(postfix);
                     var params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
                         result = prefix + string + middle + uint + postfix;
                     return result === PrivateBin.Helper.sprintf.apply(this, params);
