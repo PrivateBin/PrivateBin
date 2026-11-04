@@ -5925,11 +5925,9 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            const revealButton = document.querySelector('.toggle-password');
-            if (!revealButton) {
-                return;
-            }
-            revealButton.addEventListener('click', handleRevealButtonClick);
+            document.querySelectorAll('.toggle-password').forEach(function (revealButton) {
+                revealButton.addEventListener('click', handleRevealButtonClick);
+            });
         };
 
         return me;
