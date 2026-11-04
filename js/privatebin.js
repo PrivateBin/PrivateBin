@@ -4232,7 +4232,7 @@ window.PrivateBin = (function () {
          * @function
          */
         function removeAllEmailListeners() {
-            removeEmailConfirmListeners();
+            removeEmailConfirmButtonListeners();
             if (emailLinkListeners) {
                 emailLinkListeners.abort();
                 emailLinkListeners = null;
@@ -4276,7 +4276,7 @@ window.PrivateBin = (function () {
                         ), isBurnafterreading
                     );
                     // only send once per opening of the dialog
-                    removeEmailConfirmListeners();
+                    removeEmailConfirmButtonListeners();
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
                     }
@@ -4284,7 +4284,7 @@ window.PrivateBin = (function () {
                 }
 
                 // replace the listeners of a previous opening of the dialog
-                removeEmailConfirmListeners();
+                removeEmailConfirmButtonListeners();
                 emailConfirmListeners = new window.AbortController();
                 const signal = emailConfirmListeners.signal;
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
@@ -4479,7 +4479,7 @@ window.PrivateBin = (function () {
 
                 emailLink.classList.remove('hidden');
                 // replace the listeners of a previous document
-                removeEmailListeners();
+                removeAllEmailListeners();
                 emailLinkListeners = new window.AbortController();
                 emailLink.addEventListener('click', () => {
                     sendEmail(expirationDate, isBurnafterreading);
@@ -4502,7 +4502,7 @@ window.PrivateBin = (function () {
             }
 
             emailLink.classList.add('hidden');
-            removeEmailListeners();
+            removeAllEmailListeners();
         };
 
         /**
