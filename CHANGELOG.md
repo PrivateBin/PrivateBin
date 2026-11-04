@@ -11,6 +11,7 @@
 * FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
 * FIXED: Comments must now be unique in cipher text within a document, not reuse existing cipher texts (#2100)
 * FIXED: Password peek button next to the password input when creating a document had no effect
+* FIXED: E-mail button sent several e-mails after being shown again or after its confirmation dialog was dismissed
 * FIXED: SVG attachment previews could turn non-ASCII characters into markup after sanitization, enabling script execution when opening the preview in a new tab
 * FIXED: SVG attachment previews use a data URL, so they no longer run in the instance's origin when opened in a new tab
 * FIXED: Password characters above U+00FF got truncated before key derivation, now passwords get UTF-8 encoded and existing documents remain readable

@@ -9,30 +9,301 @@ function query(selector) {
     return document.querySelector(selector);
 }
 
+/**
+ * builds the navigation with the e-mail button and its confirmation dialog, as
+ * in the bootstrap5 template
+ *
+ * @param {boolean} withShortUrl - add the link of a shortened document URL
+ */
+function buildEmailDom(withShortUrl) {
+    document.documentElement.innerHTML =
+        '<nav><div id="navbar"><ul><li>' +
+        '<button id="clonebutton" type="button" class="btn btn-secondary">' +
+        '<svg width="16" height="16" fill="currentColor" aria-hidden="true">' +
+        '<use href="img/bootstrap-icons.svg#copy"></use></svg> Clone</button>' +
+        '</li><li>' +
+        '<button id="emaillink" type="button" class="hidden btn btn-secondary">Email</button>' +
+        '</li></ul></div></nav>' +
+        '<input id="burnafterreadingoption" type="checkbox">' +
+        (withShortUrl ?
+            '<div id="pastelink">Your document is ' +
+            '<a id="pasteurl" href="https://short.example/xYz">https://short.example/xYz</a> ' +
+            '<span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span></div>' :
+            '') +
+        '<div id="emailconfirmmodal" tabindex="-1" class="modal" role="dialog" aria-hidden="true">' +
+        '<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-body row">' +
+        '<button id="emailconfirm-timezone-current" type="button">Use Current Timezone</button>' +
+        '<button id="emailconfirm-timezone-utc" type="button">Convert To UTC</button>' +
+        '</div></div></div></div>';
+}
+
+/**
+ * replaces window.open, to record the e-mails sent via mailto: URLs
+ *
+ * @returns {{getUrl: function, getCount: function, reset: function, restore: function}}
+ */
+function mockWindowOpen() {
+    const originalOpen = window.open;
+    let openedUrl = null,
+        openedCount = 0;
+    window.open = function (url) {
+        openedUrl = url;
+        ++openedCount;
+        return {};
+    };
+    return {
+        getUrl: () => openedUrl,
+        getCount: () => openedCount,
+        reset: () => {
+            openedUrl = null;
+            openedCount = 0;
+        },
+        restore: () => {
+            window.open = originalOpen;
+        }
+    };
+}
+
+/**
+ * extracts and decodes a parameter of a mailto: URL
+ *
+ * @param {string} mailtoUrl
+ * @param {string} name - i.e. subject or body
+ * @returns {string}
+ */
+function mailtoParameter(mailtoUrl, name) {
+    assert.match(mailtoUrl, /^mailto:\?/, 'expected a mailto: URL');
+    const match = mailtoUrl.match(new RegExp('[?&]' + name + '=([^&]*)'));
+    assert.ok(match, 'expected the mailto: URL to have a ' + name + '= parameter');
+    return decodeURIComponent(match[1]);
+}
+
 describe('TopNav', function () {
-    describe('showEmailButton', function () {
+    describe('showEmailButton & hideEmailButton', function () {
+        let windowOpen;
+
+        beforeEach(function () {
+            cleanup();
+            windowOpen = mockWindowOpen();
+        });
+
         afterEach(function () {
+            windowOpen.restore();
             cleanup();
         });
 
-        it('does nothing when the email button is omitted from the page', function () {
+        it('does nothing when the e-mail button is omitted from the page', function () {
             document.documentElement.innerHTML =
                 '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
                 'type="button">New</button></li></ul></div></nav>';
             PrivateBin.TopNav.init();
 
-            const originalShowError = PrivateBin.Alert.showError;
+            // cleanup() reloads PrivateBin, dropping this replacement
             let errorShown = false;
             PrivateBin.Alert.showError = function () {
                 errorShown = true;
             };
 
-            try {
-                assert.doesNotThrow(() => PrivateBin.TopNav.showEmailButton());
-                assert.strictEqual(errorShown, false);
-            } finally {
-                PrivateBin.Alert.showError = originalShowError;
-            }
+            assert.doesNotThrow(() => PrivateBin.TopNav.showEmailButton());
+            assert.strictEqual(errorShown, false);
+        });
+
+        it('sends a single e-mail after the confirmation dialog was dismissed', function () {
+            buildEmailDom(false);
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(3600);
+
+            // open the dialog and dismiss it without choosing a timezone
+            query('#emaillink').click();
+            assert.strictEqual(windowOpen.getCount(), 0, 'no e-mail before choosing a timezone');
+
+            query('#emaillink').click();
+            query('#emailconfirm-timezone-current').click();
+            assert.strictEqual(windowOpen.getCount(), 1, 'exactly one e-mail with the current timezone');
+
+            query('#emaillink').click();
+            query('#emailconfirm-timezone-utc').click();
+            assert.strictEqual(windowOpen.getCount(), 2, 'exactly one more e-mail with UTC');
+        });
+
+        it('sends a single e-mail per click after the button was shown again', function () {
+            buildEmailDom(false);
+            PrivateBin.TopNav.init();
+            // i.e. sending a second document without reloading the page
+            PrivateBin.TopNav.showEmailButton(0);
+            PrivateBin.TopNav.showEmailButton(0);
+
+            query('#emaillink').click();
+            assert.strictEqual(windowOpen.getCount(), 1, 'exactly one e-mail per click');
+        });
+
+        it('uses the expiration of the document the button was last shown for', function () {
+            buildEmailDom(false);
+            PrivateBin.TopNav.init();
+            // first document expires, the second never does
+            PrivateBin.TopNav.showEmailButton(3600);
+            PrivateBin.TopNav.showEmailButton(0);
+
+            query('#emaillink').click();
+            assert.strictEqual(windowOpen.getCount(), 1, 'sent directly, without confirmation dialog');
+            assert.doesNotMatch(mailtoParameter(windowOpen.getUrl(), 'body'), /expire/i, 'body has no expiration');
+
+            query('#emailconfirm-timezone-current').click();
+            assert.strictEqual(windowOpen.getCount(), 1, 'no e-mail from a stale confirmation dialog');
+        });
+
+        it('sends no e-mail from a confirmation dialog opened for an earlier document', function () {
+            buildEmailDom(false);
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(3600);
+
+            // open the dialog, but start a new document instead of choosing
+            query('#emaillink').click();
+            PrivateBin.TopNav.hideEmailButton();
+            PrivateBin.TopNav.showEmailButton(0);
+
+            query('#emailconfirm-timezone-current').click();
+            query('#emailconfirm-timezone-utc').click();
+            assert.strictEqual(windowOpen.getCount(), 0, 'no e-mail from a stale confirmation dialog');
+        });
+
+        it('sends no e-mail after the button was hidden', function () {
+            buildEmailDom(false);
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(0);
+            PrivateBin.TopNav.hideEmailButton();
+
+            // i.e. a keyboard shortcut or assistive technology activating it
+            query('#emaillink').click();
+            assert.strictEqual(windowOpen.getCount(), 0, 'no e-mail from a hidden button');
+        });
+
+        it('sends exactly one e-mail, regardless of how often the button was shown or the dialog dismissed', function () {
+            fc.assert(fc.property(
+                fc.integer({min: 1, max: 5}),
+                fc.integer({min: 0, max: 5}),
+                fc.constantFrom('current', 'utc'),
+                function (shown, dismissed, timezone) {
+                    // replacing the markup is enough, init binds to the new elements
+                    buildEmailDom(false);
+                    PrivateBin.TopNav.init();
+                    for (let i = 0; i < shown; ++i) {
+                        PrivateBin.TopNav.showEmailButton(3600);
+                    }
+                    windowOpen.reset();
+
+                    for (let i = 0; i < dismissed; ++i) {
+                        query('#emaillink').click();
+                    }
+                    query('#emaillink').click();
+                    query('#emailconfirm-timezone-' + timezone).click();
+                    assert.strictEqual(windowOpen.getCount(), 1);
+                }
+            ));
+        });
+    });
+
+    describe('sendEmail', function () {
+        let windowOpen;
+
+        beforeEach(function () {
+            cleanup();
+            windowOpen = mockWindowOpen();
+        });
+
+        afterEach(function () {
+            windowOpen.restore();
+            cleanup();
+        });
+
+        it('puts the short URL into the mail body, if there is one', function () {
+            buildEmailDom(true);
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(0);
+            assert.ok(!query('#emaillink').classList.contains('hidden'), 'e-mail button is shown');
+
+            query('#emaillink').click();
+            assert.ok(windowOpen.getUrl(), 'an e-mail was sent');
+            const body = mailtoParameter(windowOpen.getUrl(), 'body');
+            assert.match(body, /https:\/\/short\.example\/xYz/, 'body contains the short URL');
+            assert.doesNotMatch(body, /undefined/, 'body never contains "undefined"');
+        });
+
+        it('puts the page URL into the mail body, if there is no short URL', function () {
+            buildEmailDom(false);
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(0);
+            assert.ok(!query('#emaillink').classList.contains('hidden'), 'e-mail button is shown');
+
+            query('#emaillink').click();
+            assert.ok(windowOpen.getUrl(), 'an e-mail was sent');
+            const body = mailtoParameter(windowOpen.getUrl(), 'body');
+            assert.match(body, new RegExp(window.location.href), 'body contains the page URL');
+            assert.doesNotMatch(body, /undefined/, 'body never contains "undefined"');
+        });
+
+        it('uses the burn-after-reading state of the viewed document, not the instance default', function () {
+            buildEmailDom(false);
+            const burnAfterReading = document.createElement('input');
+            burnAfterReading.id = 'burnafterreading';
+            burnAfterReading.type = 'checkbox';
+            burnAfterReading.checked = true;
+            document.body.appendChild(burnAfterReading);
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(0, false);
+
+            query('#emaillink').click();
+            assert.doesNotMatch(
+                mailtoParameter(windowOpen.getUrl(), 'body'),
+                /only be accessed once/,
+                'body uses the metadata of the viewed document'
+            );
+        });
+
+        it('names the instance in the mail subject', function () {
+            buildEmailDom(false);
+            // buildEmailDom() replaces the whole document, including its title
+            document.title = 'My PrivateBin Instance';
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(0);
+
+            query('#emaillink').click();
+            assert.ok(windowOpen.getUrl(), 'an e-mail was sent');
+            assert.match(mailtoParameter(windowOpen.getUrl(), 'subject'), /My PrivateBin Instance/);
+        });
+
+        it('names the instance in the mail subject after the expiration was confirmed', function () {
+            buildEmailDom(true);
+            document.title = 'My PrivateBin Instance';
+            PrivateBin.TopNav.init();
+            // a remaining time asks to confirm the timezone of the expiration
+            PrivateBin.TopNav.showEmailButton(3600);
+
+            query('#emaillink').click();
+            query('#emailconfirm-timezone-current').click();
+            assert.ok(windowOpen.getUrl(), 'an e-mail was sent');
+            assert.match(mailtoParameter(windowOpen.getUrl(), 'subject'), /My PrivateBin Instance/);
+        });
+
+        it('percent-encodes the mail subject, i.e. spaces in the instance name', function () {
+            buildEmailDom(false);
+            document.title = 'My Cool Instance';
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showEmailButton(0);
+
+            query('#emaillink').click();
+            const rawSubjectParam = windowOpen.getUrl().split('&body=')[0];
+            assert.strictEqual(
+                rawSubjectParam,
+                `mailto:?subject=${encodeURIComponent('Encrypted note on My Cool Instance')}`,
+                'raw subject parameter is exactly the encoded translated string'
+            );
+            assert.doesNotMatch(rawSubjectParam, / /, 'raw mailto: URL contains no literal space');
+            assert.strictEqual(
+                mailtoParameter(windowOpen.getUrl(), 'subject'),
+                'Encrypted note on My Cool Instance',
+                'decoded subject round-trips exactly'
+            );
         });
     });
 

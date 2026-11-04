@@ -3847,7 +3847,13 @@ window.PrivateBin = (function () {
             sendButton,
             retryButton,
             pasteExpiration = null,
-            retryButtonCallback;
+            retryButtonCallback,
+            emailConfirmModal,
+            emailConfirmBootstrapModal = null,
+            emailConfirmTimezoneCurrent,
+            emailConfirmTimezoneUtc,
+            emailDocument = null,
+            emailConfirmDocument = null;
 
         /**
          * set the expiration on bootstrap templates in dropdown
@@ -4218,10 +4224,10 @@ window.PrivateBin = (function () {
          *
          * @name   TopNav.triggerEmailSend
          * @private
-         * @param {string} subject
          * @param {string} emailBody
          */
-        function triggerEmailSend(subject, emailBody) {
+        function triggerEmailSend(emailBody) {
+            const subject = I18n._('Encrypted note on %s', document.title);
             window.open(
                 `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
                 '_self',
@@ -4230,64 +4236,84 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * Send Email with current document (URL).
+         * formats the expiration date for the e-mail body
+         *
+         * The date gets rounded down by at least 30 seconds, to make up for
+         * the delay of the request. We don't use Date.prototype.toUTCString(),
+         * because we would like to avoid GMT.
+         *
+         * @name   TopNav.formatEmailExpiration
+         * @private
+         * @function
+         * @param  {number} expirationDate - timestamp in milliseconds
+         * @param  {bool} isUtc - use UTC instead of the current timezone
+         * @return {string}
+         */
+        function formatEmailExpiration(expirationDate, isUtc) {
+            const roundedDate = new Date(expirationDate);
+            roundedDate.setUTCSeconds(roundedDate.getUTCSeconds() - 30);
+            roundedDate.setUTCSeconds(0);
+
+            const localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
+            if (isUtc) {
+                localeConfiguration.timeZone = 'UTC';
+            }
+            return roundedDate.toLocaleString([], localeConfiguration);
+        }
+
+        /**
+         * Send Email with current document (URL), asking to confirm the
+         * timezone of its expiration first, if it has one.
          *
          * @name   TopNav.sendEmail
          * @private
          * @function
-         * @param  {Date|null} expirationDate date of expiration
-         * @param  {bool} isBurnafterreading whether it is burn after reading
          */
-        function sendEmail(expirationDate, isBurnafterreading) {
-            const expirationDateRoundedToSecond = new Date(expirationDate);
-
-            // round down at least 30 seconds to make up for the delay of request
-            expirationDateRoundedToSecond.setUTCSeconds(
-                expirationDateRoundedToSecond.getUTCSeconds() - 30
-            );
-            expirationDateRoundedToSecond.setUTCSeconds(0);
-
-            // reused as-is by both the confirmation-modal and direct-send paths below
-            const emailSubject = I18n._('Encrypted note on %s', document.title);
-
-            const emailconfirmmodal = document.getElementById('emailconfirmmodal');
-            if (expirationDate !== null) {
-                const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
-                const emailconfirmTimezoneUtc = emailconfirmmodal.querySelector('#emailconfirm-timezone-utc');
-                let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
-                const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip && bootstrap.Tooltip.VERSION ?
-                    new bootstrap.Modal(emailconfirmmodal) : null;
-
-                function sendEmailAndHideModal() {
-                    const emailBody = templateEmailBody(
-                        // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
-                        expirationDateRoundedToSecond.toLocaleString(
-                            [], localeConfiguration
-                        ), isBurnafterreading
-                    );
-                    if (bootstrap5EmailConfirmModal) {
-                        bootstrap5EmailConfirmModal.hide();
-                    }
-                    triggerEmailSend(emailSubject, emailBody);
-                }
-
-                emailconfirmmodal.addEventListener('shown.bs.modal', () => {
-                    emailconfirmTimezoneUtc.focus();
-                });
-
-                emailconfirmTimezoneCurrent.removeEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneUtc.removeEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneUtc.addEventListener('click', () => {
-                    localeConfiguration.timeZone = 'UTC';
-                    sendEmailAndHideModal();
-                });
-                if (bootstrap5EmailConfirmModal) {
-                    bootstrap5EmailConfirmModal.show();
-                }
-            } else {
-                triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
+        function sendEmail() {
+            // ignore clicks on the hidden button
+            if (emailDocument === null) {
+                return;
             }
+
+            if (emailDocument.expirationDate === null) {
+                triggerEmailSend(templateEmailBody(null, emailDocument.isBurnafterreading));
+                return;
+            }
+
+            emailConfirmDocument = emailDocument;
+            if (emailConfirmBootstrapModal) {
+                emailConfirmBootstrapModal.show();
+            }
+        }
+
+        /**
+         * Send the Email of the confirmation dialog, with the expiration in
+         * the chosen timezone.
+         *
+         * @name   TopNav.confirmEmailTimezone
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function confirmEmailTimezone(event) {
+            // ignore a dialog opened for an earlier document
+            if (emailConfirmDocument === null) {
+                return;
+            }
+
+            const emailBody = templateEmailBody(
+                formatEmailExpiration(
+                    emailConfirmDocument.expirationDate,
+                    event.currentTarget === emailConfirmTimezoneUtc
+                ),
+                emailConfirmDocument.isBurnafterreading
+            );
+            // only send once per opening of the dialog
+            emailConfirmDocument = null;
+            if (emailConfirmBootstrapModal) {
+                emailConfirmBootstrapModal.hide();
+            }
+            triggerEmailSend(emailBody);
         }
 
         /**
@@ -4455,20 +4481,21 @@ window.PrivateBin = (function () {
                 return;
             }
 
+            // forget a previous document, even if the expiration can't be calculated
+            emailDocument = null;
+            emailConfirmDocument = null;
             try {
-                // we cache expiration date in closure to avoid inaccurate expiration datetime
+                // we cache the expiration date to avoid an inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
                     new Date(),
                     typeof optionalRemainingTimeInSeconds === 'number' ? optionalRemainingTimeInSeconds : TopNav.getExpiration()
                 );
-                const isBurnafterreading = typeof optionalBurnAfterReading === 'boolean' ?
-                    optionalBurnAfterReading : TopNav.getBurnAfterReading();
-
+                emailDocument = {
+                    expirationDate: expirationDate,
+                    isBurnafterreading: typeof optionalBurnAfterReading === 'boolean' ?
+                        optionalBurnAfterReading : TopNav.getBurnAfterReading()
+                };
                 emailLink.classList.remove('hidden');
-                emailLink.removeEventListener('click', sendEmail);
-                emailLink.addEventListener('click', () => {
-                    sendEmail(expirationDate, isBurnafterreading);
-                });
             } catch (error) {
                 console.error(error);
                 Alert.showError('Cannot calculate expiration date.');
@@ -4487,7 +4514,8 @@ window.PrivateBin = (function () {
             }
 
             emailLink.classList.add('hidden');
-            emailLink.removeEventListener('click', sendEmail);
+            emailDocument = null;
+            emailConfirmDocument = null;
         };
 
         /**
@@ -4783,13 +4811,26 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * init navigation manager
+         * bind the event listeners of the e-mail button and its confirmation
+         * dialog
          *
-         * preloads DOM elements
-         *
-         * @name   TopNav.init
+         * @name   TopNav.bindEmailEvents
+         * @private
          * @function
          */
+        function bindEmailEvents() {
+            if (emailLink) {
+                emailLink.addEventListener('click', sendEmail);
+            }
+            if (emailConfirmModal) {
+                emailConfirmModal.addEventListener('shown.bs.modal', () => {
+                    emailConfirmTimezoneUtc.focus();
+                });
+                emailConfirmTimezoneCurrent.addEventListener('click', confirmEmailTimezone);
+                emailConfirmTimezoneUtc.addEventListener('click', confirmEmailTimezone);
+            }
+        }
+
         /**
          * bind all navigation event listeners
          *
@@ -4844,6 +4885,7 @@ window.PrivateBin = (function () {
             if (qrCodeLink) {
                 qrCodeLink.addEventListener('click', displayQrCode);
             }
+            bindEmailEvents();
 
             if (Helper.isBootstrap5()) {
                 const pasteExpirationSelect = document.getElementById('pasteExpiration');
@@ -4887,6 +4929,14 @@ window.PrivateBin = (function () {
             }
         }
 
+        /**
+         * init navigation manager
+         *
+         * preloads DOM elements
+         *
+         * @name   TopNav.init
+         * @function
+         */
         me.init = function () {
             attach = document.getElementById('attach');
             burnAfterReading = document.getElementById('burnafterreading');
@@ -4908,6 +4958,14 @@ window.PrivateBin = (function () {
             sendButton = document.getElementById('sendbutton');
             qrCodeLink = document.getElementById('qrcodelink');
             emailLink = document.getElementById('emaillink');
+            emailConfirmModal = document.getElementById('emailconfirmmodal');
+            emailConfirmTimezoneCurrent = document.getElementById('emailconfirm-timezone-current');
+            emailConfirmTimezoneUtc = document.getElementById('emailconfirm-timezone-utc');
+            emailConfirmBootstrapModal = emailConfirmModal && typeof bootstrap !== 'undefined' &&
+                bootstrap.Tooltip && typeof bootstrap.Modal === 'function' ?
+                new bootstrap.Modal(emailConfirmModal) : null;
+            emailDocument = null;
+            emailConfirmDocument = null;
 
             bindEvents();
 
