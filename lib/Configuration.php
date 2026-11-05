@@ -66,6 +66,7 @@ class Configuration
             'httpwarning'              => true,
             'compression'              => 'zlib',
         ],
+        'template_options' => [],
         'expire' => [
             'default' => '1week',
         ],
