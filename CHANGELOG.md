@@ -1,5 +1,9 @@
 # PrivateBin version history
 
+## 2.1.2 (not yet released)
+* ADDED: Optional `modern` template based on the Bootstrap 5 one, use configuration `template = "modern"` to switch to it
+* ADDED: Configuration section `[template_options]` for settings of the selected template, used by the `modern` template for its logo, accent color and an additional stylesheet
+
 ## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)
 * ADDED: Comments authenticate the IDs of their document and parent comment if present. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled to validate these fields (#2101)
