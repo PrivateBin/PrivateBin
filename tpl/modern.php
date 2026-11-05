@@ -27,6 +27,13 @@ if ($SYNTAXHIGHLIGHTING) :
     endif;
 endif;
 ?>
+<?php
+if (!empty($OPTIONS['stylesheet'])) :
+?>
+		<link type="text/css" rel="stylesheet" href="<?php echo I18n::encode($OPTIONS['stylesheet']); ?>?<?php echo rawurlencode($VERSION); ?>" />
+<?php
+endif;
+?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
 		<?php $this->_linkTag('js/zlib-1.3.2.js'); ?>
 <?php
@@ -208,11 +215,13 @@ endif;
 						</li>
 					</ul>
 					<ul class="navbar-nav pb-actions">
-						<li class="nav-item">
-							<div class="form-check form-switch navbar-text pb-theme-switch">
-								<input id="bd-theme" type="checkbox" class="form-check-input" />
-								<label for="bd-theme" class="form-check-label"><?php echo I18n::_('Dark Mode'); ?></label>
-							</div>
+						<li class="nav-item pb-theme-toggle">
+							<input id="bd-theme" type="checkbox" class="visually-hidden" />
+							<label for="bd-theme" class="btn pb-tool" title="<?php echo I18n::_('Dark Mode'); ?>">
+								<svg class="pb-theme-moon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/></svg>
+								<svg class="pb-theme-sun" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg>
+								<span class="pb-theme-label"><?php echo I18n::_('Dark Mode'); ?></span>
+							</label>
 						</li>
 <?php
 if (!empty($LANGUAGESELECTION)) :
@@ -338,18 +347,18 @@ if ($HTTPWARNING) :
 endif;
 ?>
 				<div id="pastesuccess" class="hidden">
-					<div role="alert" class="alert alert-success">
+					<div role="alert" class="alert alert-success pb-share">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
 						<div id="pastelink"></div>
-					</div>
-					<div class="pb-success-actions">
-						<button id="copyLink" type="button" class="btn btn-primary">
-							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Copy link') ?>
-						</button>
-						<a href="#" id="deletelink" class="btn pb-tool">
-							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#trash" /></svg>
-							<span></span>
-						</a>
+						<div class="pb-share-actions">
+							<a href="#" id="deletelink" class="btn pb-tool">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#trash" /></svg>
+								<span></span>
+							</a>
+							<button id="copyLink" type="button" class="btn btn-primary">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Copy link') ?>
+							</button>
+						</div>
 					</div>
 <?php
 if (!empty($URLSHORTENER)) :
@@ -411,13 +420,13 @@ endif;
 								echo I18n::_("To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>", I18n::getCopyHotkey())
 							?>
 						</small>
-						<button type="button" id="copyShortcutHintBtn" class="btn btn-secondary ms-auto"><?php echo I18n::_('Copy'); ?></button>
+						<button type="button" id="copyShortcutHintBtn" class="btn btn-secondary btn-sm ms-auto"><?php echo I18n::_('Copy'); ?></button>
 					</h6>
 					<div id="prettymessage" class="card hidden">
 						<pre id="prettyprint" class="card-body prettyprint linenums:1"></pre>
 					</div>
 					<div id="plaintext" class="hidden"></div>
-					<p class="pb-editor"><textarea id="message" name="message" cols="80" rows="25" aria-label="<?php echo I18n::_('Document text'); ?>" tabindex="1" class="form-control hidden"></textarea></p>
+					<p class="pb-editor"><textarea id="message" name="message" cols="80" rows="25" aria-label="<?php echo I18n::_('Document text'); ?>" placeholder="<?php echo I18n::_('Document text'); ?>" tabindex="1" class="form-control hidden"></textarea></p>
 					<div class="pb-options">
 						<div id="expiration" class="pb-field hidden">
 							<label for="pasteExpiration" class="form-label"><?php echo I18n::_('Expires'); ?>:</label>
