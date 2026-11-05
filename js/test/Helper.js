@@ -247,6 +247,7 @@ describe('Helper', function () {
 
             it('removes unsafe URLs', function () {
                 const result = urls2linksNonStrict('<a href="javascript:alert(1)">foo</a>');
+                // eslint-disable-next-line no-script-url
                 assert.ok(!result.includes('javascript:'), result);
                 assert.ok(result.includes('foo'), result);
             });
