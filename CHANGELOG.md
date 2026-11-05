@@ -3,6 +3,8 @@
 ## 2.1.2 (not yet released)
 * ADDED: Optional "splitview" template with the editor on top, a file drop area below and the options in a full-height side pane
 * ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates; the `bootstrap5` and `splitview` templates have one
+* ADDED: Optional `modern` template based on the Bootstrap 5 one, use configuration `template = "modern"` to switch to it
+* ADDED: Configuration section `[template_options]` for settings of the selected template, used by the `modern` template for its logo, accent color and an additional stylesheet
 
 ## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)
