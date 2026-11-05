@@ -578,8 +578,8 @@ kbd {
 	color: var(--bs-secondary-color);
 }
 
-[data-bs-theme=dark] li.L1, [data-bs-theme=dark] li.L3, [data-bs-theme=dark] li.L5,
-[data-bs-theme=dark] li.L7, [data-bs-theme=dark] li.L9 {
+/* No zebra stripes from prettify, nor from the Bootstrap 5 template in dark mode */
+#prettyprint ol > li {
 	background-color: transparent !important;
 }
 
