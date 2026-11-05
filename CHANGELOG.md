@@ -1,5 +1,8 @@
 # PrivateBin version history
 
+## 2.1.2 (not yet released)
+* FIXED: Source code documents were displayed without syntax highlighting colors, as the stricter sanitization removed the classes these rely on
+
 ## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)
 * ADDED: Comments authenticate the IDs of their document and parent comment if present. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled to validate these fields (#2101)

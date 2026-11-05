@@ -77,6 +77,32 @@ window.PrivateBin = (function () {
     };
 
     /**
+     * DOMpurify settings for the output of the syntax highlighter, which needs
+     * its lists, spans and classes. Everything else remains forbidden, to not
+     * allow styling with the classes of the template or triggering its scripts.
+     *
+     * NOTE: The key {@link purifyHtmlConfig.USE_PROFILES} **must not** be included,
+     * as otherwise `USE_PROFILES` takes precedence over {@link purifySyntaxHighlightConfig.ALLOWED_TAGS}.
+     *
+     * @see    {@link syntaxHighlightClasses} for the classes that are kept
+     * @private
+     */
+    const purifySyntaxHighlightConfig = {
+        ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
+        ALLOWED_TAGS: ['a', 'li', 'ol', 'span'],
+        ALLOWED_ATTR: ['class', 'href'],
+        ALLOW_ARIA_ATTR: false,
+        ALLOW_DATA_ATTR: false
+    };
+
+    /**
+     * classes set by the syntax highlighter
+     *
+     * @private
+     */
+    const syntaxHighlightClasses = /^(?:atn|atv|clo|com|dec|fun|kwd|linenums|lit|L[0-9]|nocode|opn|pln|pun|src|str|tag|typ|var)$/;
+
+    /**
      * DOMpurify settings for SVG content
      *
      * @private
@@ -461,7 +487,7 @@ window.PrivateBin = (function () {
          * @name   Helper.urls2links
          * @function
          * @param  {HTMLElement} element
-         * @param  {Boolean} strict - optional
+         * @param  {Boolean} strict - optional, if false the element is expected to contain syntax highlighter output
          */
         me.urls2links = function (element, strict = true) {
             const raw = element.innerHTML;
@@ -470,8 +496,17 @@ window.PrivateBin = (function () {
                     /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/;#@~%+*-]+))/ig,
                     '<a href="$1">$1</a>'
                 ),
-                strict ? purifyHtmlConfigStrictSubset : purifyHtmlConfig
+                strict ? purifyHtmlConfigStrictSubset : purifySyntaxHighlightConfig
             );
+            if (!strict) {
+                element.querySelectorAll('[class]').forEach(function (node) {
+                    Array.from(node.classList).forEach(function (name) {
+                        if (!syntaxHighlightClasses.test(name)) {
+                            node.classList.remove(name);
+                        }
+                    });
+                });
+            }
             element.querySelectorAll('a').forEach(function (link) {
                 const href = link.getAttribute('href');
                 if (href && href.match(/^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i)) {

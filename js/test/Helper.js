@@ -191,6 +191,66 @@ describe('Helper', function () {
                 }
             ));
         });
+
+        describe('with syntax highlighter output', function () {
+            function urls2linksNonStrict(html) {
+                const clean = globalThis.cleanup();
+                document.body.innerHTML = '<div id="foo"></div>';
+                const e = document.getElementById('foo');
+                e.innerHTML = html;
+                PrivateBin.Helper.urls2links(e, false);
+                const result = e.innerHTML;
+                clean();
+                return result;
+            }
+
+            it('keeps its lists, spans and classes', function () {
+                const html = '<ol class="linenums"><li class="L0"><span class="kwd">function</span>' +
+                    '<span class="pln"> foo</span></li><li class="L9"><span class="com">// bar</span></li></ol>';
+                assert.strictEqual(urls2linksNonStrict(html), html);
+            });
+
+            it('converts URLs to links', function () {
+                assert.strictEqual(
+                    urls2linksNonStrict('<span class="str">https://example.com/</span>'),
+                    '<span class="str"><a href="https://example.com/" target="_blank" rel="nofollow noopener noreferrer">https://example.com/</a></span>'
+                );
+            });
+
+            it('removes classes not set by the highlighter', function () {
+                assert.strictEqual(
+                    urls2linksNonStrict('<span class="kwd alert position-fixed L10 Xkwd">foo</span>'),
+                    '<span class="kwd">foo</span>'
+                );
+            });
+
+            it('removes other attributes', function () {
+                assert.strictEqual(
+                    urls2linksNonStrict(
+                        '<span id="foo" style="position:fixed" onclick="alert(1)" title="bar" ' +
+                        'aria-hidden="true" data-bs-toggle="modal" data-bs-target="#passwordmodal">baz</span>'
+                    ),
+                    '<span>baz</span>'
+                );
+            });
+
+            it('removes other elements', function () {
+                assert.strictEqual(
+                    urls2linksNonStrict(
+                        '<img src="x" onerror="alert(1)"><script>alert(2)</script><style>*{display:none}</style>' +
+                        '<form><input></form><iframe src="https://example.com/"></iframe><svg><circle></circle></svg>' +
+                        '<div>foo</div><b>bar</b>'
+                    ),
+                    'foobar'
+                );
+            });
+
+            it('removes unsafe URLs', function () {
+                const result = urls2linksNonStrict('<a href="javascript:alert(1)">foo</a>');
+                assert.ok(!result.includes('javascript:'), result);
+                assert.ok(result.includes('foo'), result);
+            });
+        });
     });
 
     describe('sprintf', function () {
