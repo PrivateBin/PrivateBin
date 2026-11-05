@@ -15,8 +15,8 @@
 [data-bs-theme=light] {
 	--pb-surface: #fff;
 	--pb-ink: #161512;
-	--pb-ink-hover: #36342e;
-	--pb-on-ink: #fff;
+	--pb-on-accent: #161512;
+	--pb-accent-hover: color-mix(in srgb, var(--pb-accent) 86%, #161512);
 	--pb-control-border: #928f86;
 	--pb-soft-border: #d5d2c9;
 	--pb-accent: #f2a900;
@@ -72,8 +72,6 @@
 [data-bs-theme=dark] {
 	--pb-surface: #1d1c1a;
 	--pb-ink: #f7f5ef;
-	--pb-ink-hover: #dcd9cf;
-	--pb-on-ink: #161512;
 	--pb-control-border: #77756c;
 	--pb-soft-border: #3d3b36;
 	--pb-accent: #f2a900;
@@ -260,21 +258,32 @@ kbd {
 	box-shadow: 0 0 0 3px var(--pb-accent-soft);
 }
 
-.pb-theme-switch {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	min-height: 2.25rem;
-	margin: 0;
-	padding-block: 0;
-	padding-inline: 0 0.5rem;
-	color: var(--bs-secondary-color);
-	font-size: 0.875rem;
+.pb-theme-toggle {
+	position: relative;
 }
 
-.pb-theme-switch .form-check-input {
-	float: none;
-	margin: 0;
+.pb-theme-toggle input:focus-visible + label {
+	box-shadow: 0 0 0 3px var(--pb-accent-soft);
+}
+
+.pb-theme-sun,
+[data-bs-theme=dark] .pb-theme-moon {
+	display: none;
+}
+
+[data-bs-theme=dark] .pb-theme-sun {
+	display: block;
+}
+
+@media (min-width: 1200px) {
+	.pb-theme-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
 }
 
 /* Buttons */
@@ -311,19 +320,21 @@ kbd {
 	margin-inline: 0;
 }
 
+/* The one loud element on the page, in the colour of the PrivateBin key */
 .btn-primary {
-	--bs-btn-color: var(--pb-on-ink);
-	--bs-btn-bg: var(--pb-ink);
-	--bs-btn-border-color: var(--pb-ink);
-	--bs-btn-hover-color: var(--pb-on-ink);
-	--bs-btn-hover-bg: var(--pb-ink-hover);
-	--bs-btn-hover-border-color: var(--pb-ink-hover);
-	--bs-btn-active-color: var(--pb-on-ink);
-	--bs-btn-active-bg: var(--pb-ink-hover);
-	--bs-btn-active-border-color: var(--pb-ink-hover);
-	--bs-btn-disabled-color: var(--pb-on-ink);
-	--bs-btn-disabled-bg: var(--pb-ink);
-	--bs-btn-disabled-border-color: var(--pb-ink);
+	--bs-btn-color: var(--pb-on-accent);
+	--bs-btn-bg: var(--pb-accent);
+	--bs-btn-border-color: var(--pb-accent);
+	--bs-btn-hover-color: var(--pb-on-accent);
+	--bs-btn-hover-bg: var(--pb-accent-hover);
+	--bs-btn-hover-border-color: var(--pb-accent-hover);
+	--bs-btn-active-color: var(--pb-on-accent);
+	--bs-btn-active-bg: var(--pb-accent-hover);
+	--bs-btn-active-border-color: var(--pb-accent-hover);
+	--bs-btn-disabled-color: var(--pb-on-accent);
+	--bs-btn-disabled-bg: var(--pb-accent);
+	--bs-btn-disabled-border-color: var(--pb-accent);
+	font-weight: 600;
 }
 
 .btn-secondary,
@@ -504,6 +515,11 @@ kbd {
 	box-shadow: none;
 }
 
+#message::placeholder {
+	color: var(--bs-secondary-color);
+	opacity: 1;
+}
+
 .pb-options {
 	display: flex;
 	flex-wrap: wrap;
@@ -512,9 +528,40 @@ kbd {
 	margin-top: 0.75rem;
 }
 
+/* Checkboxes as chips, matching the height of the controls next to them */
 .pb-options .form-check {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.25rem;
 	margin: 0;
+	padding: 0;
+	background-color: var(--pb-surface);
+	border: 1px solid var(--pb-soft-border);
+	border-radius: var(--bs-border-radius);
 	font-size: 0.875rem;
+	transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.pb-options .form-check:hover {
+	background-color: var(--bs-tertiary-bg);
+}
+
+.pb-options .form-check:has(.form-check-input:checked) {
+	background-color: var(--pb-accent-soft);
+	border-color: var(--pb-accent-border);
+}
+
+.pb-options .form-check .form-check-input {
+	flex: none;
+	float: none;
+	margin: 0;
+	margin-inline-start: 0.75rem;
+}
+
+.pb-options .form-check-label {
+	padding-block: 0.375rem;
+	padding-inline: 0.5rem 0.75rem;
+	cursor: pointer;
 }
 
 #password .input-group {
@@ -544,9 +591,25 @@ kbd {
 	color: var(--bs-secondary-color);
 }
 
+/* Copy row as the header of the document, like a file view */
 #copyShortcutHint {
-	margin-bottom: 0.75rem;
+	min-height: 2.5rem;
+	margin: 0;
+	padding: 0.375rem 0.5rem;
+	padding-inline-start: 1.25rem;
 	color: var(--bs-secondary-color);
+	background-color: var(--bs-tertiary-bg);
+	border: 1px solid var(--bs-border-color);
+	border-bottom: 0;
+	border-start-start-radius: var(--bs-border-radius-lg);
+	border-start-end-radius: var(--bs-border-radius-lg);
+	font-weight: 400;
+}
+
+#copyShortcutHint:not(.hidden) ~ #prettymessage,
+#copyShortcutHint:not(.hidden) ~ #plaintext {
+	border-start-start-radius: 0;
+	border-start-end-radius: 0;
 }
 
 [data-bs-theme=light] #prettymessage,
@@ -581,6 +644,15 @@ kbd {
 /* No zebra stripes from prettify, nor from the Bootstrap 5 template in dark mode */
 #prettyprint ol > li {
 	background-color: transparent !important;
+}
+
+/* Colours of the dark prettify theme that are too dim on this surface */
+[data-bs-theme=dark] #prettyprint .com {
+	color: #93a1a8;
+}
+
+[data-bs-theme=dark] #prettyprint .dec {
+	color: #c9a0e6;
 }
 
 /* Markdown */
@@ -649,19 +721,69 @@ kbd {
 	font-weight: 600;
 }
 
-.pb-success-actions {
+/* Reading it must not be mistaken for the routine expiry notice */
+#remainingtime.foryoureyesonly {
+	--bs-alert-color: var(--bs-warning-text-emphasis);
+	--bs-alert-bg: var(--bs-warning-bg-subtle);
+	--bs-alert-border-color: var(--bs-warning-border-subtle);
+	font-weight: 600;
+}
+
+/* The moment the document is created: the link and what to do with it */
+.pb-share {
+	--bs-alert-color: var(--bs-body-color);
+	--bs-alert-bg: var(--pb-surface);
+	--bs-alert-border-color: var(--bs-border-color);
+	--bs-alert-border-radius: var(--bs-border-radius-lg);
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	justify-content: space-between;
-	gap: 0.5rem;
-	margin-bottom: 1rem;
+	gap: 0.625rem 0.75rem;
+}
+
+.pb-share > svg {
+	flex: none;
+	margin: 0;
+	color: var(--bs-success-text-emphasis);
+}
+
+.pb-share #pastelink {
+	display: block;
+	flex: 1 1 20rem;
+	min-width: 0;
 }
 
 #pastelink a {
 	color: inherit;
+	font-family: var(--bs-font-monospace);
+	font-size: 0.8125rem;
 	font-weight: 600;
 	word-break: break-all;
+}
+
+#pastelink #copyhint {
+	display: block;
+	margin-top: 0.125rem;
+	color: var(--bs-secondary-color);
+	font-size: 0.8125rem;
+}
+
+.pb-share-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.25rem;
+	margin-inline-start: auto;
+}
+
+#deletelink.pb-tool {
+	--bs-btn-hover-color: var(--bs-danger-text-emphasis);
+	--bs-btn-hover-bg: var(--bs-danger-bg-subtle);
+	--bs-btn-active-color: var(--bs-danger-text-emphasis);
+	--bs-btn-active-bg: var(--bs-danger-bg-subtle);
+	float: none;
+	margin: 0;
 }
 
 /* Dropdowns and modals */
@@ -818,9 +940,6 @@ kbd {
 		justify-content: flex-start;
 	}
 
-	.pb-theme-switch {
-		padding-inline-start: 0.8125rem;
-	}
 }
 
 @media (max-width: 575.98px) {
@@ -836,6 +955,15 @@ kbd {
 
 	#attach {
 		margin-inline-start: 0;
+	}
+
+	.pb-share-actions {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.pb-options .form-check {
+		flex: 1 1 auto;
 	}
 
 	.pb-field .form-select {

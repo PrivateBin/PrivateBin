@@ -142,6 +142,18 @@ class ViewTest extends TestCase
         $this->assertStringContainsString('<img alt="" src="img/icon.svg" height="28" />', $content, 'uses default logo');
         $this->assertStringNotContainsString('pb-logo-dark', $content, 'no dark logo by default');
         $this->assertStringNotContainsString('data-accent', $content, 'no accent by default');
+        $this->assertStringNotContainsString('css/custom', $content, 'no additional stylesheet by default');
+    }
+
+    public function testModernTemplateStylesheet()
+    {
+        $content = $this->_renderModern(['stylesheet' => 'css/custom/brand.css']);
+        $this->assertMatchesRegularExpression(
+            '#<link[^>]+rel="stylesheet"[^>]+href="css/modern/privatebin\.css\?[^"]+"[^>]*>.*' .
+            '<link[^>]+rel="stylesheet"[^>]+href="css/custom/brand\.css\?' . rawurlencode(self::$version) . '"[^>]*>#s',
+            $content,
+            'loads additional stylesheet after the one of the template, with cache buster'
+        );
     }
 
     public function testModernTemplateOptions()
@@ -160,8 +172,9 @@ class ViewTest extends TestCase
     public function testModernTemplateEncodesOptions()
     {
         $content = $this->_renderModern([
-            'logo'   => '"><script>alert(1)</script>',
-            'accent' => '"><script>alert(2)</script>',
+            'stylesheet' => '"><script>alert(3)</script>',
+            'logo'       => '"><script>alert(1)</script>',
+            'accent'     => '"><script>alert(2)</script>',
         ]);
         $this->assertStringNotContainsString('<script>alert', $content, 'encodes option values');
     }

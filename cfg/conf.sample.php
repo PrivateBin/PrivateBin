@@ -145,6 +145,9 @@ languageselection = false
 ; logo_dark = "img/custom/logo-dark.svg"
 ; accent colour: "amber" (default) / "blue" / "green" / "rose"
 ; accent = "amber"
+; additional stylesheet to customize the template, as a path on this server,
+; loaded after the ones of the template, e.g. to override its CSS variables
+; stylesheet = "css/custom/brand.css"
 
 [expire]
 ; expire value that is selected per default
