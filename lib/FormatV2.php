@@ -39,7 +39,7 @@ class FormatV2
             $required_keys[] = 'meta';
         }
 
-        // Make sure no additionnal keys were added.
+        // Make sure no additional keys were added.
         if (count(array_keys($message)) !== count($required_keys)) {
             return false;
         }
@@ -60,6 +60,32 @@ class FormatV2
 
         // Make sure the cipher parameters are a properly sized array.
         if (!is_array($cipherParams) || count($cipherParams) < 8) {
+            return false;
+        }
+
+        // Make sure the adata parameters of pastes are a properly sized array
+        $adataLength = count($message['adata']);
+
+        // Comments may authenticate their document and parent IDs, by
+        // appending them to the cipher parameters. These must match the
+        // unencrypted IDs, which are validated by the comment model.
+        if ($isComment) {
+            if ($adataLength !== 8 && (
+                count($cipherParams) !== 10 ||
+                !is_string($cipherParams[8]) ||
+                !is_string($cipherParams[9]) ||
+                $cipherParams[8] !== $message['pasteid'] ||
+                $cipherParams[9] !== $message['parentid']
+            )) {
+                return false;
+            }
+            // For pastes: adata must have exactly 4 entries,
+            // and meta must contain only the 'expire' key.
+        } elseif ($adataLength !== 4 ||
+            !is_array($message['meta']) ||
+            count($message['meta']) !== 1 ||
+            !array_key_exists('expire', $message['meta'])
+        ) {
             return false;
         }
 
@@ -128,16 +154,6 @@ class FormatV2
 
         // Reject data if entropy is too low
         if (strlen($ct) > strlen(gzdeflate($ct))) {
-            return false;
-        }
-
-        // require only the key 'expire' in the metadata of pastes
-        if (!$isComment && (
-            !is_array($message['meta']) ||
-            count($message['meta']) === 0 ||
-            !array_key_exists('expire', $message['meta']) ||
-            count($message['meta']) > 1
-        )) {
             return false;
         }
 

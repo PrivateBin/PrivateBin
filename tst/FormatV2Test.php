@@ -20,6 +20,14 @@ class FormatV2Test extends TestCase
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of salt');
 
         $paste = Helper::getPastePost();
+        $paste['adata'][] = 0;
+        $this->assertFalse(FormatV2::isValid($paste), 'invalid extra adata entry');
+
+        $paste = Helper::getPastePost();
+        $paste['adata'][] = 0;
+        $this->assertFalse(FormatV2::isValid($paste), 'invalid extra adata entry');
+
+        $paste = Helper::getPastePost();
         $paste['ct'] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of ct');
 
@@ -108,5 +116,35 @@ class FormatV2Test extends TestCase
         $comment = Helper::getCommentPost();
         $comment['ct'] = 42;
         $this->assertFalse(FormatV2::isValid($comment, true), 'non-string comment ciphertext');
+
+        $comment = Helper::getCommentPost();
+        $comment['adata'][] = $comment['pasteid'];
+        $comment['adata'][] = $comment['parentid'];
+        $this->assertTrue(FormatV2::isValid($comment, true), 'comment with authenticated IDs');
+
+        $comment = Helper::getCommentPost();
+        $comment['adata'][] = $comment['pasteid'];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'comment with incomplete authenticated IDs');
+
+        $comment = Helper::getCommentPost();
+        $comment['adata'][] = $comment['pasteid'];
+        $comment['adata'][] = $comment['parentid'];
+        $comment['adata'][] = $comment['parentid'];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'comment with too many cipher parameters');
+
+        $comment = Helper::getCommentPost();
+        $comment['adata'][] = '1111111111111111';
+        $comment['adata'][] = $comment['parentid'];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'comment with mismatched document ID');
+
+        $comment = Helper::getCommentPost();
+        $comment['adata'][] = $comment['pasteid'];
+        $comment['adata'][] = '1111111111111111';
+        $this->assertFalse(FormatV2::isValid($comment, true), 'comment with mismatched parent ID');
+
+        $comment = Helper::getCommentPost();
+        $comment['adata'][] = $comment['pasteid'];
+        $comment['adata'][] = [];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'comment with non-string parent ID');
     }
 }

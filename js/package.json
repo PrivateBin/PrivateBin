@@ -1,6 +1,6 @@
 {
   "name": "privatebin",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted in the browser using 256 bit AES in Galois Counter mode (GCM).",
   "main": "privatebin.js",
   "directories": {
@@ -8,10 +8,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@peculiar/webcrypto": "^1.5.0",
-    "eslint": "^10.13.0",
+    "@peculiar/webcrypto": "^2.0.0",
+    "eslint": "^10.14.0",
     "fast-check": "^4.10.2",
-    "globals": "^17.13.0",
+    "globals": "^17.14.0",
     "jsdom": "^30.1.3",
     "jsdom-global": "^3.0.2",
     "jshint": "^2.13.6",

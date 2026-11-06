@@ -72,6 +72,12 @@ exports.fcA2zString = function() {
     return fc.constantFrom(...a2zString);
 };
 
+// removes %s and %d placeholders from a string, including the whole run of
+// percent signs before them, so the removal can't create new ones (i.e. %%dd)
+exports.removePlaceholders = function(string) {
+    return string.replace(/%+(?=[sd])/g, '');
+};
+
 // provides random lowercase alpha numeric characters (a to z and 0 to 9)
 exports.fcAlnumString = function() {
     return fc.constantFrom(...alnumString);
