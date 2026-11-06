@@ -80,12 +80,43 @@ class I18nTest extends TestCase
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
     }
 
-    public function testEqualQualityPreservesBrowserOrder()
+    /**
+     * @dataProvider provideEqualQualityHeaders
+     */
+    public function testEqualQualityPreservesBrowserOrder($acceptedLanguage, $language)
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr;q=0.8,de;q=0.8';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
         I18n::loadTranslations();
+        $this->assertEquals($language, I18n::getLanguage(), 'browser language ' . $acceptedLanguage);
+    }
 
-        $this->assertEquals('fr', I18n::getLanguage());
+    public function provideEqualQualityHeaders()
+    {
+        // ICU before version 67 sorts languages of equal quality alphabetically
+        return [
+            'fr;q=0.8,de;q=0.8' => ['fr;q=0.8,de;q=0.8', 'fr'],
+            'fr,de' => ['fr,de', 'fr'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideLanguagesUnknownToIcuHeaders
+     */
+    public function testBrowserLanguageUnknownToIcuDetection($acceptedLanguage, $language)
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
+        I18n::loadTranslations();
+        $this->assertEquals($language, I18n::getLanguage(), 'browser language ' . $acceptedLanguage);
+    }
+
+    public function provideLanguagesUnknownToIcuHeaders()
+    {
+        // ICU has no locale data for these languages, so it can only match the next one in the header
+        return [
+            'co,fr;q=0.8' => ['co,fr;q=0.8', 'co'],
+            'jbo,de;q=0.8' => ['jbo,de;q=0.8', 'jbo'],
+            'la,it;q=0.8' => ['la,it;q=0.8', 'la'],
+        ];
     }
 
     public function testBulgarianMonthExpirationTranslation()
@@ -166,6 +197,26 @@ class I18nTest extends TestCase
             I18n::loadTranslations();
             $this->assertEquals($language, I18n::getLanguage(), 'browser language ' . $acceptedLanguage);
         }
+    }
+
+    /**
+     * @dataProvider provideTraditionalChineseWithZhFallbackHeaders
+     */
+    public function testBrowserLanguageZhHantWithZhFallbackDetection($acceptedLanguage, $language)
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
+        I18n::loadTranslations();
+        $this->assertEquals($language, I18n::getLanguage(), 'browser language ' . $acceptedLanguage);
+    }
+
+    public function provideTraditionalChineseWithZhFallbackHeaders()
+    {
+        // typical Chrome headers from Taiwan and Hong Kong, ICU before version 67
+        // has zh_TW and zh_HK only as aliases, skips them and returns zh instead
+        return [
+            'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7' => ['zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7', 'zh-tw'],
+            'zh-HK,zh;q=0.9,en;q=0.8' => ['zh-HK,zh;q=0.9,en;q=0.8', 'zh-tw'],
+        ];
     }
 
     public function testBrowserLanguagePlDetection()
