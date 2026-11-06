@@ -32,9 +32,10 @@ class I18nTest extends TestCase
         fwrite(
             STDERR,
             sprintf(
-                "I18n tests: Intl extension loaded=%s; locale_accept_from_http exists=%s\n",
+                "I18n tests: Intl extension loaded=%s; locale_accept_from_http exists=%s; ICU version=%s\n",
                 extension_loaded('intl') ? 'yes' : 'no',
-                function_exists('locale_accept_from_http') ? 'yes' : 'no'
+                function_exists('locale_accept_from_http') ? 'yes' : 'no',
+                defined('INTL_ICU_VERSION') ? INTL_ICU_VERSION : 'none'
             )
         );
     }
