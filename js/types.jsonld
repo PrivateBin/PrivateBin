@@ -92,6 +92,12 @@
 		"@type": "dp:Second",
 		"@minimum": 1
 	},
+	"DocumentId": {
+		"@type": "so:name"
+	},
+	"ParentId": {
+		"@type": "so:name"
+	},
 	"CipherParameters": {
 		"@container": "@list",
 		"@value": [

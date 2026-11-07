@@ -26,7 +26,7 @@
 			"@type": "pb:CipherText"
 		},
 		"adata": {
-			"@type": "pb:CipherParameters"
+			"@type": "cm:AuthenticatedData"
 		},
 		"meta": {
 			"@type": "cm:MetaData"

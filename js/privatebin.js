@@ -56,7 +56,7 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-        ALLOWED_ATTR: ['href'],
+        FORBID_ATTR: ['id', 'class', 'style'],
         USE_PROFILES: {
             html: true
         }
@@ -228,6 +228,25 @@ window.PrivateBin = (function () {
          */
         this.getIcon = function () {
             return this.meta.icon || '';
+        };
+
+        /**
+         * checks if the comment belongs to the given document and its parent
+         *
+         * Comments without authenticated IDs predate this check and are
+         * accepted.
+         *
+         * @name Comment.isBoundTo
+         * @function
+         * @param  {string} pasteId
+         * @return {bool}
+         */
+        this.isBoundTo = function (pasteId) {
+            return this.adata.length === 8 || (
+                this.adata.length === 10 &&
+                this.adata[8] === pasteId &&
+                this.adata[9] === this.parentid
+            );
         };
     }
 
@@ -1046,14 +1065,16 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * convert UTF-8 string into a Uint8Array
+         * convert binary string into a Uint8Array
          *
-         * Iterates over the bytes of the message, writing them to the array
+         * Iterates over the characters of the message, writing their codes to
+         * the array. Only use this for binary strings, i.e. the output of atob,
+         * characters above U+00FF get truncated to their lowest byte.
          *
          * @name   CryptTool.stringToArraybuffer
          * @function
          * @private
-         * @param  {string} message UTF-8 string
+         * @param  {string} message binary string
          * @return {Uint8Array} array
          */
         function stringToArraybuffer(message)
@@ -1140,16 +1161,15 @@ window.PrivateBin = (function () {
          * @async
          * @function
          * @private
-         * @param  {string} key
-         * @param  {string} password
-         * @param  {array}  spec cryptographic specification
-         * @return {CryptoKey} derived key
+         * @param  {string}     key
+         * @param  {Uint8Array} passwordArray encoded password
+         * @param  {array}      spec cryptographic specification
+         * @return {CryptoKey}  derived key
          */
-        async function deriveKey(key, password, spec) {
+        async function deriveKey(key, passwordArray, spec) {
             let keyArray = stringToArraybuffer(key);
-            if (password.length > 0) {
-                let passwordArray = stringToArraybuffer(password),
-                    newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
+            if (passwordArray.length > 0) {
+                const newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
                 newKeyArray.set(keyArray, 0);
                 newKeyArray.set(passwordArray, keyArray.length);
                 keyArray = newKeyArray;
@@ -1235,12 +1255,12 @@ window.PrivateBin = (function () {
             for (let i = 0; i < spec.length; ++i) {
                 encodedSpec[i] = i < 2 ? btoa(spec[i]) : spec[i];
             }
-            if (adata.length === 0) {
-                // comment
-                adata = encodedSpec;
-            } else if (adata[0] === null) {
+            if (adata[0] === null) {
                 // paste
                 adata[0] = encodedSpec;
+            } else {
+                // comment, optionally followed by its document and parent IDs
+                adata = encodedSpec.concat(adata);
             }
 
             // finally, encrypt message
@@ -1249,7 +1269,11 @@ window.PrivateBin = (function () {
                     arraybufferToString(
                         await window.crypto.subtle.encrypt(
                             cryptoSettings(JSON.stringify(adata), spec),
-                            await deriveKey(key, password, spec),
+                            await deriveKey(
+                                key,
+                                new TextEncoder().encode(password),
+                                spec
+                            ),
                             await compress(message, compression, zlib)
                         ).catch(Alert.showError)
                     )
@@ -1288,16 +1312,27 @@ window.PrivateBin = (function () {
                     throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.';
                 }
             }
-            try {
-                plaintext = await window.crypto.subtle.decrypt(
-                    cryptoSettings(adataString, spec),
-                    await deriveKey(key, password, spec),
-                    stringToArraybuffer(
-                        atob(cipherMessage)
-                    )
-                );
-            } catch (err) {
-                console.error(err);
+            const passwordArray = [new TextEncoder().encode(password)];
+            // documents created by earlier versions truncated the characters
+            // of non-ASCII passwords to their lowest byte
+            if (/[\u0080-\uffff]/.test(password)) {
+                passwordArray.push(stringToArraybuffer(password));
+            }
+            let decryptionError;
+            for (const passwordAttempt of passwordArray) {
+                try {
+                    plaintext = await window.crypto.subtle.decrypt(
+                        cryptoSettings(adataString, spec),
+                        await deriveKey(key, passwordAttempt, spec),
+                        stringToArraybuffer(atob(cipherMessage))
+                    );
+                    break;
+                } catch (err) {
+                    decryptionError = err;
+                }
+            }
+            if (typeof plaintext === 'undefined') {
+                console.error(decryptionError);
                 return '';
             }
             try {
@@ -2593,11 +2628,13 @@ window.PrivateBin = (function () {
 
             if (format === 'markdown') {
                 const converter = new showdown.Converter({
+                    disallowRawHTML: true,
+                    excludeTrailingPunctuationFromURLs: true,
+                    safeMode: true,
+                    simplifiedAutoLink: true,
                     strikethrough: true,
                     tables: true,
-                    tablesHeaderId: true,
-                    simplifiedAutoLink: true,
-                    excludeTrailingPunctuationFromURLs: true
+                    tablesHeaderId: true
                 });
                 // let showdown convert the HTML and sanitize HTML *afterwards*!
                 if (plainText) {
@@ -2821,23 +2858,19 @@ window.PrivateBin = (function () {
             dropzone;
 
         /**
-         * get blob URL from string data and mime type
+         * get blob URL from binary data and mime type
          *
          * @name   AttachmentViewer.getBlobUrl
          * @private
          * @function
-         * @param {string} data - raw data of attachment
-         * @param {string} data - mime type of attachment
+         * @param {Uint8Array} data - raw data of attachment
+         * @param {string} mimeType - mime type of attachment
          * @return {string} objectURL
          */
         function getBlobUrl(data, mimeType) {
             // Transform into a Blob
-            const buf = Uint8Array.from(
-                data,
-                character => character.charCodeAt(0)
-            );
             const blob = new window.Blob(
-                [buf],
+                [data],
                 {
                     type: mimeType
                 }
@@ -2876,12 +2909,19 @@ window.PrivateBin = (function () {
                 sanitizedMimeType = mimeType;
             }
 
-            // extract data and convert to binary
+            // extract data and convert to binary - atob returns a binary
+            // string, each character representing a single byte, so taking
+            // the character codes is lossless here, as opposed to strings in
+            // general, that may contain characters above U+00FF
             const base64Data = attachmentData.substring(base64Start);
-            const plainData = base64Data.length > 0 ? atob(base64Data) : '';
+            const plainData = Uint8Array.from(
+                base64Data.length > 0 ? atob(base64Data) : '',
+                character => character.charCodeAt(0)
+            );
 
-            let blobUrl = getBlobUrl(plainData, sanitizedMimeType);
+            const blobUrl = getBlobUrl(plainData, sanitizedMimeType);
             attachmentLink.setAttribute('href', blobUrl);
+            let previewUrl = blobUrl;
 
             if (typeof fileName !== 'undefined') {
                 attachmentLink.setAttribute('download', fileName);
@@ -2893,39 +2933,39 @@ window.PrivateBin = (function () {
             }
 
             // sanitize SVG preview
-            // prevents executing embedded scripts when CSP is not set and user
-            // right-clicks/long-taps and opens the SVG in a new tab - prevented
-            // in the preview by use of an img tag, which disables scripts, too
+            // prevents executing embedded scripts when the user right-clicks/
+            // long-taps and opens the SVG in a new tab - prevented in the
+            // preview by use of an img tag, which disables scripts, too
             if (mimeType.startsWith('image/svg')) {
                 try {
                     // attempt to UTF-8 decode the SVG data
-                    const svgBuffer = Uint8Array.from(
-                        plainData,
-                        character => character.charCodeAt(0)
-                    );
                     const utf8ValidatedSvgString = new TextDecoder(
                         'utf-8',
                         {fatal: true}
-                    ).decode(svgBuffer);
+                    ).decode(plainData);
                     const sanitizedData = DOMPurify.sanitize(
                         utf8ValidatedSvgString,
                         purifySvgConfig
                     );
+                    // Use a data URL instead of a blob URL: blob URLs share the
+                    // origin of this page, so any script surviving sanitization
+                    // would run in it, if the user opens the image in a new tab.
+                    // Data URLs get an opaque origin or are blocked from being
+                    // opened in a new tab. encodeURIComponent UTF-8 encodes the
+                    // sanitized string, that may contain any unicode character,
+                    // i.e. from decoded character references.
+                    previewUrl = 'data:image/svg+xml;charset=utf-8,' +
+                        encodeURIComponent(sanitizedData);
                     sanitizedMimeType = 'image/svg+xml';
-                    blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
                 } catch (e) {
-                    // Invalid or non-UTF-8 SVG: download only, no preview as it
-                    // may be used to smuggle multi-byte sequences past DOMpurify
-                    // such as `&#x13c` to get `\x01<` & `&#x13e` to get `\x01>`
-                    sanitizedMimeType = 'application/octet-stream';
-                    blobUrl = getBlobUrl(plainData, sanitizedMimeType);
+                    // Invalid or non-UTF-8 SVG: download only, no preview
                 }
             }
 
             template.classList.remove('hidden');
             attachment.appendChild(template);
 
-            me.handleBlobAttachmentPreview(attachmentPreview, blobUrl, sanitizedMimeType);
+            me.handleBlobAttachmentPreview(attachmentPreview, previewUrl, sanitizedMimeType);
         };
 
 
@@ -3240,7 +3280,9 @@ window.PrivateBin = (function () {
                 return;
             }
 
-            const alreadyIncludesCurrentAttachment = targetElement.querySelectorAll(`[src='${blobUrl}']`).length > 0;
+            const alreadyIncludesCurrentAttachment = Array.from(
+                targetElement.querySelectorAll('[src]')
+            ).some(element => element.getAttribute('src') === blobUrl);
 
             if (blobUrl && !alreadyIncludesCurrentAttachment) {
                 if (mimeType.startsWith('image/')) {
@@ -3805,7 +3847,13 @@ window.PrivateBin = (function () {
             sendButton,
             retryButton,
             pasteExpiration = null,
-            retryButtonCallback;
+            retryButtonCallback,
+            emailConfirmModal,
+            emailConfirmBootstrapModal = null,
+            emailConfirmTimezoneCurrent,
+            emailConfirmTimezoneUtc,
+            emailDocument = null,
+            emailConfirmDocument = null;
 
         /**
          * set the expiration on bootstrap templates in dropdown
@@ -4176,10 +4224,10 @@ window.PrivateBin = (function () {
          *
          * @name   TopNav.triggerEmailSend
          * @private
-         * @param {string} subject
          * @param {string} emailBody
          */
-        function triggerEmailSend(subject, emailBody) {
+        function triggerEmailSend(emailBody) {
+            const subject = I18n._('Encrypted note on %s', document.title);
             window.open(
                 `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
                 '_self',
@@ -4188,64 +4236,84 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * Send Email with current document (URL).
+         * formats the expiration date for the e-mail body
+         *
+         * The date gets rounded down by at least 30 seconds, to make up for
+         * the delay of the request. We don't use Date.prototype.toUTCString(),
+         * because we would like to avoid GMT.
+         *
+         * @name   TopNav.formatEmailExpiration
+         * @private
+         * @function
+         * @param  {number} expirationDate - timestamp in milliseconds
+         * @param  {bool} isUtc - use UTC instead of the current timezone
+         * @return {string}
+         */
+        function formatEmailExpiration(expirationDate, isUtc) {
+            const roundedDate = new Date(expirationDate);
+            roundedDate.setUTCSeconds(roundedDate.getUTCSeconds() - 30);
+            roundedDate.setUTCSeconds(0);
+
+            const localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
+            if (isUtc) {
+                localeConfiguration.timeZone = 'UTC';
+            }
+            return roundedDate.toLocaleString([], localeConfiguration);
+        }
+
+        /**
+         * Send Email with current document (URL), asking to confirm the
+         * timezone of its expiration first, if it has one.
          *
          * @name   TopNav.sendEmail
          * @private
          * @function
-         * @param  {Date|null} expirationDate date of expiration
-         * @param  {bool} isBurnafterreading whether it is burn after reading
          */
-        function sendEmail(expirationDate, isBurnafterreading) {
-            const expirationDateRoundedToSecond = new Date(expirationDate);
-
-            // round down at least 30 seconds to make up for the delay of request
-            expirationDateRoundedToSecond.setUTCSeconds(
-                expirationDateRoundedToSecond.getUTCSeconds() - 30
-            );
-            expirationDateRoundedToSecond.setUTCSeconds(0);
-
-            // reused as-is by both the confirmation-modal and direct-send paths below
-            const emailSubject = I18n._('Encrypted note on %s', document.title);
-
-            const emailconfirmmodal = document.getElementById('emailconfirmmodal');
-            if (expirationDate !== null) {
-                const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
-                const emailconfirmTimezoneUtc = emailconfirmmodal.querySelector('#emailconfirm-timezone-utc');
-                let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
-                const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip && bootstrap.Tooltip.VERSION ?
-                    new bootstrap.Modal(emailconfirmmodal) : null;
-
-                function sendEmailAndHideModal() {
-                    const emailBody = templateEmailBody(
-                        // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
-                        expirationDateRoundedToSecond.toLocaleString(
-                            [], localeConfiguration
-                        ), isBurnafterreading
-                    );
-                    if (bootstrap5EmailConfirmModal) {
-                        bootstrap5EmailConfirmModal.hide();
-                    }
-                    triggerEmailSend(emailSubject, emailBody);
-                }
-
-                emailconfirmmodal.addEventListener('shown.bs.modal', () => {
-                    emailconfirmTimezoneUtc.focus();
-                });
-
-                emailconfirmTimezoneCurrent.removeEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneUtc.removeEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneUtc.addEventListener('click', () => {
-                    localeConfiguration.timeZone = 'UTC';
-                    sendEmailAndHideModal();
-                });
-                if (bootstrap5EmailConfirmModal) {
-                    bootstrap5EmailConfirmModal.show();
-                }
-            } else {
-                triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
+        function sendEmail() {
+            // ignore clicks on the hidden button
+            if (emailDocument === null) {
+                return;
             }
+
+            if (emailDocument.expirationDate === null) {
+                triggerEmailSend(templateEmailBody(null, emailDocument.isBurnafterreading));
+                return;
+            }
+
+            emailConfirmDocument = emailDocument;
+            if (emailConfirmBootstrapModal) {
+                emailConfirmBootstrapModal.show();
+            }
+        }
+
+        /**
+         * Send the Email of the confirmation dialog, with the expiration in
+         * the chosen timezone.
+         *
+         * @name   TopNav.confirmEmailTimezone
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function confirmEmailTimezone(event) {
+            // ignore a dialog opened for an earlier document
+            if (emailConfirmDocument === null) {
+                return;
+            }
+
+            const emailBody = templateEmailBody(
+                formatEmailExpiration(
+                    emailConfirmDocument.expirationDate,
+                    event.currentTarget === emailConfirmTimezoneUtc
+                ),
+                emailConfirmDocument.isBurnafterreading
+            );
+            // only send once per opening of the dialog
+            emailConfirmDocument = null;
+            if (emailConfirmBootstrapModal) {
+                emailConfirmBootstrapModal.hide();
+            }
+            triggerEmailSend(emailBody);
         }
 
         /**
@@ -4413,20 +4481,21 @@ window.PrivateBin = (function () {
                 return;
             }
 
+            // forget a previous document, even if the expiration can't be calculated
+            emailDocument = null;
+            emailConfirmDocument = null;
             try {
-                // we cache expiration date in closure to avoid inaccurate expiration datetime
+                // we cache the expiration date to avoid an inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
                     new Date(),
                     typeof optionalRemainingTimeInSeconds === 'number' ? optionalRemainingTimeInSeconds : TopNav.getExpiration()
                 );
-                const isBurnafterreading = typeof optionalBurnAfterReading === 'boolean' ?
-                    optionalBurnAfterReading : TopNav.getBurnAfterReading();
-
+                emailDocument = {
+                    expirationDate: expirationDate,
+                    isBurnafterreading: typeof optionalBurnAfterReading === 'boolean' ?
+                        optionalBurnAfterReading : TopNav.getBurnAfterReading()
+                };
                 emailLink.classList.remove('hidden');
-                emailLink.removeEventListener('click', sendEmail);
-                emailLink.addEventListener('click', () => {
-                    sendEmail(expirationDate, isBurnafterreading);
-                });
             } catch (error) {
                 console.error(error);
                 Alert.showError('Cannot calculate expiration date.');
@@ -4445,7 +4514,8 @@ window.PrivateBin = (function () {
             }
 
             emailLink.classList.add('hidden');
-            emailLink.removeEventListener('click', sendEmail);
+            emailDocument = null;
+            emailConfirmDocument = null;
         };
 
         /**
@@ -4741,13 +4811,26 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * init navigation manager
+         * bind the event listeners of the e-mail button and its confirmation
+         * dialog
          *
-         * preloads DOM elements
-         *
-         * @name   TopNav.init
+         * @name   TopNav.bindEmailEvents
+         * @private
          * @function
          */
+        function bindEmailEvents() {
+            if (emailLink) {
+                emailLink.addEventListener('click', sendEmail);
+            }
+            if (emailConfirmModal) {
+                emailConfirmModal.addEventListener('shown.bs.modal', () => {
+                    emailConfirmTimezoneUtc.focus();
+                });
+                emailConfirmTimezoneCurrent.addEventListener('click', confirmEmailTimezone);
+                emailConfirmTimezoneUtc.addEventListener('click', confirmEmailTimezone);
+            }
+        }
+
         /**
          * bind all navigation event listeners
          *
@@ -4802,6 +4885,7 @@ window.PrivateBin = (function () {
             if (qrCodeLink) {
                 qrCodeLink.addEventListener('click', displayQrCode);
             }
+            bindEmailEvents();
 
             if (Helper.isBootstrap5()) {
                 const pasteExpirationSelect = document.getElementById('pasteExpiration');
@@ -4845,6 +4929,14 @@ window.PrivateBin = (function () {
             }
         }
 
+        /**
+         * init navigation manager
+         *
+         * preloads DOM elements
+         *
+         * @name   TopNav.init
+         * @function
+         */
         me.init = function () {
             attach = document.getElementById('attach');
             burnAfterReading = document.getElementById('burnafterreading');
@@ -4866,6 +4958,14 @@ window.PrivateBin = (function () {
             sendButton = document.getElementById('sendbutton');
             qrCodeLink = document.getElementById('qrcodelink');
             emailLink = document.getElementById('emaillink');
+            emailConfirmModal = document.getElementById('emailconfirmmodal');
+            emailConfirmTimezoneCurrent = document.getElementById('emailconfirm-timezone-current');
+            emailConfirmTimezoneUtc = document.getElementById('emailconfirm-timezone-utc');
+            emailConfirmBootstrapModal = emailConfirmModal && typeof bootstrap !== 'undefined' &&
+                bootstrap.Tooltip && typeof bootstrap.Modal === 'function' ?
+                new bootstrap.Modal(emailConfirmModal) : null;
+            emailDocument = null;
+            emailConfirmDocument = null;
 
             bindEvents();
 
@@ -5277,14 +5377,16 @@ window.PrivateBin = (function () {
             });
 
             // fill it with unencrypted params
-            ServerInteraction.setUnencryptedData('pasteid', Model.getPasteId());
+            const pasteid = Model.getPasteId();
             if (typeof parentid === 'undefined') {
                 // if parent id is not set, this is the top-most comment, so use
                 // document id as parent, as the root element of the discussion tree
-                ServerInteraction.setUnencryptedData('parentid', Model.getPasteId());
-            } else {
-                ServerInteraction.setUnencryptedData('parentid', parentid);
+                parentid = pasteid;
             }
+            ServerInteraction.setUnencryptedData('pasteid', pasteid);
+            ServerInteraction.setUnencryptedData('parentid', parentid);
+            // authenticate the IDs, so the comment can't be moved elsewhere
+            ServerInteraction.setUnencryptedData('adata', [pasteid, parentid]);
 
             // prepare cypher message
             let cipherMessage = {
@@ -5540,11 +5642,15 @@ window.PrivateBin = (function () {
             const commentDecryptionPromises = [];
             // iterate over comments
             for (let i = 0; i < paste.comments.length; ++i) {
-                const comment = new Comment(paste.comments[i]),
-                    commentPromise = CryptTool.decipher(key, password, comment.getCipherData());
+                const comment = new Comment(paste.comments[i]);
                 paste.comments[i] = comment;
+                // skip comments that were moved from another document or parent
+                if (!comment.isBoundTo(Model.getPasteId())) {
+                    commentDecryptionPromises.push(Promise.resolve(['', '']));
+                    continue;
+                }
                 commentDecryptionPromises.push(
-                    commentPromise.then(function (commentJson) {
+                    CryptTool.decipher(key, password, comment.getCipherData()).then(function (commentJson) {
                         const commentMessage = JSON.parse(commentJson);
                         return [
                             commentMessage.comment || '',
@@ -5843,60 +5949,6 @@ window.PrivateBin = (function () {
         ];
 
         /**
-         * Find the password field a button belongs to
-         *
-         * @name PasswordPeek.findInput
-         * @private
-         * @function
-         * @param {HTMLElement} element
-         * @return {HTMLInputElement|null}
-         */
-        function findInput(element) {
-            const inputGroup = element.closest('.input-group');
-            return inputGroup ? inputGroup.querySelector('.input-password') : null;
-        }
-
-        /**
-         * Show or hide the password of a field and update its reveal button
-         *
-         * @name PasswordPeek.setVisible
-         * @function
-         * @param {HTMLInputElement} passwordInput
-         * @param {boolean} visible
-         */
-        me.setVisible = function (passwordInput, visible) {
-            passwordInput.setAttribute('type', visible ? 'text' : 'password');
-
-            const inputGroup = passwordInput.closest('.input-group');
-            const element = inputGroup ? inputGroup.querySelector('.toggle-password') : null;
-            if (!element) {
-                return;
-            }
-
-            const tooltip = I18n._(visible ? 'Hide password' : 'Show password');
-            element.setAttribute('title', tooltip);
-            element.setAttribute('aria-label', tooltip);
-
-            // handle bootstrap 5 icons: eye & eye-slash
-            const buttonSvg = element.querySelector('use');
-            if (buttonSvg) {
-                const iconHref = buttonSvg.getAttribute('href');
-                if (iconHref) {
-                    const base = iconHref.replace(/-slash$/, '');
-                    buttonSvg.setAttribute('href', visible ? `${base}-slash` : base);
-                }
-                return;
-            }
-
-            // handle bootstrap 3 icons: eye-open & eye-close
-            const buttonSpan = element.querySelector('span');
-            if (buttonSpan) {
-                buttonSpan.classList.toggle('glyphicon-eye-close', visible);
-                buttonSpan.classList.toggle('glyphicon-eye-open', !visible);
-            }
-        };
-
-        /**
          * Create a random password: upper and lower case letters, digits and
          * punctuation, at least one of each, drawn without bias from the
          * browser's cryptographically secure random number generator
@@ -5941,9 +5993,40 @@ window.PrivateBin = (function () {
          * @function
          */
         function handleRevealButtonClick() {
-            const passwordInput = findInput(this);
-            if (passwordInput) {
-                me.setVisible(passwordInput, passwordInput.getAttribute('type') === 'password');
+            const element = this;
+            const inputGroup = element.closest('.input-group');
+            const passwordInput = inputGroup ? inputGroup.querySelector('.input-password') : null;
+            if (!passwordInput) {
+                return;
+            }
+
+            const isHidden = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isHidden ? 'text' : 'password');
+
+            const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password');
+            element.setAttribute('title', tooltip);
+            element.setAttribute('aria-label', tooltip);
+
+            // handle bootstrap 5 icons: eye & eye-slash
+            const buttonSvg = element.querySelector('use');
+            if (buttonSvg) {
+                const iconHref = buttonSvg.getAttribute('href');
+                if (iconHref) {
+                    buttonSvg.setAttribute('href', isHidden ? `${iconHref}-slash` : iconHref.substring(0, iconHref.length - 6));
+                }
+                return;
+            }
+
+            // handle bootstrap 3 icons: eye-open & eye-close
+            const buttonSpan = element.querySelector('span');
+            if (buttonSpan) {
+                if (isHidden) {
+                    buttonSpan.classList.add('glyphicon-eye-close');
+                    buttonSpan.classList.remove('glyphicon-eye-open');
+                } else {
+                    buttonSpan.classList.add('glyphicon-eye-open');
+                    buttonSpan.classList.remove('glyphicon-eye-close');
+                }
             }
         }
 
@@ -5955,12 +6038,21 @@ window.PrivateBin = (function () {
          * @function
          */
         function handleGenerateButtonClick() {
-            const passwordInput = findInput(this);
+            const inputGroup = this.closest('.input-group');
+            const passwordInput = inputGroup ? inputGroup.querySelector('.input-password') : null;
             if (!passwordInput) {
                 return;
             }
             passwordInput.value = me.generatePassword();
-            me.setVisible(passwordInput, true);
+            if (passwordInput.getAttribute('type') === 'password') {
+                // reuse the reveal button, so title and icon follow
+                const revealButton = inputGroup.querySelector('.toggle-password');
+                if (revealButton) {
+                    revealButton.click();
+                } else {
+                    passwordInput.setAttribute('type', 'text');
+                }
+            }
             passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
             passwordInput.focus();
             passwordInput.select();
@@ -5973,11 +6065,11 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            document.querySelectorAll('.toggle-password').forEach(button => {
-                button.addEventListener('click', handleRevealButtonClick);
+            document.querySelectorAll('.toggle-password').forEach(function (revealButton) {
+                revealButton.addEventListener('click', handleRevealButtonClick);
             });
-            document.querySelectorAll('.generate-password').forEach(button => {
-                button.addEventListener('click', handleGenerateButtonClick);
+            document.querySelectorAll('.generate-password').forEach(function (generateButton) {
+                generateButton.addEventListener('click', handleGenerateButtonClick);
             });
         };
 
@@ -6028,8 +6120,9 @@ window.PrivateBin = (function () {
             TopNav.resetInput();
 
             // reset format
-            PasteViewer.setFormat('plaintext');
-            TopNav.setFormat('plaintext');
+            const defaultFormat = Model.getFormatDefault() || 'plaintext';
+            PasteViewer.setFormat(defaultFormat);
+            TopNav.setFormat(defaultFormat);
 
             TopNav.showCreateButtons();
 

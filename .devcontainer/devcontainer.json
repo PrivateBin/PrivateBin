@@ -38,7 +38,7 @@
     "features": {
         "ghcr.io/devcontainers-extra/features/mocha:2": {},
         "ghcr.io/yassinedoghri/devcontainers/php-extensions-installer:1": {
-            "extensions": "gd"
+            "extensions": "gd intl"
         }
     },
     "forwardPorts": [

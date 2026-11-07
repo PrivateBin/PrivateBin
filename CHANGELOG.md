@@ -1,23 +1,34 @@
 # PrivateBin version history
 
-## 2.1.1 (not yet released)
-* ADDED: Translation for Korean (#2071)
+## 2.1.2 (not yet released)
 * ADDED: Optional "splitview" template with the editor on top, a file drop area below and the options in a full-height side pane
-* ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates
+* ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates; the `bootstrap5` and `splitview` templates have one
+
+## 2.1.1 (2026-11-04)
+* ADDED: Translation for Korean (#2071)
+* ADDED: Comments authenticate the IDs of their document and parent comment if present. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled to validate these fields (#2101)
+* CHANGED: Check `sizelimit` over full request, before attempting decoding
+* CHANGED: Database backend now logs errors when reading comments, like it already did for comment existence checks (#2100)
 * FIXED: Creating a document failed with a JavaScript error when the `discussion`, `password`, e-mail or QR code option is disabled, as the top navigation accessed the omitted elements
 * FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
 * FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
-* FIXED: The show/hide password button only worked for the first one on the page
+* FIXED: new paste button resets it to default formatter/style instead of hardcoding 'plaintext' (#2026)
+* FIXED: Comments must now be unique in cipher text within a document, not reuse existing cipher texts (#2100)
+* FIXED: Password peek button next to the password input when creating a document had no effect
+* FIXED: E-mail button sent several e-mails after being shown again or after its confirmation dialog was dismissed
+* FIXED: SVG attachment previews could turn non-ASCII characters into markup after sanitization, enabling script execution when opening the preview in a new tab
+* FIXED: SVG attachment previews use a data URL, so they no longer run in the instance's origin when opened in a new tab
+* FIXED: Password characters above U+00FF got truncated before key derivation, now passwords get UTF-8 encoded and existing documents remain readable
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
 * ADDED: Translation for Chinese (Traditional)
 * ADDED: Subject line to the "Email" share button's mailto link (#928)
 * ADDED: Send the document with Ctrl+S, or Cmd+S on macOS (#739)
-* CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
-* CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
-* CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
-* CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
+* CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS
+* CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library
+* CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript
+* CHANGED: Removed support for Bootstrap 3 as it requires jQuery
 * CHANGED: Encode documents with `TextEncoder` in `compress()`, instead of the `utf16To8()` percent-encoding round trip, which allocated ~20 times the payload
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.17, ip-lib 1.22.1 & polyfill-php80 1.43.0
 * FIXED: Decode decompressed documents with `TextDecoder` instead of `utf8To16()`, which allocated ~3.4 GB for a 100 MB document and killed the tab (#2027)
