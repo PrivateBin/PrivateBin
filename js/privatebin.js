@@ -5909,12 +5909,81 @@ window.PrivateBin = (function () {
     })();
 
     /**
+     * Show or hide password fields and generate random passwords for them
+     *
+     * Works with any template: buttons with the class "toggle-password" or
+     * "generate-password" act on the ".input-password" field that is in the
+     * same ".input-group".
      *
      * @name PasswordPeek
      * @class
      */
     const PasswordPeek = (function () {
         const me = {};
+
+        /**
+         * Number of characters of a generated password
+         *
+         * @name PasswordPeek.passwordLength
+         * @private
+         * @const
+         * @type {number}
+         */
+        const passwordLength = 20;
+
+        /**
+         * Character classes of generated passwords. Look-alike characters
+         * (0 O o, 1 l I) and punctuation that is easily missed or mangled
+         * (quotes, commas, dots, colons, semicolons, pipes, backticks) are left out.
+         *
+         * @name PasswordPeek.passwordClasses
+         * @private
+         * @const
+         * @type {string[]}
+         */
+        const passwordClasses = [
+            'ABCDEFGHJKLMNPQRSTUVWXYZ',
+            'abcdefghijkmnpqrstuvwxyz',
+            '23456789',
+            '!@#$%&*+-=?^_~'
+        ];
+
+        /**
+         * Create a random password: upper and lower case letters, digits and
+         * punctuation, at least one of each, drawn without bias from the
+         * browser's cryptographically secure random number generator
+         *
+         * @name PasswordPeek.generatePassword
+         * @function
+         * @param {number} [length=20]
+         * @return {string}
+         */
+        me.generatePassword = function (length = passwordLength) {
+            const characters = passwordClasses.join('');
+            // values at or above the largest multiple of the alphabet size are discarded
+            const limit = 256 - (256 % characters.length);
+            const draw = () => {
+                let password = '';
+                while (password.length < length) {
+                    const values = crypto.getRandomValues(new Uint8Array(length));
+                    for (let i = 0; i < values.length && password.length < length; ++i) {
+                        if (values[i] < limit) {
+                            password += characters[values[i] % characters.length];
+                        }
+                    }
+                }
+                return password;
+            };
+            const hasAllClasses = password => passwordClasses.every(
+                set => Array.from(password).some(char => set.includes(char))
+            );
+
+            let password = draw();
+            while (length >= passwordClasses.length && !hasAllClasses(password)) {
+                password = draw();
+            }
+            return password;
+        };
 
         /**
          * Switch between visible and hidden password
@@ -5962,6 +6031,34 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * Fill the field with a random password and show it, so it can be copied
+         *
+         * @name PasswordPeek.handleGenerateButtonClick
+         * @private
+         * @function
+         */
+        function handleGenerateButtonClick() {
+            const inputGroup = this.closest('.input-group');
+            const passwordInput = inputGroup ? inputGroup.querySelector('.input-password') : null;
+            if (!passwordInput) {
+                return;
+            }
+            passwordInput.value = me.generatePassword();
+            if (passwordInput.getAttribute('type') === 'password') {
+                // reuse the reveal button, so title and icon follow
+                const revealButton = inputGroup.querySelector('.toggle-password');
+                if (revealButton) {
+                    revealButton.click();
+                } else {
+                    passwordInput.setAttribute('type', 'text');
+                }
+            }
+            passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+            passwordInput.focus();
+            passwordInput.select();
+        }
+
+        /**
          * Initialize
          *
          * @name PasswordPeek.init
@@ -5970,6 +6067,9 @@ window.PrivateBin = (function () {
         me.init = function () {
             document.querySelectorAll('.toggle-password').forEach(function (revealButton) {
                 revealButton.addEventListener('click', handleRevealButtonClick);
+            });
+            document.querySelectorAll('.generate-password').forEach(function (generateButton) {
+                generateButton.addEventListener('click', handleGenerateButtonClick);
             });
         };
 
