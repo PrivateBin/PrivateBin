@@ -476,6 +476,7 @@ class Controller
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('TEMPLATESELECTION', $templateselection);
         $page->assign('TEMPLATES', TemplateSwitcher::getAvailableTemplates());
+        $page->assign('TEMPLATEOPTIONS', $this->_conf->getSection('template_options'));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
