@@ -235,5 +235,10 @@
     "Copy": "Copy",
     "Cmd": "Cmd",
     "Ctrl": "Ctrl",
-    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s"
+    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s",
+    "Generate password": "Generate password",
+    "Attachments": "Attachments",
+    "Drag & drop files here, paste an image, or click to browse": "Drag & drop files here, paste an image, or click to browse",
+    "This file is empty (0 bytes). If it should have content, add it with click-to-browse instead.": "This file is empty (0 bytes). If it should have content, add it with click-to-browse instead.",
+    "Could not read: %s. The browser did not give access to the dragged file(s). Click here to choose them with the file dialog instead.": "Could not read: %s. The browser did not give access to the dragged file(s). Click here to choose them with the file dialog instead."
 }

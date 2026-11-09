@@ -1,5 +1,9 @@
 # PrivateBin version history
 
+## 2.1.2 (not yet released)
+* ADDED: Optional "splitview" template with the editor on top, a file drop area below and the options in a full-height side pane
+* ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates; the `bootstrap5` and `splitview` templates have one
+
 ## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)
 * ADDED: Comments authenticate the IDs of their document and parent comment if present. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled to validate these fields (#2101)
