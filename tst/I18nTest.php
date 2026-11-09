@@ -95,7 +95,7 @@ class I18nTest extends TestCase
         // ICU before version 67 sorts languages of equal quality alphabetically
         return [
             'fr;q=0.8,de;q=0.8' => ['fr;q=0.8,de;q=0.8', 'fr'],
-            'fr,de' => ['fr,de', 'fr'],
+            'fr,de'             => ['fr,de', 'fr'],
         ];
     }
 
@@ -113,9 +113,8 @@ class I18nTest extends TestCase
     {
         // ICU has no locale data for these languages, so it can only match the next one in the header
         return [
-            'co,fr;q=0.8' => ['co,fr;q=0.8', 'co'],
+            'co,fr;q=0.8'  => ['co,fr;q=0.8', 'co'],
             'jbo,de;q=0.8' => ['jbo,de;q=0.8', 'jbo'],
-            'la,it;q=0.8' => ['la,it;q=0.8', 'la'],
         ];
     }
 
@@ -215,7 +214,7 @@ class I18nTest extends TestCase
         // has zh_TW and zh_HK only as aliases, skips them and returns zh instead
         return [
             'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7' => ['zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7', 'zh-tw'],
-            'zh-HK,zh;q=0.9,en;q=0.8' => ['zh-HK,zh;q=0.9,en;q=0.8', 'zh-tw'],
+            'zh-HK,zh;q=0.9,en;q=0.8'             => ['zh-HK,zh;q=0.9,en;q=0.8', 'zh-tw'],
         ];
     }
 

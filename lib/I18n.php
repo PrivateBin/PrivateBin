@@ -205,17 +205,27 @@ class I18n
             return self::$_languageFallback;
         }
 
-        /* TODO: Once https://github.com/php/php-src/issues/24074 makes it into
-         * all supported PHP releases, we can use the intl module like so:
-        if (function_exists('locale_accept_from_http')) {
-            $detectedBestLanguage = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE'], $availableLanguages);
-            if ($detectedBestLanguage !== false) {
-                return $detectedBestLanguage;
+        // ICU < 67 returns equivalent matches in alphabetical order instead of
+        // the order passed, causing test inconsistencies (unicode-org/icu#1022).
+        // Also, ICU doesn't properly handle some of our languages (co, jbo) or
+        // regional zh variants (zh_TW, zh_HK) even in recent versions.
+        if (
+            function_exists('locale_accept_from_http') &&
+            defined('INTL_ICU_VERSION') &&
+            version_compare(INTL_ICU_VERSION, '67', '>=') &&
+            !preg_match('/(co|jbo|zh-)/', $_SERVER['HTTP_ACCEPT_LANGUAGE'])
+        ) {
+            $detectedBestLocale = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            if (
+                $detectedBestLocale !== false &&
+                function_exists('locale_get_primary_language')
+            ) {
+                $detectedBestLanguage = locale_get_primary_language($detectedBestLocale);
+                if (in_array($detectedBestLanguage, $availableLanguages)) {
+                    return $detectedBestLanguage;
+                }
             }
         }
-        * disabled for now as it's order depends on the ICU version installed
-        * and showed large inconsistencies between different test environments
-        */
 
         return self::_getMatchingLanguage(
             self::_normalizeBrowserLanguages(self::getBrowserLanguages(), $availableLanguages),
