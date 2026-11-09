@@ -13,6 +13,6 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/js"
+    directory: "/pub/js"
     schedule:
       interval: "daily"

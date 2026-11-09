@@ -13,6 +13,6 @@
         "--bootstrap",
         "${workspaceFolder}/tst/Bootstrap.php"
     ],
-    "mochaExplorer.pkgFile": "js/package.json",
-    "mochaExplorer.files": "js/test/*.js"
+    "mochaExplorer.pkgFile": "pub/js/package.json",
+    "mochaExplorer.files": "pub/js/test/*.js"
 }

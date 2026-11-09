@@ -2,7 +2,7 @@
 
 CURRENT_VERSION = 2.1.1
 VERSION ?= 2.1.1
-VERSION_FILES = README.md SECURITY.md doc/Installation.md js/package.json lib/Controller.php Makefile
+VERSION_FILES = README.md SECURITY.md doc/Installation.md pub/js/package.json lib/Controller.php Makefile
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
 
@@ -14,7 +14,7 @@ composer: ## Update composer dependencies (only production ones, optimize the au
 coverage: coverage-js coverage-php ## Run all unit tests and generate code coverage reports.
 
 coverage-js: ## Run JS unit tests and generate code coverage reports.
-	cd js && nyc mocha
+	cd pub/js && nyc mocha
 
 coverage-php: ## Run PHP unit tests and generate code coverage reports.
 	cd tst && XDEBUG_MODE=coverage phpunit 2> /dev/null
@@ -23,7 +23,7 @@ coverage-php: ## Run PHP unit tests and generate code coverage reports.
 doc: doc-js doc-php ## Generate all code documentation.
 
 doc-js: ## Generate JS code documentation.
-	jsdoc -p -d doc/jsdoc js/privatebin.js js/legacy.js
+	jsdoc -p -d doc/jsdoc pub/js/privatebin.js pub/js/legacy.js
 
 doc-php: ## Generate JS code documentation.
 	phpdoc --visibility=public,protected,private --target=doc/phpdoc --directory=lib/
@@ -44,7 +44,7 @@ sign: ## Sign a release.
 test: test-js test-php ## Run all unit tests.
 
 test-js: ## Run JS unit tests.
-	cd js && mocha
+	cd pub/js && mocha
 
 test-php: ## Run PHP unit tests.
 	cd tst && phpunit --no-coverage

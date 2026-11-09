@@ -4,9 +4,12 @@
 
 Download the
 [latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest)
-(with the link labelled as "Source code (…)") and extract it in your web hosts
-folder where you want to install your PrivateBin instance. We try to provide a
-mostly safe default configuration, but we urge you to check the
+(with the link labelled as "Source code (…)") and extract it on your web host.
+Then point the document root of your web server (or virtual host) to the `pub/`
+directory of the extracted files. Only the `pub/` directory needs to be
+accessible over HTTP, all other directories (containing the configuration,
+PHP libraries, templates and data) must stay outside of the document root. We
+try to provide a mostly safe default configuration, but we urge you to check the
 [security section](#hardening-and-security) below and the
 [configuration options](#configuration) to adjust as you see fit.
 
@@ -36,7 +39,8 @@ for more information.
 - PHP version 7.4 or above
 - PHP with zlib extension
 - some disk space and the capability to create files and folders in the
-  installation directory and the `PATH` defined in index.php
+  installation directory and the `PATH` defined in `pub/index.php`
+- a web server whose document root can be set to the `pub/` directory
 - A web browser with JavaScript support enabled
 
 ### Optional Requirements
@@ -51,28 +55,107 @@ for more information.
 
 ## Hardening and Security
 
+### Document root
+
+All files that need to be accessible to web browsers (`index.php`, JavaScript,
+CSS, images, translations, `robots.txt`, etc.) are located in the `pub/`
+directory. The configuration, data files, templates, utilities and PHP
+libraries (directories `bin`, `cfg`, `data`, `doc`, `lib`, `tpl`, `tst` and
+`vendor`) are located outside of it and must not be served by your web server.
+
+Configure the document root of your web server to point to the `pub/`
+directory, for example:
+
+```apache
+<VirtualHost *:443>
+    ServerName paste.example.com
+    DocumentRoot /srv/privatebin/pub
+    <Directory /srv/privatebin/pub>
+        Options -Indexes
+        AllowOverride FileInfo
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+```nginx
+server {
+    server_name paste.example.com;
+    root /srv/privatebin/pub;
+    index index.php;
+    autoindex off;
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass unix:/run/php/php-fpm.sock;
+    }
+}
+```
+
+Make sure directory listings are disabled (`Options -Indexes` for Apache,
+`autoindex off` for nginx, which is the default).
+
+If you want to serve PrivateBin in a subfolder of an existing site, for example
+at `https://example.com/paste/`, place the PrivateBin installation outside of
+your document root and make the `pub/` directory available under that subfolder,
+e.g. with an `Alias /paste /srv/privatebin/pub` directive in Apache, an `alias`
+location in nginx or a symbolic link `htdocs/paste -> /srv/privatebin/pub`.
+
 ### Changing the Path
 
-In the index.php you can define a different `PATH`. This is useful to secure
-your installation. You can move the utilities, configuration, data files,
-templates and PHP libraries (directories bin, cfg, doc, data, lib, tpl, tst and
-vendor) outside of your document root. This new location must still be
-accessible to your webserver and PHP process (see also
+By default, `pub/index.php` expects the remaining PrivateBin files in its parent
+directory. In the `pub/index.php` you can define a different `PATH` (it must
+end in a directory separator), if you want to store the utilities,
+configuration, data files, templates and PHP libraries in a different location.
+This location must still be accessible to your PHP process (see also
 [open_basedir setting](https://secure.php.net/manual/en/ini.core.php#ini.open-basedir)).
 
 > #### PATH Example
-> Your PrivateBin installation lives in a subfolder called "paste" inside of
+> Your PrivateBin public files live in a subfolder called "paste" inside of
 > your document root. The URL looks like this:
 > http://example.com/paste/
 >
-> The full path of PrivateBin on your webserver is:
+> The full path of the `pub/` directory contents on your webserver is:
 > /srv/example.com/htdocs/paste
 >
 > When setting the path like this:
-> define('PATH', '../../secret/privatebin/');
+> define('PATH', '/srv/example.com/secret/privatebin/');
 >
 > PrivateBin will look for your includes and data here:
 > /srv/example.com/secret/privatebin
+
+### Upgrading from versions without the pub/ directory
+
+Up to version 2.1.1, the `index.php` and the public assets were located in the
+root directory of PrivateBin and that whole directory was often used as the
+document root. When upgrading an existing installation:
+
+1. Back up your `cfg/conf.php` and `data/` directory (or database).
+2. Extract the new release next to (or over) your installation and make sure
+   `cfg/conf.php` and `data/` end up in the root directory of the new release,
+   next to the `pub/` directory - their locations did not change.
+3. Remove the old `index.php`, `css/`, `img/`, `js/`, `i18n/`,
+   `browserconfig.xml`, `manifest.json` and `robots.txt` from the root directory,
+   if you extracted the release over your existing installation.
+4. Change the document root of your web server (or the alias / symbolic link
+   pointing to your installation) to the `pub/` directory and reload the web
+   server.
+5. If you had customized the `PATH` in the old `index.php`, apply the same change
+   to `pub/index.php`. If you enabled the `.htaccess.disabled` file, it is now
+   located at `pub/.htaccess.disabled`, rename it to `pub/.htaccess` again.
+
+The URLs of your instance and its pastes do not change, as long as the `pub/`
+directory is served at the same location as the old installation root.
+
+If your hosting provider does not let you change the document root, place the
+PrivateBin installation outside of the web accessible directory and only copy
+or link the contents of the `pub/` directory into it, adjusting the `PATH` in
+`pub/index.php` accordingly (see above).
 
 ### Changing the config path only
 
@@ -132,7 +215,7 @@ More details can be found in the
 
 ### Web server configuration
 
-A `robots.txt` file is provided in the root dir of PrivateBin. It requests bots
+A `robots.txt` file is provided in the `pub/` dir of PrivateBin. It requests bots
 such as search engines and other automation tools to not index or crawl your
 site, so the paste keys are not leaked. It is recommended to place it into
 the root of your web directory if you have installed PrivateBin in a subdirectory.
@@ -148,9 +231,9 @@ Client-side checks and `robots.txt` only help after a request reaches PrivateBin
 obvious crawler User-Agents in the web server, before PHP runs. That reduces
 noise in logs and lowers the chance that automated clients fetch paste URLs.
 
-A `.htaccess.disabled` file is provided in the root dir of PrivateBin. It blocks
+A `.htaccess.disabled` file is provided in the `pub/` dir of PrivateBin. It blocks
 some known robots and link-scanning bots. If you use Apache, you can rename the
-file to `.htaccess` to enable this feature. The shipped rules return HTTP 403
+file to `pub/.htaccess` to enable this feature. The shipped rules return HTTP 403
 when the User-Agent matches patterns such as `bot`, `spider`, `crawl`, embedded
 URLs, WhatsApp, Skype preview, or `facebookexternalhit`, while still allowing
 the Let's Encrypt validation User-Agent.

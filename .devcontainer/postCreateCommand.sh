@@ -16,7 +16,7 @@ composer global require phpunit/phpunit:^9
 composer global require google/cloud-storage
 
 # for JS testing
-JAVASCRIPT_DIRECTORY="$(pwd)/js"
+JAVASCRIPT_DIRECTORY="$(pwd)/pub/js"
 npm --prefix "$JAVASCRIPT_DIRECTORY" install "$JAVASCRIPT_DIRECTORY"
 
 # development webserver

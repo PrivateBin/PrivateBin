@@ -13,11 +13,11 @@ use PrivateBin\TemplateSwitcher;
 error_reporting(E_ALL | E_STRICT);
 
 // change this, if your php files and data is outside of your webservers document root
-if (!defined('PUBLIC_PATH')) {
-    define('PUBLIC_PATH', '..');
-}
 if (!defined('PATH')) {
     define('PATH', '..' . DIRECTORY_SEPARATOR);
+}
+if (!defined('PUBLIC_PATH')) {
+    define('PUBLIC_PATH', PATH . 'pub');
 }
 if (!defined('CONF')) {
     define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php');
@@ -349,7 +349,7 @@ class Helper
      */
     public static function updateSubresourceIntegrity(): void
     {
-        foreach (new GlobIterator(PATH . 'js' . DIRECTORY_SEPARATOR . '*.*js') as $file) {
+        foreach (new GlobIterator(PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . '*.*js') as $file) {
             if ($file->getBasename() === 'common.js' || $file->getBasename() === 'eslint.config.js') {
                 continue; // ignore JS unit test bootstrap
             }

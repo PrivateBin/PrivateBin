@@ -29,7 +29,7 @@
 
 3. **Install JS dependencies (for test only):**
    ```sh
-   cd ./js
+   cd ./pub/js
    npm install
    ```
    - Only required for running JS tests. Not needed for building or running the app.
@@ -44,7 +44,7 @@
 ### Run
 
 - **PHP Server Mode:** Use Apache/Nginx with PHP, pointing the web root to the repo root.
-- **Demo:** Open the root directory served by the web server in a browser. This should call the index.php in the repositories root directory.
+- **Demo:** Point the web servers document root to the `pub/` directory and open it in a browser. This should call the `pub/index.php`.
 
 ### Test
 
@@ -57,7 +57,7 @@
 
 - **JS Tests:**
   ```sh
-  cd ./js
+  cd ./pub/js
   npm run test
   ```
   - Runs Mocha-based tests in Node.js context. Tests are implemented in BDD-Style or using jsVerify fixtures for property-based tests.
@@ -88,22 +88,23 @@
   - `composer.json`, `composer.lock`: PHP dependencies.
   - `.github/workflows/`: CI configuration.
   - `cfg/`: Default configuration files.
-  - `js/`: Main client logic (browser JS), including:
+  - `pub/`: Public web server document root, containing `index.php` and all static assets.
+  - `pub/js/`: Main client logic (browser JS), including:
       - `package.json`: JS test/lint dependencies (not for production JS).
     - `legacy.js`: Must remain compatible with legacy browsers (ES3). **Do not use modern JS here.**
     - `privatebin.js`: Core encryption and paste interface logic.
   - `tpl/`: HTML templates.
-  - `css/`: Stylesheets.
+  - `pub/css/`: Stylesheets.
 
 - **Testing & Validation:**
   - `tst/`: Contains PHP unit tests.
-  - `js/test`: Contains JS unit tests.
+  - `pub/js/test`: Contains JS unit tests.
   - `phpunit.xml`: PHPUnit config.
   - JS test files may use Node.js features; browser JS must not.
 
   - **Encryption:** Only client-side in JS using the browsers WebCrypto API.
   - **Backend:** Serves encrypted blobs (as base64 encoded strings) and plaintext meta data in JSON format. APIs are designed for WORM (write once, read many) usage. Once stored content is never updated, only deleted, if delete token is sent, has expired as per meta data or immediately upon reading for the first time, if meta data was set to burn-after-reading.
-  - **Legacy Support:** `js/legacy.js` must remain compatible with IE4 and Netscape for feature detection of ancient browsers.
+  - **Legacy Support:** `pub/js/legacy.js` must remain compatible with IE4 and Netscape for feature detection of ancient browsers.
   - **Configuration:** See `cfg/conf.sample.php` and the [wiki](https://github.com/PrivateBin/PrivateBin/wiki/Configuration) for available options. All option defaults are defined in `lib/Configuration.php`
 
 ## Automated Checks

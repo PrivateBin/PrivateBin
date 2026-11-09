@@ -2,13 +2,13 @@
   <configuration default="false" name="Frontend tests" type="mocha-javascript-test-runner">
     <node-interpreter>project</node-interpreter>
     <node-options />
-    <mocha-package>$PROJECT_DIR$/js/node_modules/mocha</mocha-package>
-    <working-directory>$PROJECT_DIR$/js</working-directory>
+    <mocha-package>$PROJECT_DIR$/pub/js/node_modules/mocha</mocha-package>
+    <working-directory>$PROJECT_DIR$/pub/js</working-directory>
     <pass-parent-env>true</pass-parent-env>
     <ui>bdd</ui>
     <extra-mocha-options />
     <test-kind>DIRECTORY</test-kind>
-    <test-directory>$PROJECT_DIR$/js/test</test-directory>
+    <test-directory>$PROJECT_DIR$/pub/js/test</test-directory>
     <recursive>true</recursive>
     <method v="2" />
   </configuration>

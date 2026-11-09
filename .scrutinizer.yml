@@ -3,11 +3,11 @@ checks:
     javascript: true
 filter:
     paths:
-        - "css/privatebin.css"
-        - "css/bootstrap/privatebin.css"
-        - "js/privatebin.js"
+        - "pub/css/privatebin.css"
+        - "pub/css/bootstrap/privatebin.css"
+        - "pub/js/privatebin.js"
         - "lib/*.php"
-        - "index.php"
+        - "pub/index.php"
 coding_style:
     php:
         spaces:

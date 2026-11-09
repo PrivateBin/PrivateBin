@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 function loadTemplateFragment(id) {
-    const template = fs.readFileSync(path.resolve(__dirname, '../../tpl/bootstrap5.php'), 'utf8');
+    const template = fs.readFileSync(path.resolve(__dirname, '../../../tpl/bootstrap5.php'), 'utf8');
     const match = template.match(new RegExp(`<div id="${id}"[^>]*>[\\s\\S]*?<\\/div>`));
 
     if (!match) {

@@ -85,7 +85,7 @@ and jsdom-global locally:
 
 ```console
 $ npm install -g mocha nyc
-$ cd PrivateBin/js
+$ cd PrivateBin/pub/js
 $ npm install
 ```
 
@@ -97,15 +97,15 @@ $ sudo mkdir /usr/local/lib/node_modules
 $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
 $ ln -s /usr/bin/nodejs /usr/local/bin/node
 $ npm install -g mocha nyc
-$ cd PrivateBin/js
+$ cd PrivateBin/pub/js
 $ npm install
 ```
 
-To run the tests, just change into the `js` directory and run nyc (will produce
+To run the tests, just change into the `pub/js` directory and run nyc (will produce
 coverage report) or just mocha:
 
 ```console
-$ cd PrivateBin/js
+$ cd PrivateBin/pub/js
 $ nyc mocha
 ```
 

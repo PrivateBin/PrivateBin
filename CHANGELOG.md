@@ -1,5 +1,8 @@
 # PrivateBin version history
 
+## (not yet released)
+* CHANGED: Moved `index.php` and all public assets into a dedicated `pub/` directory, which must now be used as the web servers document root, keeping configuration, data, templates and PHP libraries out of it. See the [upgrade instructions](https://github.com/PrivateBin/PrivateBin/blob/master/doc/Installation.md#upgrading-from-versions-without-the-pub-directory) (#2130)
+
 ## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)
 * ADDED: Comments authenticate the IDs of their document and parent comment if present. Older comments without these IDs are still accepted and shown, unless the new `discussionrequireauthenticatedids` option is enabled to validate these fields (#2101)

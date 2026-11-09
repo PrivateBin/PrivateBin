@@ -30,7 +30,7 @@ class I18nTest extends TestCase
     {
         /* Setup Routine */
         $this->_translations = json_decode(
-            file_get_contents(PATH . 'i18n' . DIRECTORY_SEPARATOR . 'de.json'),
+            file_get_contents(PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . 'de.json'),
             true
         );
     }
@@ -328,7 +328,7 @@ class I18nTest extends TestCase
     {
         $messageIds = [];
         $languages = [];
-        foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
+        foreach (new DirectoryIterator(PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n') as $file) {
             $fileNameLength = strlen($file->getFilename());
             if ($fileNameLength === 7) {       // xx.json
                 $language = substr($file->getFilename(), 0, 2);

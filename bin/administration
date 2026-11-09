@@ -18,6 +18,7 @@ use PrivateBin\Data\AbstractData;
 use PrivateBin\Model\Paste;
 
 define('PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
+define('PUBLIC_PATH', PATH . 'pub');
 require PATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 /**

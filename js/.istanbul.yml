@@ -1,5 +1,0 @@
----
-instrumentation:
-  baseline-file: ../tst/log/js-coverage-baseline.json
-reporting:
-  dir: ../tst/log/js-coverage-report

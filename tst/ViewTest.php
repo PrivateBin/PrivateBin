@@ -138,6 +138,6 @@ class ViewTest extends TestCase
         $test = new View;
         $this->expectException(Exception::class);
         $this->expectExceptionCode(81);
-        $test->draw('../index');
+        $test->draw('../pub/index');
     }
 }

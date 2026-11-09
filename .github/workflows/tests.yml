@@ -227,25 +227,25 @@ jobs:
       with:
         node-version: '22'
         cache: 'npm'
-        cache-dependency-path: 'js/package-lock.json'
+        cache-dependency-path: 'pub/js/package-lock.json'
 
     - name: Setup Mocha
       run: npm install -g mocha
 
     - name: Setup Node modules
       run: npm ci
-      working-directory: js
+      working-directory: pub/js
 
     - name: Run unit tests
       run: npm run ci-test
-      working-directory: js
+      working-directory: pub/js
 
     - name: Upload Test Results
       if: always()
       uses: actions/upload-artifact@v7
       with:
         name: Test Results (Mocha)
-        path: js/mocha-results.xml
+        path: pub/js/mocha-results.xml
 
   event_file:
     name: "Event File"
