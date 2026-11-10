@@ -136,6 +136,19 @@ languageselection = false
 ; Can be set to one these values: "none" / "zlib" (default).
 ; compression = "zlib"
 
+; (optional) settings for the selected template, each template decides which
+; ones it reads and ignores the rest. The "modern" template supports:
+; [template_options]
+; logo image, as a path on this server, defaults to "img/icon.svg"
+; logo = "img/custom/logo.svg"
+; alternative logo for dark mode, defaults to using the one above
+; logo_dark = "img/custom/logo-dark.svg"
+; accent colour: "amber" (default) / "blue" / "green" / "rose"
+; accent = "amber"
+; additional stylesheet to customize the template, as a path on this server,
+; loaded after the ones of the template, e.g. to override its CSS variables
+; stylesheet = "css/custom/brand.css"
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]

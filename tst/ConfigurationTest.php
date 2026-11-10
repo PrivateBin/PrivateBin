@@ -132,6 +132,21 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');
     }
 
+    public function testTemplateOptions()
+    {
+        $conf = new Configuration;
+        $this->assertSame([], $conf->getSection('template_options'), 'template options are empty by default');
+
+        $options = $this->_options;
+        $options['template_options'] = [
+            'logo'   => 'img/custom/logo.svg',
+            'accent' => 'blue',
+        ];
+        Helper::createIniFile(CONF, $options);
+        $conf = new Configuration;
+        $this->assertSame($options['template_options'], $conf->getSection('template_options'), 'template options accept any key');
+    }
+
     public function testConfigPath()
     {
         // setup
