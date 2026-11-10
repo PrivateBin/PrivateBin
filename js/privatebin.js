@@ -92,15 +92,18 @@ window.PrivateBin = (function () {
         ALLOWED_TAGS: ['a', 'li', 'ol', 'span'],
         ALLOWED_ATTR: ['class', 'href'],
         ALLOW_ARIA_ATTR: false,
-        ALLOW_DATA_ATTR: false
+        ALLOW_DATA_ATTR: false,
+        RETURN_DOM_FRAGMENT: true
     };
 
     /**
-     * classes set by the syntax highlighter
+     * classes set by the syntax highlighter: its PR_* token types, plus the
+     * ones of the list it generates for line numbers
      *
+     * @see    {@link https://github.com/googlearchive/code-prettify/blob/master/src/prettify.js}
      * @private
      */
-    const syntaxHighlightClasses = /^(?:atn|atv|clo|com|dec|fun|kwd|linenums|lit|L[0-9]|nocode|opn|pln|pun|src|str|tag|typ|var)$/;
+    const syntaxHighlightClasses = /^(?:atn|atv|com|dec|kwd|linenums|lit|L[0-9]|nocode|pln|pun|src|str|tag|typ)$/;
 
     /**
      * DOMpurify settings for SVG content
@@ -487,25 +490,26 @@ window.PrivateBin = (function () {
          * @name   Helper.urls2links
          * @function
          * @param  {HTMLElement} element
-         * @param  {Boolean} strict - optional, if false the element is expected to contain syntax highlighter output
+         * @param  {Boolean} strict - optional, set to false to keep the elements and classes of the syntax highlighter
          */
         me.urls2links = function (element, strict = true) {
-            const raw = element.innerHTML;
-            element.innerHTML = DOMPurify.sanitize(
-                raw.replace(
-                    /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/;#@~%+*-]+))/ig,
-                    '<a href="$1">$1</a>'
-                ),
-                strict ? purifyHtmlConfigStrictSubset : purifySyntaxHighlightConfig
+            const html = element.innerHTML.replace(
+                /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/;#@~%+*-]+))/ig,
+                '<a href="$1">$1</a>'
             );
-            if (!strict) {
-                element.querySelectorAll('[class]').forEach(function (node) {
+            if (strict) {
+                element.innerHTML = DOMPurify.sanitize(html, purifyHtmlConfigStrictSubset);
+            } else {
+                // filter the classes before anything gets added to the page
+                const fragment = DOMPurify.sanitize(html, purifySyntaxHighlightConfig);
+                fragment.querySelectorAll('[class]').forEach(function (node) {
                     Array.from(node.classList).forEach(function (name) {
                         if (!syntaxHighlightClasses.test(name)) {
                             node.classList.remove(name);
                         }
                     });
                 });
+                element.replaceChildren(fragment);
             }
             element.querySelectorAll('a').forEach(function (link) {
                 const href = link.getAttribute('href');

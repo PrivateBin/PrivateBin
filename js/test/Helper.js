@@ -224,6 +224,29 @@ describe('Helper', function () {
                 );
             });
 
+            it('does not add classes to the page that have to be removed', function () {
+                const clean = globalThis.cleanup();
+                document.body.innerHTML = '<div id="foo"></div>';
+                const e = document.getElementById('foo');
+                e.innerHTML = '<span class="kwd alert position-fixed">foo</span>';
+                const observer = new window.MutationObserver(function () {});
+                observer.observe(e, {attributes: true, attributeFilter: ['class'], subtree: true});
+                PrivateBin.Helper.urls2links(e, false);
+                const changes = observer.takeRecords();
+                observer.disconnect();
+                const result = e.innerHTML;
+                clean();
+                assert.strictEqual(changes.length, 0);
+                assert.strictEqual(result, '<span class="kwd">foo</span>');
+            });
+
+            it('removes classes of the prettify themes it does not set', function () {
+                assert.strictEqual(
+                    urls2linksNonStrict('<span class="kwd clo fun opn var">foo</span>'),
+                    '<span class="kwd">foo</span>'
+                );
+            });
+
             it('removes other attributes', function () {
                 assert.strictEqual(
                     urls2linksNonStrict(
