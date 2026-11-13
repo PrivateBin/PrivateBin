@@ -192,7 +192,7 @@ class I18n
     }
 
     /**
-     * get languages bsed on the HTTP header
+     * get languages based on the HTTP header
      *
      * @access private
      * @static
@@ -205,12 +205,25 @@ class I18n
             return self::$_languageFallback;
         }
 
-        // as per https://stackoverflow.com/a/9051957/5008962 we can use the I10n module
-        // if loaded, but it only returns the primary preference (aka one string)
-        if (function_exists('locale_accept_from_http')) {
-            $detectedBestLanguage = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-            if (in_array($detectedBestLanguage, $availableLanguages)) {
-                return $detectedBestLanguage;
+        // ICU < 67 returns equivalent matches in alphabetical order instead of
+        // the order passed, causing test inconsistencies (unicode-org/icu#1022).
+        // Also, ICU doesn't properly handle some of our languages (co, jbo) or
+        // regional zh variants (zh_TW, zh_HK) even in recent versions.
+        if (
+            function_exists('locale_accept_from_http') &&
+            defined('INTL_ICU_VERSION') &&
+            version_compare(INTL_ICU_VERSION, '67', '>=') &&
+            !preg_match('/(co|jbo|zh-)/', $_SERVER['HTTP_ACCEPT_LANGUAGE'])
+        ) {
+            $detectedBestLocale = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            if (
+                $detectedBestLocale !== false &&
+                function_exists('locale_get_primary_language')
+            ) {
+                $detectedBestLanguage = locale_get_primary_language($detectedBestLocale);
+                if (in_array($detectedBestLanguage, $availableLanguages)) {
+                    return $detectedBestLanguage;
+                }
             }
         }
 
