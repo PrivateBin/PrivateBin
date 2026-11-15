@@ -1,0 +1,52 @@
+name: SRI hashes
+
+# Regenerates the subresource integrity (SRI) hashes in lib/Configuration.php
+# after anything got merged or pushed into master and commits them, if they
+# changed. The push uses a deploy key (secret SRI_DEPLOY_KEY) that may bypass
+# the branch ruleset of master.
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'js/*.js'
+      - 'lib/Configuration.php'
+      - 'bin/sri'
+      - '.github/workflows/sri.yml'
+  workflow_dispatch:
+
+permissions: {}
+
+# run one update at a time; a queued run checks out the latest master anyway
+concurrency:
+  group: sri-hashes
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Update SRI hashes
+    if: github.repository == 'PrivateBin/PrivateBin'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: master
+          ssh-key: ${{ secrets.SRI_DEPLOY_KEY }}
+          # the deploy key is needed for the push below, no third party actions get run after this
+          persist-credentials: true
+
+      - name: Update SRI hashes
+        run: php bin/sri
+
+      - name: Commit and push changed hashes
+        run: |
+          if git diff --quiet -- lib/Configuration.php; then
+            echo "SRI hashes are up to date, nothing to commit."
+            exit 0
+          fi
+          git config user.name 'PrivateBin SRI Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --message 'chore: update SRI hashes' -- lib/Configuration.php
+          git push origin HEAD:master

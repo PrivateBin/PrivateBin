@@ -1,0 +1,131 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+/**
+ * PrivateBin
+ *
+ * a zero-knowledge paste bin
+ *
+ * @link      https://github.com/PrivateBin/PrivateBin
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ */
+
+/**
+ * Regenerates the subresource integrity (SRI) hashes of all JavaScript files
+ * in the 'sri' array of lib/Configuration.php. Entries for new files get
+ * added, entries for removed files get dropped and the array is kept sorted.
+ * On master this is run by the GitHub workflow .github/workflows/sri.yml.
+ */
+
+define('PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
+
+// JS files that browsers never load, so they need no SRI hash
+const IGNORED_FILES = ['common.js', 'eslint.config.js'];
+
+$opts = getopt('ch', ['check', 'help']);
+if ($opts === false) {
+    fail('Erroneous command line options. Please use --help');
+}
+if (array_key_exists('h', $opts) || array_key_exists('help', $opts)) {
+    echo <<<'EOT'
+Usage:
+  sri [--check]
+
+Regenerates the SRI hashes of all JavaScript files in js/ and writes them into
+the 'sri' array of lib/Configuration.php.
+
+Options:
+  -c, --check   don't write anything, exit with status 1 if any hash is
+                outdated, missing or superfluous
+  -h, --help    displays this help message
+
+EOT;
+    exit(0);
+}
+$check = array_key_exists('c', $opts) || array_key_exists('check', $opts);
+
+// calculate the hashes of all JS files
+$hashes = [];
+foreach (glob(PATH . 'js' . DIRECTORY_SEPARATOR . '*.js') as $file) {
+    $name = basename($file);
+    if (in_array($name, IGNORED_FILES, true)) {
+        continue;
+    }
+    $hashes['js/' . $name] = 'sha512-' . base64_encode(
+        hash('sha512', file_get_contents($file), true)
+    );
+}
+if (count($hashes) === 0) {
+    fail('No JS files found in ' . PATH . 'js');
+}
+ksort($hashes, SORT_STRING);
+
+// find the 'sri' array in the configuration defaults
+$file    = PATH . 'lib' . DIRECTORY_SEPARATOR . 'Configuration.php';
+$content = file_get_contents($file);
+if ($content === false) {
+    fail('Could not read ' . $file);
+}
+if (preg_match(
+    '#^( *)\'sri\' => \[\n(.*?)^\1\],\n#ms',
+    $content, $matches, PREG_OFFSET_CAPTURE
+) !== 1) {
+    fail('Could not find the \'sri\' array in ' . $file);
+}
+$indent  = $matches[1][0] . '    ';
+$block   = $matches[2][0];
+$start   = $matches[2][1];
+$current = [];
+preg_match_all('#\'(js/[^\']+)\' *=> \'([^\']*)\',#', $block, $entries, PREG_SET_ORDER);
+foreach ($entries as $entry) {
+    $current[$entry[1]] = $entry[2];
+}
+
+// generate the new array content, aligning the arrows
+$width = max(array_map('strlen', array_keys($hashes))) + 2;
+$lines = '';
+foreach ($hashes as $key => $hash) {
+    $lines .= $indent . str_pad('\'' . $key . '\'', $width) . ' => \'' . $hash . '\',' . "\n";
+}
+
+// report the differences
+$changes = 0;
+foreach ($hashes as $key => $hash) {
+    if (!array_key_exists($key, $current)) {
+        echo 'added: ', $key, PHP_EOL;
+        ++$changes;
+    } elseif ($current[$key] !== $hash) {
+        echo 'updated: ', $key, PHP_EOL;
+        ++$changes;
+    }
+}
+foreach (array_diff_key($current, $hashes) as $key => $hash) {
+    echo 'removed: ', $key, PHP_EOL;
+    ++$changes;
+}
+if ($lines === $block) {
+    echo 'SRI hashes are up to date.', PHP_EOL;
+    exit(0);
+}
+if ($check) {
+    fail('SRI hashes in ' . $file . ' are outdated, run bin/sri to update them.', 1);
+}
+if ($changes === 0) {
+    echo 'reformatted the \'sri\' array', PHP_EOL;
+}
+$content = substr($content, 0, $start) . $lines . substr($content, $start + strlen($block));
+if (file_put_contents($file, $content) === false) {
+    fail('Could not write ' . $file);
+}
+
+/**
+ * print an error to STDERR and exit
+ *
+ * @param string $message
+ * @param int $code
+ */
+function fail(string $message, int $code = 2): void
+{
+    fwrite(STDERR, $message . PHP_EOL);
+    exit($code);
+}

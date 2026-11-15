@@ -55,6 +55,13 @@
   - Always run after code changes to backend logic.
   - If `vendor/bin/phpunit` does not exist, ensure `composer install` completed without errors.
 
+- **SRI hashes:**
+  ```sh
+  php bin/sri
+  ```
+  - Regenerates the subresource integrity hashes of all JS files in the `sri` array of `lib/Configuration.php`. Browsers refuse to run a changed JS file until its hash matches, so run this before testing JS changes in a browser.
+  - `php bin/sri --check` only reports outdated hashes and exits with status 1 if there are any.
+
 - **JS Tests:**
   ```sh
   cd ./js
@@ -110,12 +117,14 @@
 
 - **GitHub CI:** On PRs, runs `composer install`, `phpunit`, and JS tests.
 - **Validation Steps:** PRs failing tests will be blocked. Always ensure a clean test run before submitting.
+- **SRI hashes:** On every push to `master`, the `sri.yml` workflow runs `bin/sri` and commits updated hashes, so PRs don't need to update them.
 
 ## Guidance for Copilot Agent
 
 - **Trust these instructions.** Only perform a search if information is missing or appears incorrect.
 - **Do NOT use Node.js APIs in production JS code.** Only test code may do so.
 - **Never modernize `legacy.js`.** It must work in very old browsers.
+- **Don't commit SRI hash changes in `lib/Configuration.php`.** They get updated automatically after merging, and committing them only causes merge conflicts between PRs.
 - **Always run `composer install` before PHP tests, and `npm install` before JS tests.**
 - **Validate all changes by running both PHP and JS tests.**
 - **Review `.github/workflows/` for the latest validation pipeline steps.**
