@@ -1,5 +1,6 @@
 bin/configuration-test-generator export-ignore
 bin/icon-test export-ignore
+bin/sri export-ignore
 doc/ export-ignore
 tst/ export-ignore
 i18n/en.json export-ignore

@@ -135,4 +135,73 @@ describe('PasswordPeek', function () {
         });
         assert.strictEqual(document.querySelector('use').getAttribute('href'), iconHref);
     });
+
+    describe('generatePassword', function () {
+        it('creates 20 characters by default', function () {
+            fc.assert(fc.property(fc.integer(), function () {
+                return PrivateBin.PasswordPeek.generatePassword().length === 20;
+            }), {numRuns: 200});
+        });
+
+        it('creates the requested number of characters', function () {
+            fc.assert(fc.property(fc.integer({min: 4, max: 128}), function (length) {
+                return PrivateBin.PasswordPeek.generatePassword(length).length === length;
+            }));
+        });
+
+        it('never uses look-alike characters', function () {
+            fc.assert(fc.property(fc.integer(), function () {
+                return !/[0OoIl1]/.test(PrivateBin.PasswordPeek.generatePassword());
+            }), {numRuns: 500});
+        });
+
+        it('uses upper and lower case letters, digits and punctuation', function () {
+            fc.assert(fc.property(fc.integer(), function () {
+                const password = PrivateBin.PasswordPeek.generatePassword();
+                return /[A-Z]/.test(password) && /[a-z]/.test(password) &&
+                    /[2-9]/.test(password) && /[!@#$%&*+\-=?^_~]/.test(password) &&
+                    /^[A-Za-z2-9!@#$%&*+\-=?^_~]+$/.test(password);
+            }), {numRuns: 500});
+        });
+
+        it('creates a different password every time', function () {
+            const seen = new Set();
+            for (let i = 0; i < 100; ++i) {
+                seen.add(PrivateBin.PasswordPeek.generatePassword());
+            }
+            assert.strictEqual(seen.size, 100);
+        });
+    });
+
+    describe('generate button', function () {
+        beforeEach(function () {
+            globalThis.cleanup();
+            document.body.innerHTML = (
+                passwordGroup('passwordinput').replace(
+                    '</button></div>',
+                    '</button><button class="generate-password" type="button">' +
+                    '<svg><use href="img/bootstrap-icons.svg#repeat" /></svg></button></div>'
+                )
+            );
+            PrivateBin.PasswordPeek.init();
+        });
+
+        it('fills in a password and shows it', function () {
+            const input = document.getElementById('passwordinput');
+            let inputEvents = 0;
+            input.addEventListener('input', () => ++inputEvents);
+            document.querySelector('.generate-password').click();
+            assert.strictEqual(input.value.length, 20);
+            assert.strictEqual(inputEvents, 1);
+            assertState('passwordinput', true);
+        });
+
+        it('keeps a shown password shown when generating again', function () {
+            document.querySelector('.generate-password').click();
+            const first = document.getElementById('passwordinput').value;
+            document.querySelector('.generate-password').click();
+            assert.notStrictEqual(document.getElementById('passwordinput').value, first);
+            assertState('passwordinput', true);
+        });
+    });
 });
