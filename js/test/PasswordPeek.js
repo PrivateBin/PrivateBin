@@ -110,10 +110,16 @@ describe('PasswordPeek', function () {
 
                 const revealed = ids.map(() => false);
                 for (const index of clicks) {
+                    // clicks are generated within the ids array bounds.
+                    // eslint-disable-next-line security/detect-object-injection
                     clickButton(ids[index]);
+                    // clicks are generated within the ids array bounds.
+                    // eslint-disable-next-line security/detect-object-injection
                     revealed[index] = !revealed[index];
                 }
                 ids.forEach(function (id, index) {
+                    // index is supplied by the ids array iteration.
+                    // eslint-disable-next-line security/detect-object-injection
                     assertState(id, revealed[index]);
                 });
             }

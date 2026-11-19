@@ -3,6 +3,7 @@
 ## 2.1.2 (not yet released)
 * ADDED: Optional "splitview" template with the editor on top, a file drop area below and the options in a full-height side pane
 * ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates; the `bootstrap5` and `splitview` templates have one
+* FIXED: Prevent prototype-key assignments from modifying model and upload metadata object prototypes
 
 ## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)

@@ -368,6 +368,8 @@ describe('Alert', function () {
                         handlerCalled = true;
                         return Math.random() > 0.5 ? true : element;
                     });
+                    // trigger is selected from the fixed functions object above.
+                    // eslint-disable-next-line security/detect-object-injection
                     functions[trigger](message);
                     PrivateBin.Alert.setCustomHandler(null);
                     return handlerCalled;

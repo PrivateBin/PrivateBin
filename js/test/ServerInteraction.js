@@ -3,6 +3,16 @@ const common = require('../common');
 const fc = require('fast-check');
 
 describe('ServerInteraction', function () {
+    it('stores unencrypted fields without invoking inherited setters', function () {
+        PrivateBin.ServerInteraction.prepare();
+        PrivateBin.ServerInteraction.setUnencryptedData('__proto__', {polluted: true});
+
+        const data = PrivateBin.ServerInteraction.getData();
+        assert.strictEqual(Object.getPrototypeOf(data), null);
+        assert.ok(Object.prototype.hasOwnProperty.call(data, '__proto__'));
+        assert.deepStrictEqual(Object.getOwnPropertyDescriptor(data, '__proto__').value, {polluted: true});
+    });
+
     describe('prepare', function () {
         afterEach(async function () {
             // pause to let async functions conclude
