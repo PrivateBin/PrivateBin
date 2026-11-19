@@ -121,7 +121,15 @@ window.PrivateBin = (function () {
         // store all keys in the default locations for drop-in replacement
         for (const key in data) {
             if (Object.prototype.hasOwnProperty.call(data, key)) {
-                this[key] = data[key];
+                // defineProperty creates a data property instead of invoking inherited setters.
+                Object.defineProperty(this, key, {
+                    // key is an own property of data and defineProperty safely handles __proto__.
+                    // eslint-disable-next-line security/detect-object-injection
+                    value: data[key],
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
             }
         }
 
@@ -499,6 +507,8 @@ window.PrivateBin = (function () {
             let format = args[0],
                 i = 1;
             return format.replace(/%(s|d)/g, function (m) {
+                // i is bounded by the local arguments array.
+                // eslint-disable-next-line security/detect-object-injection
                 let val = args[i];
                 if (m === '%d') {
                     val = parseFloat(val);
@@ -524,6 +534,8 @@ window.PrivateBin = (function () {
             const name = cname + '=',
                 ca = document.cookie.split(';');
             for (let i = 0; i < ca.length; ++i) {
+                // i is bounded by the cookie array loop.
+                // eslint-disable-next-line security/detect-object-injection
                 let c = ca[i].trim();
                 if (c.startsWith(name))
                 {
@@ -587,6 +599,8 @@ window.PrivateBin = (function () {
         me.htmlEntities = function (str) {
             return String(str).replace(
                 /[&<>"'`=\/]/g, function (s) {
+                    // s is one of the characters matched by the fixed regular expression.
+                    // eslint-disable-next-line security/detect-object-injection
                     return entityMap[s];
                 }
             );
@@ -639,6 +653,8 @@ window.PrivateBin = (function () {
             const index = Math.floor(Math.log(bytes) / Math.log(kilobyte));
 
             if (bytes > 0) {
+                // index selects a unit from the fixed sizes array.
+                // eslint-disable-next-line security/detect-object-injection
                 result = parseFloat((bytes / Math.pow(kilobyte, index)).toFixed(decimalPoint)) + ' ' + sizes[index];
             } else {
                 result = `0 ${I18n._('B')}`;
@@ -802,21 +818,31 @@ window.PrivateBin = (function () {
                 }
 
                 // save English translation (should be the same on both sides)
+                // translations has a null prototype, so messageId cannot access inherited keys.
+                // eslint-disable-next-line security/detect-object-injection
                 translations[messageId] = args[0];
             }
 
             // lookup plural translation
+            // translations has a null prototype and messageId is a translation key.
+            // eslint-disable-next-line security/detect-object-injection
             if (usesPlurals && Array.isArray(translations[messageId])) {
                 let n = parseInt(args[1] || 1, 10),
                     key = me.getPluralForm(n),
+                    // translations has a null prototype and messageId is a translation key.
+                    // eslint-disable-next-line security/detect-object-injection
                     maxKey = translations[messageId].length - 1;
                 if (key > maxKey) {
                     key = maxKey;
                 }
+                // Both indexes address local arrays: translations[messageId] and args.
+                // eslint-disable-next-line security/detect-object-injection
                 args[0] = translations[messageId][key];
                 args[1] = n;
             } else {
                 // lookup singular translation
+                // translations has a null prototype and messageId is a translation key.
+                // eslint-disable-next-line security/detect-object-injection
                 args[0] = translations[messageId];
             }
 
@@ -828,6 +854,8 @@ window.PrivateBin = (function () {
                 for (let i = 0; i < args.length; ++i) {
                     // parameters (i > 0) may never contain HTML as they may come from untrusted parties
                     if ((containsHtml ? i > 1 : i > 0) || !containsHtml) {
+                        // i is bounded by the local arguments array.
+                        // eslint-disable-next-line security/detect-object-injection
                         args[i] = Helper.htmlEntities(args[i]);
                     }
                 }
@@ -1007,7 +1035,7 @@ window.PrivateBin = (function () {
          */
         me.reset = function (mockLanguage, mockTranslations) {
             language = mockLanguage || null;
-            translations = mockTranslations || Object.create(null);
+            translations = Object.assign(Object.create(null), mockTranslations || {});
         };
 
         /**
@@ -1149,6 +1177,8 @@ window.PrivateBin = (function () {
             const byteArray = new Uint8Array(length);
             window.crypto.getRandomValues(byteArray);
             for (let i = 0; i < length; ++i) {
+                // i is bounded by the byte array loop.
+                // eslint-disable-next-line security/detect-object-injection
                 bytes += String.fromCharCode(byteArray[i]);
             }
             return bytes;
@@ -1253,6 +1283,8 @@ window.PrivateBin = (function () {
                     compression         // compression
                 ], encodedSpec = [];
             for (let i = 0; i < spec.length; ++i) {
+                // i is bounded by the local specification array.
+                // eslint-disable-next-line security/detect-object-injection
                 encodedSpec[i] = i < 2 ? btoa(spec[i]) : spec[i];
             }
             if (adata[0] === null) {
@@ -1715,11 +1747,15 @@ window.PrivateBin = (function () {
 
             // function guard
             if (!element) {
+                // id is the fixed alert-type index passed by this module's handlers.
+                // eslint-disable-next-line security/detect-object-injection
                 throw new TypeError(`invalid/no element (${element}) given for alert type ${alertType[id]} with ID ${id}`);
             }
 
             // pass to custom handler if defined
             if (typeof customHandler === 'function') {
+                // id is the fixed alert-type index passed by this module's handlers.
+                // eslint-disable-next-line security/detect-object-injection
                 let handlerResult = customHandler(alertType[id], element, args, icon);
                 if (handlerResult === true) {
                     // if it returns true, skip own handler
@@ -1744,15 +1780,23 @@ window.PrivateBin = (function () {
                 element.appendChild(translationTarget);
 
                 if (icon !== null && // icon was passed
+                    // id is the fixed alert-type index passed by this module's handlers.
+                    // eslint-disable-next-line security/detect-object-injection
                     icon !== currentIcon[id] // and it differs from current icon
                 ) {
                     // remove (previous) icon
+                    // id is the fixed alert-type index passed by this module's handlers.
+                    // eslint-disable-next-line security/detect-object-injection
                     glyphIcon.classList.remove(currentIcon[id]);
 
                     // any other thing as a string (e.g. 'null') (only) removes the icon
                     if (typeof icon === 'string') {
                         // set new icon
+                        // id is the fixed alert-type index passed by this module's handlers.
+                        // eslint-disable-next-line security/detect-object-injection
                         currentIcon[id] = 'glyphicon-' + icon;
+                        // id is the fixed alert-type index passed by this module's handlers.
+                        // eslint-disable-next-line security/detect-object-injection
                         glyphIcon.classList.add(currentIcon[id]);
                     }
                 }
@@ -3247,6 +3291,8 @@ window.PrivateBin = (function () {
                     fileReader.onload = function (event) {
                         const dataURL = event.target.result;
                         if (dataURL) {
+                            // index is supplied by the files array iteration.
+                            // eslint-disable-next-line security/detect-object-injection
                             attachmentsData[index] = dataURL;
                         }
 
@@ -4010,6 +4056,8 @@ window.PrivateBin = (function () {
             const newDoc = document.open('text/html', 'replace');
             newDoc.write('<!DOCTYPE html><html><head>');
             for (let i = 0; i < headElements.length; ++i) {
+                // i is bounded by the static query result list.
+                // eslint-disable-next-line security/detect-object-injection
                 newDoc.write(headElements[i].outerHTML);
             }
             newDoc.write(
@@ -5183,7 +5231,7 @@ window.PrivateBin = (function () {
             successFunc = null;
             failureFunc = null;
             url = Helper.baseUri();
-            data = {};
+            data = Object.create(null);
         };
 
         /**
@@ -5220,6 +5268,8 @@ window.PrivateBin = (function () {
          * @param {mixed} element
          */
         me.setUnencryptedData = function (index, element) {
+            // data has a null prototype, so caller-supplied keys cannot trigger inherited setters.
+            // eslint-disable-next-line security/detect-object-injection
             data[index] = element;
         };
 
@@ -5479,6 +5529,8 @@ window.PrivateBin = (function () {
                         Alert.showStatus(
                             [
                                 'Retrieving cloned file \'%s\' from memory...',
+                                // i is bounded by the attachments array iteration.
+                                // eslint-disable-next-line security/detect-object-injection
                                 cipherMessage['attachment_name'][i]
                             ],
                             'copy'
@@ -5609,6 +5661,8 @@ window.PrivateBin = (function () {
             if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
                 if (Array.isArray(pasteMessage.attachment) && Array.isArray(pasteMessage.attachment_name)) {
                     pasteMessage.attachment.forEach((attachment, key) => {
+                        // key is supplied by the attachment array iteration.
+                        // eslint-disable-next-line security/detect-object-injection
                         const attachment_name = pasteMessage.attachment_name[key];
                         AttachmentViewer.setAttachment(attachment, attachment_name);
                     });
@@ -5642,7 +5696,11 @@ window.PrivateBin = (function () {
             const commentDecryptionPromises = [];
             // iterate over comments
             for (let i = 0; i < paste.comments.length; ++i) {
+                // i is bounded by the comments array loop.
+                // eslint-disable-next-line security/detect-object-injection
                 const comment = new Comment(paste.comments[i]);
+                // i is bounded by the comments array loop.
+                // eslint-disable-next-line security/detect-object-injection
                 paste.comments[i] = comment;
                 // skip comments that were moved from another document or parent
                 if (!comment.isBoundTo(Model.getPasteId())) {
@@ -5661,12 +5719,20 @@ window.PrivateBin = (function () {
             }
             return Promise.all(commentDecryptionPromises).then(function (plaintexts) {
                 for (let i = 0; i < paste.comments.length; ++i) {
+                    // i is bounded by both result arrays.
+                    // eslint-disable-next-line security/detect-object-injection
                     if (plaintexts[i][0].length === 0) {
                         continue;
                     }
                     DiscussionViewer.addComment(
+                        // i is bounded by the comments array loop.
+                        // eslint-disable-next-line security/detect-object-injection
                         paste.comments[i],
+                        // i is bounded by the plaintexts array loop.
+                        // eslint-disable-next-line security/detect-object-injection
                         plaintexts[i][0],
+                        // i is bounded by the plaintexts array loop.
+                        // eslint-disable-next-line security/detect-object-injection
                         plaintexts[i][1]
                     );
                 }
@@ -5967,7 +6033,11 @@ window.PrivateBin = (function () {
                 while (password.length < length) {
                     const values = crypto.getRandomValues(new Uint8Array(length));
                     for (let i = 0; i < values.length && password.length < length; ++i) {
+                        // i is bounded by the random byte array loop.
+                        // eslint-disable-next-line security/detect-object-injection
                         if (values[i] < limit) {
+                            // the modulo result is bounded by the character alphabet length.
+                            // eslint-disable-next-line security/detect-object-injection
                             password += characters[values[i] % characters.length];
                         }
                     }

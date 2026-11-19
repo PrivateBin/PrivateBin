@@ -92,8 +92,12 @@ describe('DiscussionViewer', function () {
                         if (commentKey >= comments.length) {
                             commentKey = commentKey % comments.length;
                         }
+                        // commentKey is reduced modulo comments.length above.
+                        // eslint-disable-next-line security/detect-object-injection
                         PrivateBin.DiscussionViewer.highlightComment(comments[commentKey].id, fadeOut);
                         results.push(
+                            // commentKey is reduced modulo comments.length above.
+                            // eslint-disable-next-line security/detect-object-injection
                             document.getElementById('comment_' + comments[commentKey].id).classList.contains('highlight')
                         );
                     }

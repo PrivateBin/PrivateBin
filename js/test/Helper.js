@@ -3,6 +3,20 @@ const common = require('../common');
 const fc = require('fast-check');
 
 describe('Helper', function () {
+    describe('PasteFactory', function () {
+        it('copies a __proto__ field without changing the paste prototype', function () {
+            const paste = PrivateBin.Helper.PasteFactory(
+                JSON.parse('{"__proto__":{"polluted":true},"ct":"cipher"}')
+            );
+            const regularPaste = PrivateBin.Helper.PasteFactory({ct: 'cipher'});
+
+            assert.strictEqual(Object.getPrototypeOf(paste), Object.getPrototypeOf(regularPaste));
+            assert.strictEqual(Object.prototype.polluted, undefined);
+            assert.ok(Object.prototype.hasOwnProperty.call(paste, '__proto__'));
+            assert.strictEqual(paste.ct, 'cipher');
+        });
+    });
+
     describe('secondsToHuman', function () {
         it('returns an array with a number and a word', () => {
             fc.assert(fc.property(fc.integer(), function (number) {
@@ -79,6 +93,8 @@ describe('Helper', function () {
                         result = true,
                         clean = globalThis.cleanup(html);
                     ids.forEach(function(item, i) {
+                        // i is bounded by the generated ids array; contents[0] is the fallback.
+                        // eslint-disable-next-line security/detect-object-injection
                         html += '<div id="' + item.join('') + '">' + PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                     });
                     // TODO: As per https://github.com/tmpvar/jsdom/issues/321 there is no getSelection in jsdom, yet.
