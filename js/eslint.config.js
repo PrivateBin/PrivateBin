@@ -6,7 +6,6 @@ module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]), {
         globals: {
             ...globals.amd,
             ...globals.browser,
-            ...globals.jquery,
             ...globals.node,
             ...globals.mocha,
             DOMPurify: "readonly",
