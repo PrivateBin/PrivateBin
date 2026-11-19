@@ -5249,7 +5249,7 @@ window.PrivateBin = (function () {
             ) {
                 symmetricKey = CryptTool.getSymmetricKey();
             }
-            if (!Object.prototype.hasOwnProperty.call(data, 'adata')) {
+            if (!data.hasOwnProperty('adata')) {
                 data['adata'] = [];
             }
             let cipherResult = await CryptTool.cipher(symmetricKey, password, JSON.stringify(cipherMessage), data['adata']);
