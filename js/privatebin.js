@@ -77,6 +77,35 @@ window.PrivateBin = (function () {
     };
 
     /**
+     * DOMpurify settings for the output of the syntax highlighter, which needs
+     * its lists, spans and classes. Everything else remains forbidden, to not
+     * allow styling with the classes of the template or triggering its scripts.
+     *
+     * NOTE: The key {@link purifyHtmlConfig.USE_PROFILES} **must not** be included,
+     * as otherwise `USE_PROFILES` takes precedence over {@link purifySyntaxHighlightConfig.ALLOWED_TAGS}.
+     *
+     * @see    {@link syntaxHighlightClasses} for the classes that are kept
+     * @private
+     */
+    const purifySyntaxHighlightConfig = {
+        ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
+        ALLOWED_TAGS: ['a', 'li', 'ol', 'span'],
+        ALLOWED_ATTR: ['class', 'href'],
+        ALLOW_ARIA_ATTR: false,
+        ALLOW_DATA_ATTR: false,
+        RETURN_DOM_FRAGMENT: true
+    };
+
+    /**
+     * classes set by the syntax highlighter: its PR_* token types, plus the
+     * ones of the list it generates for line numbers
+     *
+     * @see    {@link https://github.com/googlearchive/code-prettify/blob/master/src/prettify.js}
+     * @private
+     */
+    const syntaxHighlightClasses = /^(?:atn|atv|com|dec|kwd|linenums|lit|L[0-9]|nocode|pln|pun|src|str|tag|typ)$/;
+
+    /**
      * DOMpurify settings for SVG content
      *
      * @private
@@ -461,17 +490,27 @@ window.PrivateBin = (function () {
          * @name   Helper.urls2links
          * @function
          * @param  {HTMLElement} element
-         * @param  {Boolean} strict - optional
+         * @param  {Boolean} strict - optional, set to false to keep the elements and classes of the syntax highlighter
          */
         me.urls2links = function (element, strict = true) {
-            const raw = element.innerHTML;
-            element.innerHTML = DOMPurify.sanitize(
-                raw.replace(
-                    /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/;#@~%+*-]+))/ig,
-                    '<a href="$1">$1</a>'
-                ),
-                strict ? purifyHtmlConfigStrictSubset : purifyHtmlConfig
+            const html = element.innerHTML.replace(
+                /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/;#@~%+*-]+))/ig,
+                '<a href="$1">$1</a>'
             );
+            if (strict) {
+                element.innerHTML = DOMPurify.sanitize(html, purifyHtmlConfigStrictSubset);
+            } else {
+                // filter the classes before anything gets added to the page
+                const fragment = DOMPurify.sanitize(html, purifySyntaxHighlightConfig);
+                fragment.querySelectorAll('[class]').forEach(function (node) {
+                    Array.from(node.classList).forEach(function (name) {
+                        if (!syntaxHighlightClasses.test(name)) {
+                            node.classList.remove(name);
+                        }
+                    });
+                });
+                element.replaceChildren(fragment);
+            }
             element.querySelectorAll('a').forEach(function (link) {
                 const href = link.getAttribute('href');
                 if (href && href.match(/^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i)) {

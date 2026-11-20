@@ -36,6 +36,38 @@ describe('PasteViewer', function () {
             assert.ok(!document.getElementById('plaintext').classList.contains('hidden'));
         });
 
+        it('syntax highlighting keeps the classes used for coloring', function () {
+            PrivateBin.PasteViewer.init();
+            PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            PrivateBin.PasteViewer.setText('function foo() {\n  // comment\n  return "bar";\n}\n');
+            PrivateBin.PasteViewer.run();
+            const prettyPrint = document.getElementById('prettyprint');
+            assert.ok(prettyPrint.querySelector('ol.linenums > li.L0'), 'line numbers');
+            assert.strictEqual(prettyPrint.querySelector('span.kwd').textContent, 'function');
+            assert.strictEqual(prettyPrint.querySelector('span.com').textContent, '// comment');
+            assert.strictEqual(prettyPrint.querySelector('span.str').textContent, '"bar"');
+        });
+
+        it('syntax highlighting does not render HTML in the document', function () {
+            const text = '<img src=x onerror=alert(1)><script>alert(2)</script>' +
+                '<span class="alert" style="position:fixed" data-bs-toggle="modal">foo</span>';
+            PrivateBin.PasteViewer.init();
+            PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            PrivateBin.PasteViewer.setText(text);
+            PrivateBin.PasteViewer.run();
+            const prettyPrint = document.getElementById('prettyprint');
+            assert.strictEqual(prettyPrint.querySelector('img, script, [style], [data-bs-toggle], .alert'), null);
+            assert.strictEqual(prettyPrint.textContent, text);
+        });
+
+        it('markdown does not keep classes', function () {
+            PrivateBin.PasteViewer.init();
+            PrivateBin.PasteViewer.setFormat('markdown');
+            PrivateBin.PasteViewer.setText('**foo** <span class="alert">bar</span>\n\n```\nbaz\n```\n');
+            PrivateBin.PasteViewer.run();
+            assert.strictEqual(document.getElementById('plaintext').querySelector('[class]'), null);
+        });
+
         it('initializes with empty text and shows nothing', () => {
             fc.assert(fc.property(
                 common.fcFormats(),
