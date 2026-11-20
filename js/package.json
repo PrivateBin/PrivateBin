@@ -12,7 +12,7 @@
     "eslint": "^10.15.0",
     "fast-check": "^4.10.2",
     "globals": "^17.14.0",
-    "jsdom": "^31.0.0",
+    "jsdom": "^31.0.1",
     "jsdom-global": "^3.0.2",
     "jshint": "^2.13.6",
     "jsverify": "^0.8.3",
