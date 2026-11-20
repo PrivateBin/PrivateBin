@@ -55,6 +55,7 @@ templateselection = false
 ; List of available for selection templates when "templateselection" option is enabled
 availabletemplates[] = "bootstrap5"
 availabletemplates[] = "splitview"
+availabletemplates[] = "modern"
 
 ; set the template your installs defaults to, defaults to "bootstrap5" (tpl/bootstrap5.php)
 ; previews at:
