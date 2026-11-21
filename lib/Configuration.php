@@ -52,6 +52,7 @@ class Configuration
             'availabletemplates'                    => [
                 'bootstrap5',
                 'splitview',
+                'modern',
             ],
             'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
             'notice'                   => '',
@@ -66,7 +67,8 @@ class Configuration
             'httpwarning'              => true,
             'compression'              => 'zlib',
         ],
-        'expire' => [
+        'template_options' => [],
+        'expire'           => [
             'default' => '1week',
         ],
         'expire_options' => [
