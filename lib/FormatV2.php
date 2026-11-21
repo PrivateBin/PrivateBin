@@ -79,12 +79,14 @@ class FormatV2
             )) {
                 return false;
             }
-            // For pastes: adata must have exactly 4 entries,
-            // and meta must contain only the 'expire' key.
+            // For pastes: adata must have exactly 4 entries, and meta must
+            // contain the 'expire' key and optionally the one-time ticket
+            // marker 'ticket', which must be the integer 1, but nothing else.
         } elseif ($adataLength !== 4 ||
             !is_array($message['meta']) ||
-            count($message['meta']) !== 1 ||
-            !array_key_exists('expire', $message['meta'])
+            !array_key_exists('expire', $message['meta']) ||
+            count($message['meta']) !== (array_key_exists('ticket', $message['meta']) ? 2 : 1) ||
+            (array_key_exists('ticket', $message['meta']) && $message['meta']['ticket'] !== 1)
         ) {
             return false;
         }

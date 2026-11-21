@@ -194,6 +194,18 @@ window.PrivateBin = (function () {
         this.isDiscussionEnabled = function () {
             return this.adata[2];
         };
+
+        /**
+         * is this document a one-time ticket, that only allows to create a
+         * single new document, instead of containing anything to display
+         *
+         * @name Paste.isTicket
+         * @function
+         * @return {bool}
+         */
+        this.isTicket = function () {
+            return !!this.meta && this.meta.ticket === 1;
+        };
     }
 
     /**
@@ -1400,6 +1412,7 @@ window.PrivateBin = (function () {
         let id = null,
             pasteData = null,
             symmetricKey = null,
+            ticketId = '',
             templates;
 
         /**
@@ -1509,6 +1522,30 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * returns the ID of the one-time ticket, that the next document gets
+         * created with, or an empty string if there is none
+         *
+         * @name   Model.getTicketId
+         * @function
+         * @return {string}
+         */
+        me.getTicketId = function () {
+            return ticketId;
+        };
+
+        /**
+         * sets the ID of the one-time ticket to create the next document
+         * with, use an empty string to clear it
+         *
+         * @name   Model.setTicketId
+         * @function
+         * @param  {string} newTicketId
+         */
+        me.setTicketId = function (newTicketId) {
+            ticketId = newTicketId;
+        };
+
+        /**
          * returns true, when the URL has a delete token and the current call was used for deleting a document.
          *
          * @name   Model.hasDeleteToken
@@ -1586,6 +1623,7 @@ window.PrivateBin = (function () {
          */
         me.reset = function () {
             pasteData = templates = id = symmetricKey = null;
+            ticketId = '';
         };
 
         /**
@@ -2005,15 +2043,18 @@ window.PrivateBin = (function () {
          * @function
          * @param  {string} url
          * @param  {string} deleteUrl
+         * @param  {bool}   isTicket - optional, if the URL is that of a one-time ticket
          */
-        me.createPasteNotification = function(url, deleteUrl)
+        me.createPasteNotification = function(url, deleteUrl, isTicket)
         {
             const ua = navigator.userAgent;
             const isMac = /Mac/.test(ua);
             const hotkey = isMac ? I18n._('Cmd') : I18n._('Ctrl');
             I18n._(
                 document.getElementById('pastelink'),
-                'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>',
+                isTicket === true ?
+                    'Your one-time ticket is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>' :
+                    'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>',
                 url, url, hotkey
             );
             // save newly created element
@@ -3845,6 +3886,7 @@ window.PrivateBin = (function () {
             qrCodeLink,
             emailLink,
             sendButton,
+            ticketButton,
             retryButton,
             pasteExpiration = null,
             retryButtonCallback,
@@ -4317,6 +4359,35 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * checks that there is neither text nor a file in the new document yet
+         *
+         * @name   TopNav.isInputEmpty
+         * @function
+         * @return {bool}
+         */
+        me.isInputEmpty = function () {
+            const files = AttachmentViewer.getFiles();
+            return Editor.getText().length === 0 &&
+                !me.getFileList() &&
+                !AttachmentViewer.hasAttachment() &&
+                !(Array.isArray(files) && files.length > 0);
+        };
+
+        /**
+         * enables the one-time ticket button only for a new, empty document,
+         * so it can't be mistaken for a way to send the document being written
+         *
+         * @name   TopNav.updateTicketButton
+         * @private
+         * @function
+         */
+        function updateTicketButton() {
+            if (ticketButton) {
+                ticketButton.disabled = !me.isInputEmpty();
+            }
+        }
+
+        /**
          * Shows all navigation elements for viewing an existing document
          *
          * @name   TopNav.showViewButtons
@@ -4391,12 +4462,25 @@ window.PrivateBin = (function () {
             formatter.classList.remove('hidden');
             newButton.classList.remove('hidden');
             if (openDiscussionOption) {
-                openDiscussionOption.classList.remove('hidden');
+                if (Model.getTicketId() === '') {
+                    openDiscussionOption.classList.remove('hidden');
+                } else {
+                    // documents created with a one-time ticket can't have a discussion
+                    openDiscussionOption.classList.add('hidden');
+                    if (openDiscussion) {
+                        openDiscussion.checked = false;
+                    }
+                }
             }
             if (password) {
                 password.classList.remove('hidden');
             }
             sendButton.classList.remove('hidden');
+            // a ticket can't be used to create another ticket
+            if (ticketButton && Model.getTicketId() === '') {
+                ticketButton.classList.remove('hidden');
+                updateTicketButton();
+            }
 
             createButtonsDisplayed = true;
         };
@@ -4425,6 +4509,9 @@ window.PrivateBin = (function () {
             }
             if (attach) {
                 attach.classList.add('hidden');
+            }
+            if (ticketButton) {
+                ticketButton.classList.add('hidden');
             }
 
             createButtonsDisplayed = false;
@@ -4663,6 +4750,7 @@ window.PrivateBin = (function () {
                     }
                 });
             }
+            updateTicketButton();
         };
 
         /**
@@ -4708,6 +4796,20 @@ window.PrivateBin = (function () {
          */
         me.getBurnAfterReading = function () {
             return burnAfterReading ? !!burnAfterReading.checked : false;
+        };
+
+        /**
+         * sets the state of the burn after reading checkbox
+         *
+         * @name   TopNav.setBurnAfterReading
+         * @function
+         * @param  {bool} state
+         */
+        me.setBurnAfterReading = function (state) {
+            if (burnAfterReading) {
+                burnAfterReading.checked = !!state;
+                changeBurnAfterReading();
+            }
         };
 
         /**
@@ -4867,6 +4969,18 @@ window.PrivateBin = (function () {
                 sendButton.addEventListener('click', PasteEncrypter.sendPaste);
                 document.addEventListener('keydown', sendOnShortcut);
             }
+            if (ticketButton) {
+                ticketButton.addEventListener('click', PasteEncrypter.sendTicket);
+                // keep the button state in sync with what gets entered
+                const messageField = document.getElementById('message');
+                if (messageField) {
+                    messageField.addEventListener('input', updateTicketButton);
+                }
+                const fileField = document.getElementById('file');
+                if (fileField) {
+                    fileField.addEventListener('change', updateTicketButton);
+                }
+            }
             if (cloneButton) {
                 cloneButton.addEventListener('click', Controller.clonePaste);
             }
@@ -4956,6 +5070,7 @@ window.PrivateBin = (function () {
             downloadTextButton = document.getElementById('downloadtextbutton');
             retryButton = document.getElementById('retrybutton');
             sendButton = document.getElementById('sendbutton');
+            ticketButton = document.getElementById('ticketbutton');
             qrCodeLink = document.getElementById('qrcodelink');
             emailLink = document.getElementById('emaillink');
             emailConfirmModal = document.getElementById('emailconfirmmodal');
@@ -5281,6 +5396,9 @@ window.PrivateBin = (function () {
             Alert.hideLoading();
             Alert.hideMessages();
 
+            // a one-time ticket is used up by the document it was used for
+            Model.setTicketId('');
+
             // show notification
             const baseUri = Helper.baseUri() + '?',
                 url = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
@@ -5307,6 +5425,43 @@ window.PrivateBin = (function () {
             // parse and show text
             // (preparation already done in me.sendPaste())
             PasteViewer.run();
+        }
+
+        /**
+         * called after successful one-time ticket upload
+         *
+         * @name PasteEncrypter.showCreatedTicket
+         * @private
+         * @function
+         * @param {int} status
+         * @param {object} data
+         */
+        function showCreatedTicket(status, data) {
+            Alert.hideLoading();
+            Alert.hideMessages();
+
+            // show notification, the ticket link is not pushed to the browser's
+            // URL bar, as opening it there would start using the ticket
+            const baseUri = Helper.baseUri() + '?',
+                url = baseUri + data.id + '#' + CryptTool.base58encode(data.encryptionKey),
+                deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+            PasteStatus.createPasteNotification(url, deleteUrl, true);
+
+            TopNav.showViewButtons();
+
+            CopyToClipboard.setUrl(url);
+            CopyToClipboard.showKeyboardShortcutHint();
+
+            // this cannot be grouped with showViewButtons due to remaining time calculation
+            TopNav.showEmailButton();
+
+            // there is no text to work with, just the link to hand out
+            TopNav.hideCloneButton();
+            TopNav.hideRawButton();
+            TopNav.hideDownloadButton();
+            Editor.hide();
+
+            PasteStatus.checkAutoShorten();
         }
 
         /**
@@ -5434,6 +5589,11 @@ window.PrivateBin = (function () {
             ServerInteraction.prepare();
             ServerInteraction.setCryptParameters(TopNav.getPassword());
 
+            // if we got a one-time ticket, it gets used up by this document
+            if (Model.getTicketId() !== '') {
+                ServerInteraction.setUrl(Helper.baseUri() + '?ticket=' + Model.getTicketId());
+            }
+
             // set success/fail functions
             ServerInteraction.setSuccess(showCreatedPaste);
             ServerInteraction.setFailure(function (status, data) {
@@ -5521,6 +5681,66 @@ window.PrivateBin = (function () {
 
             // encrypt message
             await ServerInteraction.setCipherMessage(cipherMessage).catch(Alert.showError);
+
+            // send data
+            ServerInteraction.run();
+        };
+
+        /**
+         * sends a one-time ticket to the server
+         *
+         * A ticket is a document that is flagged as such in its unencrypted
+         * metadata. It contains only a fixed text, the link to it is what gets
+         * handed out and allows to create a single document.
+         *
+         * @name   PasteEncrypter.sendTicket
+         * @async
+         * @function
+         */
+        me.sendTicket = async function () {
+            // only for new documents, the button is disabled otherwise
+            if (!TopNav.isInputEmpty()) {
+                return;
+            }
+
+            // hide previous (error) messages
+            Controller.hideStatusMessages();
+
+            // a ticket that never expires could not be taken back by itself
+            if (TopNav.getExpiration() === 'never') {
+                Alert.showError('A one-time ticket needs an expiration time.');
+                return;
+            }
+
+            // UI loading state
+            TopNav.hideAllButtons();
+            Alert.showLoading('Sending document…', 'cloud-upload');
+            TopNav.collapseBar();
+
+            // prepare server interaction
+            ServerInteraction.prepare();
+            ServerInteraction.setCryptParameters('');
+
+            // set success/fail functions
+            ServerInteraction.setSuccess(showCreatedTicket);
+            ServerInteraction.setFailure(function (status, data) {
+                // revert loading status…
+                Alert.hideLoading();
+                TopNav.showCreateButtons();
+
+                // show error message
+                Alert.showError(
+                    ServerInteraction.parseUploadError(status, data, 'create document')
+                );
+            });
+
+            // fill it with unencrypted submitted options: plain text, neither
+            // burn after reading nor discussion and the ticket marker
+            ServerInteraction.setUnencryptedData('adata', [null, 'plaintext', 0, 0]);
+            ServerInteraction.setUnencryptedData('meta', { 'expire': TopNav.getExpiration(), 'ticket': 1 });
+
+            // encrypt message
+            await ServerInteraction.setCipherMessage({ 'paste': 'One-time ticket' }).catch(Alert.showError);
 
             // send data
             ServerInteraction.run();
@@ -5688,6 +5908,14 @@ window.PrivateBin = (function () {
             if (typeof paste === 'undefined' || paste.type === 'click') {
                 // get cipher data and wait until it is available
                 Model.getPasteData(me.run);
+                return;
+            }
+
+            // a one-time ticket has nothing to decrypt, it allows to create
+            // a single document of your own instead
+            if (paste.isTicket()) {
+                Alert.hideLoading();
+                Controller.useTicket();
                 return;
             }
 
@@ -6104,8 +6332,10 @@ window.PrivateBin = (function () {
          *
          * @name   Controller.newPaste
          * @function
+         * @param  {bool} keepUrl - optional, true to leave the URL in the
+         *                          browser's address bar as it is
          */
-        me.newPaste = function () {
+        me.newPaste = function (keepUrl) {
             // Important: This *must not* run Alert.hideMessages() as previous
             // errors from viewing a document should be shown.
             TopNav.hideAllButtons();
@@ -6133,12 +6363,29 @@ window.PrivateBin = (function () {
 
             Alert.hideLoading();
             // only push new state if we are coming from a different one
-            if (Helper.baseUri() !== window.location) {
+            if (keepUrl !== true && Helper.baseUri() !== window.location) {
                 history.pushState({ type: 'create' }, document.title, Helper.baseUri());
             }
 
             // clear discussion
             DiscussionViewer.prepareNewDiscussion();
+        };
+
+        /**
+         * starts creating a document with the one-time ticket that got opened
+         *
+         * The ticket stays in the browser's address bar, so reloading the page
+         * keeps working until the ticket got used. The document that gets
+         * created with it is read once by default, which can be changed.
+         *
+         * @name   Controller.useTicket
+         * @function
+         */
+        me.useTicket = function () {
+            Model.setTicketId(Model.getPasteId());
+            me.newPaste(true);
+            TopNav.setBurnAfterReading(true);
+            Alert.showStatus('You received a one-time ticket. It allows you to create a single document, then it is used up.');
         };
 
         /**

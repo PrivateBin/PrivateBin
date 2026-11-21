@@ -24,6 +24,9 @@
 		"expire": {
 			"@type": "pb:Expiration"
 		},
+		"ticket": {
+			"@type": "pb:OneTimeTicket"
+		},
 		"time_to_live": {
 			"@type": "pb:RemainingSeconds"
 		}

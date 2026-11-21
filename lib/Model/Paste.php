@@ -208,6 +208,44 @@ class Paste extends AbstractModel
     }
 
     /**
+     * Check if the data set on this paste marks it as a one-time ticket.
+     *
+     * A ticket is an ordinary paste, that is flagged in its unencrypted
+     * metadata. It carries no secrets, the ticket link only permits to create
+     * a single new paste. This only looks at the data currently set, use
+     * redeemTicket() to check the ticket of an existing paste.
+     *
+     * @access public
+     * @return bool
+     */
+    public function isTicket()
+    {
+        return ($this->_data['meta']['ticket'] ?? 0) === 1;
+    }
+
+    /**
+     * Use up the one-time ticket stored under the ID of this paste.
+     *
+     * The ticket is deleted, so it can't be used again. This reads from the
+     * store directly, as get() would also delete burn-after-reading pastes.
+     *
+     * @access public
+     * @throws TranslatedException if the ticket doesn't exist, isn't one or has expired
+     */
+    public function redeemTicket()
+    {
+        $data = $this->_store->read($this->getId());
+        if ($data === false || ($data['meta']['ticket'] ?? 0) !== 1) {
+            throw new TranslatedException(Controller::GENERIC_ERROR, 64);
+        }
+        if (($data['meta']['expire_date'] ?? PHP_INT_MAX) < time()) {
+            $this->delete();
+            throw new TranslatedException(Controller::GENERIC_ERROR, 63);
+        }
+        $this->delete();
+    }
+
+    /**
      * Sanitizes data to conform with current configuration.
      *
      * @access protected
@@ -257,6 +295,19 @@ class Paste extends AbstractModel
             $data['adata'][self::ADATA_BURN_AFTER_READING] !== 1
         ) {
             throw new TranslatedException(self::INVALID_DATA_ERROR, 73);
+        }
+
+        // tickets need to be enabled, must expire and can't be read once or
+        // discussed, as they get used up by the paste created with them
+        if (
+            array_key_exists('ticket', $data['meta']) && (
+                !$this->_conf->getKey('onetimeticket') ||
+                !array_key_exists('expire_date', $data['meta']) ||
+                $data['adata'][self::ADATA_OPEN_DISCUSSION] !== 0 ||
+                $data['adata'][self::ADATA_BURN_AFTER_READING] !== 0
+            )
+        ) {
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 78);
         }
     }
 }

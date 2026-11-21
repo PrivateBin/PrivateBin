@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.1.2 (not yet released)
+* ADDED: Optional one-time tickets, enabled with the `onetimeticket` option. An authenticated user can create a ticket link that allows its recipient to create exactly one document, which lets a front end proxy keep the creation of documents restricted while letting a ticket request through (`POST /?ticket=<ticket id>`). Tickets expire, can't be created from a ticket and don't change the zero-knowledge encryption
 * ADDED: Optional "splitview" template with the editor on top, a file drop area below and the options in a full-height side pane
 * ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates; the `bootstrap5` and `splitview` templates have one
 * ADDED: Optional `modern` template based on the Bootstrap 5 one, use configuration `template = "modern"` to switch to it
