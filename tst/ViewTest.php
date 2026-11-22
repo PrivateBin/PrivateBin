@@ -32,6 +32,8 @@ class ViewTest extends TestCase
 
     private $_content = [];
 
+    private $_page;
+
     public function setUp(): void
     {
         /* Setup Routine */
@@ -66,6 +68,7 @@ class ViewTest extends TestCase
         $page->assign('COMPRESSION', 'zlib');
         $page->assign('CSPHEADER', 'default-src \'none\'');
         $page->assign('SRI', []);
+        $this->_page = $page;
 
         foreach (new DirectoryIterator(PATH . 'tpl') as $file) {
             if ($file->getExtension() === 'php') {
@@ -123,6 +126,57 @@ class ViewTest extends TestCase
             $this->_content['bootstrap5'],
             'bootstrap5: retry button stays inside an initially hidden list item'
         );
+    }
+
+    private function _renderModern(array $options): string
+    {
+        $this->_page->assign('TEMPLATEOPTIONS', $options);
+        ob_start();
+        $this->_page->draw('modern');
+        return ob_get_clean();
+    }
+
+    public function testModernTemplateDefaultOptions()
+    {
+        $content = $this->_renderModern([]);
+        $this->assertStringContainsString('<img alt="" src="img/icon.svg" height="28" />', $content, 'uses default logo');
+        $this->assertStringNotContainsString('pb-logo-dark', $content, 'no dark logo by default');
+        $this->assertStringNotContainsString('data-accent', $content, 'no accent by default');
+        $this->assertStringNotContainsString('css/custom', $content, 'no additional stylesheet by default');
+    }
+
+    public function testModernTemplateStylesheet()
+    {
+        $content = $this->_renderModern(['stylesheet' => 'css/custom/brand.css']);
+        $this->assertMatchesRegularExpression(
+            '#<link[^>]+rel="stylesheet"[^>]+href="css/modern/privatebin\.css\?[^"]+"[^>]*>.*' .
+            '<link[^>]+rel="stylesheet"[^>]+href="css/custom/brand\.css\?' . rawurlencode(self::$version) . '"[^>]*>#s',
+            $content,
+            'loads additional stylesheet after the one of the template, with cache buster'
+        );
+    }
+
+    public function testModernTemplateOptions()
+    {
+        $content = $this->_renderModern([
+            'logo'      => 'img/custom/logo.svg',
+            'logo_dark' => 'img/custom/logo-dark.svg',
+            'accent'    => 'blue',
+        ]);
+        $this->assertMatchesRegularExpression('#<html[^>]+data-accent="blue"#', $content, 'sets accent');
+        $this->assertStringContainsString('src="img/custom/logo.svg" height="28" class="pb-logo-light"', $content, 'uses configured logo');
+        $this->assertStringContainsString('src="img/custom/logo-dark.svg" height="28" class="pb-logo-dark"', $content, 'uses configured dark logo');
+        $this->assertStringNotContainsString('img/icon.svg', $content, 'replaces default logo');
+    }
+
+    public function testModernTemplateEncodesOptions()
+    {
+        $content = $this->_renderModern([
+            'stylesheet' => '"><script>alert(3)</script>',
+            'logo'       => '"><script>alert(1)</script>',
+            'accent'     => '"><script>alert(2)</script>',
+        ]);
+        $this->assertStringNotContainsString('<script>alert', $content, 'encodes option values');
     }
 
     public function testMissingTemplate()
