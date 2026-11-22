@@ -44,6 +44,7 @@ class Configuration
             'password'                              => true,
             'fileupload'                            => false,
             'burnafterreadingselected'              => false,
+            'onetimeticket'                         => false,
             'defaultformatter'                      => 'plaintext',
             'syntaxhighlightingtheme'               => '',
             'sizelimit'                             => 10485760,

@@ -84,6 +84,14 @@ class Request
     private $_isJsonApi = false;
 
     /**
+     * One-time ticket the request is made with, null if there is none
+     *
+     * @access private
+     * @var ?string
+     */
+    private $_ticket = null;
+
+    /**
      * Return the paste ID of the current document.
      *
      * @access private
@@ -151,6 +159,12 @@ class Request
             !empty($_SERVER['QUERY_STRING'])
         ) {
             $this->_params['pasteid'] = $this->getPasteId();
+        }
+
+        // a one-time ticket is passed in the URL, so it is available to the
+        // proxies in front of the instance, even if it is not a valid ID
+        if (array_key_exists('ticket', $_GET)) {
+            $this->_ticket = is_string($_GET['ticket']) ? $_GET['ticket'] : '';
         }
 
         // prepare operation, depending on current parameters
@@ -234,6 +248,20 @@ class Request
             $data[$key] = $this->getParam($key, $key === 'v' ? 1 : '');
         }
         return $data;
+    }
+
+    /**
+     * Get the one-time ticket of the request
+     *
+     * The value isn't validated. Null means the request got no ticket, while
+     * an empty or malformed one must still not be handled as having none.
+     *
+     * @access public
+     * @return ?string
+     */
+    public function getTicket()
+    {
+        return $this->_ticket;
     }
 
     /**

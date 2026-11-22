@@ -37,6 +37,15 @@ fileupload = false
 ; preselect the burn-after-reading feature, defaults to false
 burnafterreadingselected = false
 
+; enable or disable one-time tickets, defaults to false
+; A ticket is a link that lets whoever receives it create exactly one document,
+; without access to the create page of this instance. The "One-time ticket"
+; button next to the editor creates a ticket that expires after the selected
+; expiration time and is used up by the first document created with it. If the
+; create page is restricted, i.e. by a reverse proxy, that proxy needs to let
+; requests to "?ticket=<ticket id>" pass in addition to viewing documents.
+onetimeticket = false
+
 ; which display mode to preselect by default, defaults to "plaintext"
 ; make sure the value exists in [formatter_options]
 defaultformatter = "plaintext"

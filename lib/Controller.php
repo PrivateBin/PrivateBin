@@ -13,6 +13,7 @@ namespace PrivateBin;
 
 use Exception;
 use PrivateBin\Exception\TranslatedException;
+use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Proxy\AbstractProxy;
@@ -298,6 +299,13 @@ class Controller
             return;
         }
 
+        // A one-time ticket allows to create a single paste, but no comments.
+        $ticketId = $this->_request->getTicket();
+        if ($ticketId !== null && $isComment) {
+            $this->_json_error(I18n::_('Invalid data.'));
+            return;
+        }
+
         // The user posts a comment.
         if ($isComment) {
             $paste = $this->_model->getPaste($data['pasteid']);
@@ -320,12 +328,42 @@ class Controller
                 $this->_model->purge();
                 $paste = $this->_model->getPaste();
                 $paste->setData($data);
+                if ($ticketId !== null) {
+                    $this->_redeemTicket($ticketId, $paste);
+                }
                 $paste->store();
                 $this->_json_result($paste->getId(), ['deletetoken' => $paste->getDeleteToken()]);
             } catch (Exception $e) {
                 $this->_json_error($e->getMessage());
             }
         }
+    }
+
+    /**
+     * Use up a one-time ticket, to allow creating the given paste
+     *
+     * The ticket gets deleted before the paste is stored, so it can't be used
+     * for a second one. The paste gets validated before, so a rejected paste
+     * doesn't use up the ticket.
+     *
+     * @access private
+     * @param  string $ticketId
+     * @param  Paste $paste the new paste, that the ticket is used for
+     * @throws TranslatedException
+     */
+    private function _redeemTicket($ticketId, Paste $paste)
+    {
+        // tickets can't be used, if disabled, can't create more tickets and can't
+        // be used to create documents that allow discussions
+        if (
+            !$this->_conf->getKey('onetimeticket') ||
+            !Paste::isValidId($ticketId) ||
+            $paste->isTicket() ||
+            $paste->isOpenDiscussion()
+        ) {
+            throw new TranslatedException(self::GENERIC_ERROR, 79);
+        }
+        $this->_model->getPaste($ticketId)->redeemTicket();
     }
 
     /**
@@ -470,6 +508,7 @@ class Controller
         $page->assign('INFO', I18n::_(str_replace("'", '"', $this->_conf->getKey('info'))));
         $page->assign('NOTICE', I18n::_($this->_conf->getKey('notice')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
+        $page->assign('ONETIMETICKET', $this->_conf->getKey('onetimeticket'));
         $page->assign('PASSWORD', $this->_conf->getKey('password'));
         $page->assign('FILEUPLOAD', $this->_conf->getKey('fileupload'));
         $page->assign('LANGUAGESELECTION', $languageselection);

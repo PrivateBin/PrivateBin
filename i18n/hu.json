@@ -240,5 +240,10 @@
     "Attachments": "Attachments",
     "Drag & drop files here, paste an image, or click to browse": "Drag & drop files here, paste an image, or click to browse",
     "This file is empty (0 bytes). If it should have content, add it with click-to-browse instead.": "This file is empty (0 bytes). If it should have content, add it with click-to-browse instead.",
-    "Could not read: %s. The browser did not give access to the dragged file(s). Click here to choose them with the file dialog instead.": "Could not read: %s. The browser did not give access to the dragged file(s). Click here to choose them with the file dialog instead."
+    "Could not read: %s. The browser did not give access to the dragged file(s). Click here to choose them with the file dialog instead.": "Could not read: %s. The browser did not give access to the dragged file(s). Click here to choose them with the file dialog instead.",
+    "One-time ticket": "One-time ticket",
+    "Create a link that allows someone else to create a single document": "Create a link that allows someone else to create a single document",
+    "A one-time ticket needs an expiration time.": "A one-time ticket needs an expiration time.",
+    "You received a one-time ticket. It allows you to create a single document, then it is used up.": "You received a one-time ticket. It allows you to create a single document, then it is used up.",
+    "Your one-time ticket is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "Your one-time ticket is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>"
 }

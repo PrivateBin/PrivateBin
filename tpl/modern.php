@@ -197,6 +197,13 @@ endif;
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg> <?php echo I18n::_('Save document'), PHP_EOL; ?>
 							</button>
 <?php
+if ($ONETIMETICKET) :
+?>
+							<button id="ticketbutton" type="button" class="hidden btn pb-tool" title="<?php echo I18n::_('Create a link that allows someone else to create a single document'); ?>">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#send" /></svg> <?php echo I18n::_('One-time ticket'), PHP_EOL; ?>
+							</button>
+<?php
+endif;
 if ($EMAIL) :
 ?>
 							<button id="emaillink" type="button" class="hidden btn pb-tool">

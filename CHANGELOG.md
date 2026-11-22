@@ -5,6 +5,7 @@
 * ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates; the `bootstrap5` and `splitview` templates have one
 * ADDED: Optional `modern` template based on the Bootstrap 5 one, use configuration `template = "modern"` to switch to it
 * ADDED: Configuration section `[template_options]` for settings of the selected template, used by the `modern` template for its logo, accent color and an additional stylesheet
+* ADDED: Optional one-time tickets (`onetimeticket` option), links that allow their recipient to create a single document, see `doc/One-time tickets.md`
 
 ## 2.1.1 (2026-11-04)
 * ADDED: Translation for Korean (#2071)
