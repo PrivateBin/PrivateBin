@@ -4934,6 +4934,29 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * bind the event listeners of the one-time ticket button
+         *
+         * @name   TopNav.bindTicketEvents
+         * @private
+         * @function
+         */
+        function bindTicketEvents() {
+            if (!ticketButton) {
+                return;
+            }
+            ticketButton.addEventListener('click', PasteEncrypter.sendTicket);
+            // keep the button state in sync with what gets entered
+            const messageField = document.getElementById('message');
+            if (messageField) {
+                messageField.addEventListener('input', updateTicketButton);
+            }
+            const fileField = document.getElementById('file');
+            if (fileField) {
+                fileField.addEventListener('change', updateTicketButton);
+            }
+        }
+
+        /**
          * bind all navigation event listeners
          *
          * @name   TopNav.bindEvents
@@ -4969,18 +4992,7 @@ window.PrivateBin = (function () {
                 sendButton.addEventListener('click', PasteEncrypter.sendPaste);
                 document.addEventListener('keydown', sendOnShortcut);
             }
-            if (ticketButton) {
-                ticketButton.addEventListener('click', PasteEncrypter.sendTicket);
-                // keep the button state in sync with what gets entered
-                const messageField = document.getElementById('message');
-                if (messageField) {
-                    messageField.addEventListener('input', updateTicketButton);
-                }
-                const fileField = document.getElementById('file');
-                if (fileField) {
-                    fileField.addEventListener('change', updateTicketButton);
-                }
-            }
+            bindTicketEvents();
             if (cloneButton) {
                 cloneButton.addEventListener('click', Controller.clonePaste);
             }
