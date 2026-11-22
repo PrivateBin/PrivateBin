@@ -1,9 +1,16 @@
 const globals = require('globals');
+const { FlatCompat } = require('@eslint/eslintrc');
 const { globalIgnores } = require('eslint/config');
 const pluginSecurity = require('eslint-plugin-security');
 
+// compatibility https://eslint.org/docs/latest/use/configure/migration-guide#use-eslintrc-configs-in-flat-config
+const compat = new FlatCompat({
+	baseDirectory: __dirname,
+});
+
 module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]),
     pluginSecurity.configs.recommended,
+    ...compat.extends("plugin:xss/recommended"),
     {
     languageOptions: {
         globals: {
