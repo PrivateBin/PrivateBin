@@ -3,6 +3,7 @@
 ## 2.1.2 (not yet released)
 * ADDED: Optional `splitview` template with the editor on top, a file drop area below and the options in a full-height side pane
 * ADDED: Buttons with the class `generate-password` fill the password field next to them with a random 20 character password, available to all templates; the `bootstrap5` and `splitview` templates have one
+* FIXED: Prevent prototype-key assignments from modifying model and upload metadata object prototypes
 * ADDED: Optional `modern` template based on the Bootstrap 5 one, use configuration `template = "modern"` to switch to it
 * ADDED: Configuration section `[template_options]` for settings of the selected template, used by the `modern` template for its logo, accent color and an additional stylesheet
 * FIXED: Browser language detection no longer depends on the ICU library, which could pick Simplified instead of Traditional Chinese or skip Corsican, Latin and Lojban (#2078)

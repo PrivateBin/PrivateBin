@@ -10,6 +10,7 @@
     "@eslint/js": "^10.0.1",
     "@peculiar/webcrypto": "^2.0.0",
     "eslint": "^10.15.0",
+    "eslint-plugin-security": "^4.2.1",
     "fast-check": "^4.10.2",
     "globals": "^17.14.0",
     "jsdom": "^31.0.1",

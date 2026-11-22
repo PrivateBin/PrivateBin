@@ -1,7 +1,10 @@
 const globals = require('globals');
 const { globalIgnores } = require('eslint/config');
+const pluginSecurity = require('eslint-plugin-security');
 
-module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]), {
+module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]),
+    pluginSecurity.configs.recommended,
+    {
     languageOptions: {
         globals: {
             ...globals.amd,

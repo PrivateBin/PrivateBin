@@ -108,6 +108,8 @@ describe('PasteStatus', function () {
                 fc.string({minLength: 1}),
                 common.fcUrl(),
                 function (schema, domain, url) {
+                    // This fixed character-class expression has no nested quantifiers.
+                    // eslint-disable-next-line security/detect-unsafe-regex
                     domain = domain.replace(/\P{Letter}|[\u{AA}-\u{BA}]/gu, '').toLowerCase();
                     if (domain.length === 0) {
                         domain = 'a';

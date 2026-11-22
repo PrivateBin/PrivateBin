@@ -73,9 +73,11 @@ function mockWindowOpen() {
  */
 function mailtoParameter(mailtoUrl, name) {
     assert.match(mailtoUrl, /^mailto:\?/, 'expected a mailto: URL');
-    const match = mailtoUrl.match(new RegExp('[?&]' + name + '=([^&]*)'));
-    assert.ok(match, 'expected the mailto: URL to have a ' + name + '= parameter');
-    return decodeURIComponent(match[1]);
+    const parameter = mailtoUrl.slice(mailtoUrl.indexOf('?') + 1)
+        .split('&')
+        .find(value => value.startsWith(name + '='));
+    assert.ok(parameter, 'expected the mailto: URL to have a ' + name + '= parameter');
+    return decodeURIComponent(parameter.slice(name.length + 1));
 }
 
 describe('TopNav', function () {
@@ -238,7 +240,7 @@ describe('TopNav', function () {
             query('#emaillink').click();
             assert.ok(windowOpen.getUrl(), 'an e-mail was sent');
             const body = mailtoParameter(windowOpen.getUrl(), 'body');
-            assert.match(body, new RegExp(window.location.href), 'body contains the page URL');
+            assert.ok(body.includes(window.location.href), 'body contains the page URL');
             assert.doesNotMatch(body, /undefined/, 'body never contains "undefined"');
         });
 

@@ -216,7 +216,8 @@ describe('I18n', function () {
 
                     // mock
                     clean = globalThis.cleanup('', {cookie: ['lang=' + language]});
-                    // eslint-disable-next-line global-require
+                    // language comes from the fixed supported-language generator.
+                    // eslint-disable-next-line global-require, security/detect-non-literal-require
                     PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
                     const loadedLang = PrivateBin.I18n.getLanguage(),
                           result     = PrivateBin.I18n.translate('Never'),
