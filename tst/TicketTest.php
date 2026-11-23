@@ -21,8 +21,8 @@ class TicketTest extends TestCase
         $this->_data = new Filesystem(['dir' => $this->_path]);
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
-        $_POST   = [];
-        $_GET    = [];
+        $_POST = [];
+        $_GET = [];
         $_SERVER = [];
         $options = parse_ini_file(CONF_SAMPLE, true);
         $options['model_options']['dir'] = $this->_path;
@@ -74,8 +74,8 @@ class TicketTest extends TestCase
         Request::setInputStream($file);
         $_GET = $ticket === null ? [] : ['ticket' => $ticket];
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -137,7 +137,7 @@ class TicketTest extends TestCase
     public function testSecondUseOfTicketFails()
     {
         $ticket = $this->issueTicket();
-        $first  = $this->post($this->body([]), $ticket);
+        $first = $this->post($this->body([]), $ticket);
         $this->assertEquals(0, $first['status']);
         $second = $this->post($this->body([], [2 => 'plaintext']), $ticket);
         $this->assertEquals(1, $second['status'], 'second use refused');
@@ -180,7 +180,7 @@ class TicketTest extends TestCase
      */
     public function testTicketCannotMintTickets()
     {
-        $ticket   = $this->issueTicket();
+        $ticket = $this->issueTicket();
         $response = $this->post($this->body(['ticket' => 1]), $ticket);
         $this->assertEquals(1, $response['status']);
         $this->assertTrue($this->_data->exists($ticket), 'ticket not consumed by a refused request');
@@ -191,7 +191,7 @@ class TicketTest extends TestCase
      */
     public function testInvalidPasteDoesNotConsumeTicket()
     {
-        $ticket   = $this->issueTicket();
+        $ticket = $this->issueTicket();
         $response = $this->post('{"broken":', $ticket);
         $this->assertEquals(1, $response['status']);
         $this->assertTrue($this->_data->exists($ticket), 'ticket still there');
@@ -244,8 +244,8 @@ class TicketTest extends TestCase
         Request::setInputStream($file);
         $_GET = ['ticket' => $ticket];
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new Controller;
         $response = json_decode(ob_get_clean(), true);
@@ -270,7 +270,7 @@ class TicketTest extends TestCase
      */
     public function testTicketCannotCreateDiscussion()
     {
-        $ticket   = $this->issueTicket();
+        $ticket = $this->issueTicket();
         $response = $this->post($this->body([], [2 => 1]), $ticket);
         $this->assertEquals(1, $response['status'], 'discussion refused');
         $this->assertTrue($this->_data->exists($ticket), 'ticket not consumed');
