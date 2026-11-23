@@ -414,11 +414,8 @@ class I18nTest extends TestCase
         $checked = 0;
         foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
             $fileNameLength = strlen($file->getFilename());
-            if ($fileNameLength === 7 || $fileNameLength === 10) { // xx.json / xx-xx.json
-                $language = substr($file->getFilename(), 0, 2);
-            } elseif ($fileNameLength === 8) { // jbo.json
-                $language = substr($file->getFilename(), 0, 3);
-            } else {
+            // neither xx.json, xxx.json or xx-xx.json
+            if (!in_array($fileNameLength, [7, 8, 10], true)) {
                 continue;
             }
             $languageJson = file_get_contents($file->getPathname());
@@ -430,7 +427,9 @@ class I18nTest extends TestCase
                 try {
                     sprintf($translation, ...$args);
                 } catch (ValueError $e) {
-                    $this->fail("invalid sprintf placeholder in $language.json for message '$messageId': " . $e->getMessage());
+                    $languageFile = $file->getFilename();
+                    $errorMessage = $e->getMessage();
+                    $this->fail("invalid sprintf placeholder in $languageFile for message '$messageId': $errorMessage");
                 }
                 ++$checked;
             }
