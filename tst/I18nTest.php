@@ -407,4 +407,34 @@ class I18nTest extends TestCase
             }
         }
     }
+
+    public function testSprintfPlaceholdersAreValidInAllLanguages()
+    {
+        $args = array_fill(0, 20, 'x');
+        $checked = 0;
+        foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
+            $fileNameLength = strlen($file->getFilename());
+            if ($fileNameLength === 7 || $fileNameLength === 10) { // xx.json / xx-xx.json
+                $language = substr($file->getFilename(), 0, 2);
+            } elseif ($fileNameLength === 8) { // jbo.json
+                $language = substr($file->getFilename(), 0, 3);
+            } else {
+                continue;
+            }
+            $languageJson = file_get_contents($file->getPathname());
+            $translations = Json::decode($languageJson);
+            foreach ($translations as $messageId => $translation) {
+                if (!is_string($translation)) {
+                    continue;
+                }
+                try {
+                    sprintf($translation, ...$args);
+                } catch (ValueError $e) {
+                    $this->fail("invalid sprintf placeholder in $language.json for message '$messageId': " . $e->getMessage());
+                }
+                ++$checked;
+            }
+        }
+        $this->assertGreaterThan(0, $checked, 'at least one translation was validated');
+    }
 }
