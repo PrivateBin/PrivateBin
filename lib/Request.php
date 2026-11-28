@@ -94,7 +94,7 @@ class Request
         foreach ($_GET as $key => $value) {
             // only return if value is empty and key is 16 hex chars
             $key = (string) $key;
-            if (empty($value) && Paste::isValidId($key)) {
+            if ($value === '' && Paste::isValidId($key)) {
                 return $key;
             }
         }
