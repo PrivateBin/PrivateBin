@@ -58,7 +58,7 @@ class View
         if (!in_array($path, glob($dir . '*.php', GLOB_NOSORT | GLOB_ERR), true)) {
             throw new Exception('Template ' . $file . '.php not found in ' . $dir . '!', 81);
         }
-        extract($this->_variables);
+        extract($this->_variables, EXTR_SKIP);
         include $path;
     }
 
