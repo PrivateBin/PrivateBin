@@ -176,12 +176,9 @@ class IPv6 implements AddressInterface
                         $before = ($parts[0] === '') ? array() : explode(':', $parts[0]);
                         $after = ($parts[1] === '') ? array() : explode(':', $parts[1]);
                         $missing = 8 - count($before) - count($after);
-                        if ($missing >= 0) {
-                            $chunks = $before;
-                            if ($missing !== 0) {
-                                $chunks = array_merge($chunks, array_fill(0, $missing, '0'));
-                            }
-                            $chunks = array_merge($chunks, $after);
+                        // "::" stands for one or more groups of zeros (RFC 4291, section 2.2)
+                        if ($missing > 0) {
+                            $chunks = array_merge($before, array_fill(0, $missing, '0'), $after);
                         }
                     }
                 }

@@ -143,7 +143,9 @@ class Subnet extends AbstractRange
         }
         $numSameBytes = $networkPrefix >> 3;
         $sameBytes = array_slice($addressBytes, 0, $numSameBytes);
+        /** @var int[] $differentBytesStart */
         $differentBytesStart = ($totalBytes === $numSameBytes) ? array() : array_fill(0, $totalBytes - $numSameBytes, 0);
+        /** @var int[] $differentBytesEnd */
         $differentBytesEnd = ($totalBytes === $numSameBytes) ? array() : array_fill(0, $totalBytes - $numSameBytes, 255);
         $startSameBits = $networkPrefix % 8;
         if ($startSameBits !== 0) {

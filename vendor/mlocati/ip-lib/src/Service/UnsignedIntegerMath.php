@@ -13,7 +13,7 @@ class UnsignedIntegerMath
      * Convert a string containing a decimal, octal or hexadecimal number into its bytes.
      *
      * @param string $value
-     * @param int $numBytes the wanted number of bytes
+     * @param int<0, max> $numBytes the wanted number of bytes
      * @param bool $onlyDecimal Only parse decimal numbers
      *
      * @return int[]|null
@@ -51,7 +51,7 @@ class UnsignedIntegerMath
 
     /**
      * @param string $value never zero-length, never extra leading zeroes
-     * @param int $numBytes
+     * @param int<0, max> $numBytes
      *
      * @return int[]|null
      */
@@ -74,7 +74,7 @@ class UnsignedIntegerMath
 
     /**
      * @param string $value may be zero-length, never extra leading zeroes
-     * @param int $numBytes
+     * @param int<0, max> $numBytes
      *
      * @return int[]|null
      */
@@ -99,7 +99,7 @@ class UnsignedIntegerMath
 
     /**
      * @param string $value never zero-length, never extra leading zeroes
-     * @param int $numBytes
+     * @param int<0, max> $numBytes
      *
      * @return int[]|null
      */
@@ -153,7 +153,7 @@ class UnsignedIntegerMath
 
     /**
      * @param string $value never zero-length, never extra leading zeroes
-     * @param int $numBytes
+     * @param int<0, max> $numBytes
      *
      * @return int[]|null
      */

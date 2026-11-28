@@ -296,7 +296,9 @@ class Pattern extends AbstractRange
                 $bytes = array(0, 0, 0, 0);
                 break;
             default:
-                $bytes = array_pad(array_fill(0, 4 - $this->asterisksCount, 255), 4, 0);
+                /** @var int[] $bytes */
+                $bytes = array_fill(0, 4 - $this->asterisksCount, 255);
+                $bytes = array_pad($bytes, 4, 0);
                 break;
         }
 

@@ -169,6 +169,7 @@ class IPv4 implements AddressInterface
         $nums = array();
         $maxChunkIndex = count($matches) - 1;
         for ($i = 1; $i <= $maxChunkIndex; $i++) {
+            /** @var int<1, 4> $numBytes */
             $numBytes = $i === $maxChunkIndex ? 5 - $i : 1;
             $chunkBytes = $math->getBytes($matches[$i], $numBytes, $onlyDecimal);
             if ($chunkBytes === null) {
