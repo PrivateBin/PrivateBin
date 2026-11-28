@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
+use PrivateBin\Exception\TranslatedException;
 
 class ConfigurationTest extends TestCase
 {
@@ -61,6 +62,15 @@ class ConfigurationTest extends TestCase
         file_put_contents(CONF, '');
         $this->expectException(Exception::class);
         $this->expectExceptionCode(2);
+        new Configuration;
+    }
+
+    public function testHandleMalformedConfigFile()
+    {
+        file_put_contents(CONF, '[main');
+        $this->expectException(TranslatedException::class);
+        $this->expectExceptionMessage('Unable to parse configuration file.');
+        $this->expectExceptionCode(5);
         new Configuration;
     }
 
