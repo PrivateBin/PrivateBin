@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
+use PrivateBin\I18n;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Request;
@@ -92,6 +93,26 @@ class ControllerTest extends TestCase
             $content,
             'outputs title correctly'
         );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testViewReloadsLanguageBetweenRequests()
+    {
+        $_COOKIE['lang'] = 'de';
+        I18n::loadTranslations();
+        $this->assertSame('de', I18n::getLanguage());
+
+        $_COOKIE['lang'] = 'fr';
+        ob_start();
+        try {
+            new Controller;
+        } finally {
+            ob_end_clean();
+            unset($_COOKIE['lang']);
+        }
+        $this->assertSame('fr', I18n::getLanguage());
     }
 
     /**
