@@ -41,7 +41,7 @@ if ($SYNTAXHIGHLIGHTING) :
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
-		<?php $this->_linkTag('js/zlib-1.3.2.js'); ?>
+		<?php $this->_linkTag('js/zlib-1.4.0.js'); ?>
 <?php
 if ($QRCODE) :
 ?>
