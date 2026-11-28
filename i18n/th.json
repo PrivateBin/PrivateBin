@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s เป็น pastebin ออนไลน์แบบมินิมอลและโอเพนซอร์ส ที่เซิร์ฟเวอร์ไม่รู้ข้อมูลใดๆ เกี่ยวกับข้อมูลที่จัดเก็บไว้ ข้อมูลจะถูกเข้ารหัส/ถอดรหัส %ในเบราว์เซอร์%s โดยใช้ AES 256 บิต",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s เป็น pastebin ออนไลน์แบบมินิมอลและโอเพนซอร์ส ที่เซิร์ฟเวอร์ไม่รู้ข้อมูลใดๆ เกี่ยวกับข้อมูลที่จัดเก็บไว้ ข้อมูลจะถูกเข้ารหัส/ถอดรหัส %sในเบราว์เซอร์%s โดยใช้ AES 256 บิต",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "ข้อมูลเพิ่มเติม ดูได้ที่<a href=\"https://privatebin.info/\">หน้าโครงการ</a>",
     "Because ignorance is bliss": "ไม่รู้ไม่ชี้ดีที่สุด",
     "Document does not exist, has expired or has been deleted.": "เอกสารนี้ไม่มีอยู่จริง หมดอายุ หรือถูกลบไปแล้ว",
